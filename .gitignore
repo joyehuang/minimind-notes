@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+
+# Model files (too large for git)
+*.pth
+*.safetensors
+*.bin
+*.ckpt
+
+# Datasets (too large for git)
+dataset/*.jsonl
+dataset/*.txt
+
+# Model directories
+MiniMind2/
+out/
+checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup
+.git.backup/
+
+# Other
+website/
+docs-minimind/
+requirements_fixed.txt
+test_speed.py
