@@ -257,6 +257,13 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 - [x] 理解 RoPE 在 Attention 中的应用位置
 - [x] 创建 Q、K、V 学习示例代码（attention_qkv_explained.py）
 - [x] 更新 knowledge_base.md 完整的 Attention 章节
+- [x] 理解 Softmax 和 RMSNorm 的区别和位置
+- [x] 理解 FeedForward 的核心作用（非线性变换）
+- [x] 理解"扩张-压缩"机制（768 → 2048 → 768）
+- [x] 理解 SwiGLU 激活函数（gate × up）
+- [x] 理解 Attention vs FeedForward 的分工
+- [x] 创建 FeedForward 学习示例代码（feedforward_explained.py）
+- [x] 更新 knowledge_base.md 完整的 FeedForward 章节
 
 #### 💭 个人思考
 
@@ -286,25 +293,43 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
   - 合并：8 × 96 = 768（恢复原始维度）
 - **不变量**：输入维度 = 输出维度 = 768
 
+**2025-11-10：FeedForward 前馈网络的理解**
+- **初始困惑**："扩张-压缩"到底在做什么？为什么不直接 768 → 768？
+- **关键突破**：
+  - 直接 768 → 768：只是线性变换，表达能力有限
+  - 768 → 2048 → 768：经过高维空间，能做复杂的非线性变换
+  - 类比：做菜（食材→加工→装盘），照片处理（像素→特征提取→优化像素）
+- **核心认知**：
+  - FeedForward 每个词独立处理（vs Attention 词与词交互）
+  - Attention = 开会讨论，FeedForward = 各自思考
+  - SwiGLU 比普通 FFN 更强：门控机制（gate × up）+ SiLU 激活
+- **实现细节**：
+  - gate_proj: 768 → 2048（门控分支）
+  - up_proj: 768 → 2048（上投影分支）
+  - hidden = SiLU(gate) * up（逐元素相乘）
+  - down_proj: 2048 → 768（压缩回原维度）
+- **与 Attention 的分工**：
+  - Attention：让模型知道"哪些词相关"
+  - FeedForward：让模型知道"如何处理这些信息"
+  - 两者缺一不可！
+- **创建学习材料**：feedforward_explained.py
+
 ---
 
 ## 🎯 下次学习计划
 
-**当前进度**：Transformer 核心组件学习中（3/4 完成）
+**当前进度**：Transformer 核心组件学习中（4/4 完成）✨
 - ✅ RMSNorm（归一化）
 - ✅ RoPE（位置编码）
-- ✅ Attention（注意力机制）✨ 今天完成！
-- ⏳ FeedForward（前馈网络）
+- ✅ Attention（注意力机制）
+- ✅ FeedForward（前馈网络）✨ 今天完成！
 
 **下次学习**：
-- [ ] FeedForward 前馈网络
-  - SwiGLU 激活函数
-  - 为什么需要 FFN？
-  - FFN 的作用和位置
 - [ ] 完整的 Transformer Block
   - 所有组件的组合方式
   - 残差连接的作用
   - 整体数据流
+  - Pre-Norm vs Post-Norm
 
 **可选深入**（以后有时间再学）：
 - GQA (Grouped Query Attention)
@@ -321,4 +346,4 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 ---
 
 **最后更新**：2025-11-10
-**学习进度**：第一阶段 - Transformer 核心组件学习中（3/4 完成）
+**学习进度**：第一阶段 - Transformer 核心组件学习完成（4/4 完成）✨

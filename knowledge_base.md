@@ -17,8 +17,13 @@
    - Q、K、V 详解
    - Multi-Head Attention
    - RoPE 在 Attention 中的应用
-4. [Transformer 架构](#4-transformer-架构)
-5. [问答记录](#问答记录)
+4. [前馈网络](#4-前馈网络feedforward)
+   - FeedForward 原理
+   - 扩张-压缩机制
+   - SwiGLU 实现
+   - Attention vs FeedForward 对比
+5. [Transformer 架构](#5-transformer-架构)
+6. [问答记录](#问答记录)
 
 ---
 
@@ -596,9 +601,313 @@ xq, xk = apply_rotary_pos_emb(xq, xk, cos[:seq_len], sin[:seq_len])
 
 ---
 
-## 4. Transformer 架构
+### 3.10 Softmax 归一化详解
 
-### 3.1 整体结构
+**Softmax 和 RMSNorm 的区别**：
+
+| 特性 | Softmax（Attention 中） | RMSNorm（Transformer Block 中） |
+|------|------------------------|-------------------------------|
+| **用在哪里** | Attention 计算**内部** | Attention **之前**和 FeedForward **之前** |
+| **归一化什么** | Attention 权重矩阵（每一行） | 词向量（每个向量的大小） |
+| **目的** | 把分数变成概率分布 | 稳定数值，防止梯度爆炸/消失 |
+| **输入** | 相似度分数（任意大小） | 词向量（768 维） |
+| **输出** | 概率（0-1之间，和为1） | 归一化后的向量（保持方向） |
+| **公式** | `exp(x_i) / Σexp(x_j)` | `x / sqrt(mean(x²))` |
+
+**Softmax 在 Attention 中的作用**：
+
+```python
+# 步骤 1: 计算相似度分数
+scores = Q @ K.T / sqrt(96)
+scores = [
+  [5.2, 3.1, 2.8],  # "我" 和其他词的分数
+  [3.0, 4.5, 6.2],  # "爱" 和其他词的分数
+  [2.1, 5.8, 7.3],  # "编程" 和其他词的分数
+]
+
+# 步骤 2: Softmax 归一化
+weights = softmax(scores, dim=-1)
+weights = [
+  [0.59, 0.24, 0.17],  # 和 = 1.0 ✅
+  [0.12, 0.24, 0.64],  # 和 = 1.0 ✅
+  [0.05, 0.27, 0.68],  # 和 = 1.0 ✅
+]
+
+# 步骤 3: 加权求和
+output = weights @ V
+```
+
+**为什么要用 Softmax？**
+
+1. **转换成概率分布**：
+   - 所有权重 ≥ 0
+   - 所有权重加起来 = 1
+   - 可以解释为"关注度"
+
+2. **放大差异**：
+   - 使用 exp 函数，大的分数变得更大
+   - 小的分数变得更小
+   - 让模型更关注相关的词
+
+**Softmax 公式**：
+```
+softmax(x_i) = exp(x_i) / Σexp(x_j)
+```
+
+**位置关系**：
+```python
+输入 X
+  ↓
+RMSNorm #1 ← 归一化词向量
+  ↓
+Attention:
+  Q, K, V = X @ W_Q, W_K, W_V
+  scores = Q @ K^T
+  weights = Softmax(scores) ← Softmax 在这里！
+  output = weights @ V
+  ↓
+残差连接
+  ↓
+RMSNorm #2 ← 归一化词向量
+  ↓
+FeedForward
+```
+
+**总结**：
+- **Softmax**：在 Attention **内部**，把分数变成概率
+- **RMSNorm**：在 Attention **外部**，稳定词向量大小
+- **完全不同的归一化，用途和位置都不一样！**
+
+---
+
+## 4. 前馈网络（FeedForward）
+
+### 4.1 FeedForward 是什么？
+
+**核心思想**：对每个词的向量进行非线性变换，"深度思考"
+
+**典型结构**：扩张 → 激活 → 压缩
+```
+768 维 → 2048 维 → 768 维
+```
+
+**关键特点**：
+- ✅ 每个词**独立处理**（没有词与词的交互）
+- ✅ 输入维度 = 输出维度（768 维）
+- ✅ 但内容完全改变（经过非线性变换）
+- ✅ 分工明确：Attention 负责信息交换，FeedForward 负责深度处理
+
+---
+
+### 4.2 为什么要"扩张-压缩"？
+
+**问题**：为什么不直接 768 → 768？
+
+**答案**：直接 768 → 768 只是线性变换，表达能力有限
+
+**对比**：
+
+| 方案 | 计算 | 表达能力 |
+|------|------|---------|
+| 直接变换 | `768 → 768` | 只是线性组合，简单 |
+| 扩张-压缩 | `768 → 2048 → 768` | 经过高维空间，能表达复杂函数 ✅ |
+
+**数学本质**：
+- 在高维空间中，向量有更多"自由度"
+- 可以进行更复杂的非线性变换
+- 压缩回来时，已经包含了更丰富的信息
+
+**类比**：
+1. **做菜**：
+   - 输入：食材（原始维度）
+   - 扩张：切碎、加工（高维空间）
+   - 压缩：装盘（回到原始维度）
+   - 结果：维度没变，但"熟"了
+
+2. **照片处理**：
+   - 输入：像素（原始维度）
+   - 扩张：提取特征（高维空间）
+   - 压缩：优化像素（回到原始维度）
+   - 结果：分辨率没变，但"质量提升"了
+
+---
+
+### 4.3 普通 FFN vs SwiGLU
+
+**普通 FeedForward（早期 Transformer）**：
+```python
+class SimpleFeedForward(nn.Module):
+    def forward(self, x):
+        h = self.w1(x)      # 扩张：768 → 2048
+        h = F.relu(h)       # 激活
+        output = self.w2(h) # 压缩：2048 → 768
+        return output
+```
+
+**SwiGLU（MiniMind 使用）**：
+```python
+class SwiGLU(nn.Module):
+    def forward(self, x):
+        gate = self.gate_proj(x)  # 门控分支：768 → 2048
+        up = self.up_proj(x)      # 上投影分支：768 → 2048
+
+        # SiLU 激活 + 门控机制（逐元素相乘）
+        hidden = F.silu(gate) * up
+
+        output = self.down_proj(hidden)  # 压缩：2048 → 768
+        return output
+```
+
+**区别**：
+
+| 特性 | 普通 FFN | SwiGLU |
+|------|----------|--------|
+| **分支数** | 1 个 | 2 个（gate + up）|
+| **激活函数** | ReLU | SiLU (Swish) |
+| **门控机制** | 无 | 有（gate × up）|
+| **性能** | 较好 | **更好**（实验证明）|
+| **参数量** | 较少 | 约 1.5 倍 |
+| **使用模型** | GPT-2, BERT | Llama, MiniMind, PaLM |
+
+**SwiGLU 的优势**：
+- **门控机制**：`gate` 分支控制 `up` 分支哪些信息通过
+- **SiLU 激活**：比 ReLU 更平滑，梯度更好
+- **表达能力**：两个分支提供更丰富的特征
+
+---
+
+### 4.4 SwiGLU 实现细节
+
+**代码位置**（`model/model_minimind.py:225-238`）：
+```python
+class FeedForward(nn.Module):
+    def __init__(self, dim, hidden_dim):
+        super().__init__()
+        self.gate_proj = nn.Linear(dim, hidden_dim, bias=False)
+        self.up_proj = nn.Linear(dim, hidden_dim, bias=False)
+        self.down_proj = nn.Linear(hidden_dim, dim, bias=False)
+
+    def forward(self, x):
+        # SwiGLU: gate 和 up 两个分支
+        gate = self.gate_proj(x)      # [batch, seq, hidden_dim]
+        up = self.up_proj(x)          # [batch, seq, hidden_dim]
+
+        # SiLU 激活 + 门控
+        hidden = F.silu(gate) * up    # 逐元素相乘
+
+        # 压缩回原维度
+        return self.down_proj(hidden)
+```
+
+**维度变化**（以 MiniMind2 为例）：
+```
+输入 x:     [batch, seq_len, 768]
+  ↓
+gate:       [batch, seq_len, 2048]  # 扩张
+up:         [batch, seq_len, 2048]  # 扩张
+  ↓
+hidden:     [batch, seq_len, 2048]  # gate × up
+  ↓
+输出:       [batch, seq_len, 768]   # 压缩
+```
+
+**SiLU 激活函数**：
+```
+SiLU(x) = x * sigmoid(x)
+```
+
+特点：
+- 平滑（处处可导）
+- 非单调（有负值）
+- 梯度更稳定
+
+---
+
+### 4.5 FeedForward 的作用演示
+
+```python
+# 输入：3个词的向量
+x = [
+    [我的向量],     # [1.0, 2.0, 1.0, 0.5]
+    [爱的向量],     # [0.5, 1.5, 2.0, 1.0]
+    [编程的向量],   # [2.0, 0.5, 1.0, 1.5]
+]
+
+# 经过 FeedForward
+output = FeedForward(x)
+
+# 关键观察：
+# 1. 每个词独立处理（没有词与词的交互）
+# 2. 输入输出维度相同（4维 → 4维）
+# 3. 但内容完全不同（经过了非线性变换）
+```
+
+**类比理解**：
+```
+Attention:  开会讨论（词与词交换信息）
+FeedForward: 各自思考（每个词独立深化理解）
+
+完整流程：
+1. Attention: "我" 听取 "爱" 和 "编程" 的信息
+2. FeedForward: "我" 基于收集到的信息深度思考
+3. 输出：融合了上下文并深化理解的 "我"
+```
+
+---
+
+### 4.6 Attention vs FeedForward 对比
+
+| 特性 | Attention | FeedForward |
+|------|-----------|-------------|
+| **处理方式** | 词与词交互 | 每个词独立 |
+| **作用** | 信息交换（开会） | 深度思考（各自消化）|
+| **输入维度** | [seq_len, 768] | [seq_len, 768] |
+| **中间维度** | [seq_len, seq_len]（分数矩阵）| [seq_len, 2048]（扩张）|
+| **输出维度** | [seq_len, 768] | [seq_len, 768] |
+| **位置编码** | 需要（RoPE）| 不需要 |
+| **核心操作** | Q @ K^T, softmax, @ V | Linear, SiLU, Linear |
+| **类比** | 词汇表查询 | 函数变换 |
+
+**为什么需要两者配合**？
+- ✅ **Attention**：让模型知道"哪些词相关"
+- ✅ **FeedForward**：让模型知道"如何处理这些信息"
+- ✅ **分工明确**：交互 + 处理，缺一不可
+
+---
+
+### 4.7 在 Transformer Block 中的位置
+
+```python
+Transformer Block:
+  输入 x: [batch, seq_len, 768]
+    ↓
+  RMSNorm #1 ← 归一化
+    ↓
+  Attention ← 词与词交互
+    ↓
+  残差连接：x = x + Attention(x)
+    ↓
+  RMSNorm #2 ← 归一化
+    ↓
+  FeedForward ← 独立深度处理 ⭐
+    ↓
+  残差连接：x = x + FeedForward(x)
+    ↓
+  输出 x: [batch, seq_len, 768]
+```
+
+**数据流**：
+```
+词向量 → 归一化 → 多头注意力 → 残差 → 归一化 → 前馈网络 → 残差 → 下一层
+         ↑                                      ↑
+      Attention 阶段                      FeedForward 阶段
+```
+
+---
+
+## 5. Transformer 架构
+
+### 5.1 整体结构
 
 MiniMind 是 **Decoder-Only Transformer**，类似 GPT。
 
@@ -613,12 +922,12 @@ MiniMindForCausalLM
     │       ├─ self_attn: Attention
     │       ├─ 残差连接
     │       ├─ post_attention_layernorm: RMSNorm
-    │       ├─ mlp: FeedForward
+    │       ├─ mlp: FeedForward (SwiGLU)
     │       └─ 残差连接
     └─ norm: 最终的 RMSNorm
 ```
 
-### 3.2 关键配置参数
+### 5.2 关键配置参数
 
 ```python
 MiniMindConfig(
