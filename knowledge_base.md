@@ -12,8 +12,13 @@
 2. [位置编码](#2-位置编码)
    - RoPE 基本原理
    - 多频率机制
-3. [Transformer 架构](#3-transformer-架构)
-4. [问答记录](#问答记录)
+3. [注意力机制](#3-注意力机制)
+   - Self-Attention 原理
+   - Q、K、V 详解
+   - Multi-Head Attention
+   - RoPE 在 Attention 中的应用
+4. [Transformer 架构](#4-transformer-架构)
+5. [问答记录](#问答记录)
 
 ---
 
@@ -252,7 +257,346 @@ def apply_rotary_pos_emb(q, k, cos, sin, position_ids=None):
 
 ---
 
-## 3. Transformer 架构
+## 3. 注意力机制
+
+### 3.1 什么是 Attention？
+
+**核心思想**：让模型理解词与词之间的关系
+
+**例子**：
+```
+句子: "小明很喜欢他的猫，它总是在窗边睡觉"
+
+当理解"它"时：
+  "它" 和 "小明" 的相关性: 0.1  （关系不大）
+  "它" 和 "喜欢" 的相关性: 0.05 （关系很小）
+  "它" 和 "猫" 的相关性:   0.8  （关系很大！）✅
+  "它" 和 "窗边" 的相关性: 0.05 （关系很小）
+
+最终理解 = 0.1×小明 + 0.05×喜欢 + 0.8×猫 + 0.05×窗边
+         ≈ 主要吸收"猫"的信息
+```
+
+**Attention 做什么**：
+1. 计算每两个 token 之间的相关性分数
+2. 归一化成概率分布（加起来 = 1）
+3. 用这个分布加权求和，得到融合了上下文的新表示
+
+---
+
+### 3.2 Self-Attention vs Cross-Attention
+
+**Self-Attention**（自注意力）：
+- 句子关注"自己内部"的词
+- 例如："我爱编程" 内部计算 我←→爱←→编程 的关系
+- **MiniMind 使用的就是 Self-Attention**
+
+**Cross-Attention**（交叉注意力）：
+- 句子 A 关注句子 B
+- 例如：翻译时，中文句子关注对应的英文句子
+- 用于 Encoder-Decoder 架构（如 T5）
+
+**为什么叫 "Self"**？
+- 因为计算的是**同一个句子内部**词与词的关系
+- 不是因为"token 与自身"（虽然也会计算，但不是重点）
+
+---
+
+### 3.3 Q、K、V 详解
+
+**核心类比**：数据库查询
+
+```sql
+SELECT value
+FROM memory_bank
+WHERE key MATCHES query
+```
+
+**在 Attention 中**：
+
+| 名称 | 全称 | 作用 | 类比 |
+|------|------|------|------|
+| **Q** | Query | "我想查询什么信息？" | 搜索条件 |
+| **K** | Key | "我这里有什么信息？" | 索引标签 |
+| **V** | Value | "我的实际内容" | 数据值 |
+
+**例子**：
+
+```python
+句子: "我 爱 编程"
+
+# 当理解"爱"这个词时：
+Query("爱"):  "我想知道我在表达什么动作？"
+
+Keys:
+  - Key("我"):    "我是主语"
+  - Key("爱"):    "我是情感动词"
+  - Key("编程"):  "我是宾语"
+
+# 匹配过程
+"爱"的Query 与 "我"的Key    → 相似度 0.6 (需要知道主语)
+"爱"的Query 与 "爱"的Key    → 相似度 0.3 (自己)
+"爱"的Query 与 "编程"的Key  → 相似度 0.8 (需要知道宾语) ✅
+
+# 归一化成权重
+权重分布: [0.25, 0.15, 0.60]  # 最关注"编程"
+
+# 加权求和 Value
+"爱"的新表示 = 0.25×Value("我") + 0.15×Value("爱") + 0.60×Value("编程")
+```
+
+---
+
+### 3.4 Q、K、V 怎么得到？
+
+**关键**：Q、K、V 都是从同一个输入 X 通过不同的权重矩阵变换得到！
+
+```python
+# 输入（词嵌入）
+X = [
+    [我的向量],     # 768 维
+    [爱的向量],     # 768 维
+    [编程的向量]    # 768 维
+]
+X.shape: [3, 768]  # 3个词，每个768维
+
+# 三个可学习的权重矩阵（模型参数）
+W_Q: [768, 768]  # Query 权重
+W_K: [768, 768]  # Key 权重
+W_V: [768, 768]  # Value 权重
+
+# 矩阵乘法生成 Q、K、V
+Q = X @ W_Q  # [3, 768]
+K = X @ W_K  # [3, 768]
+V = X @ W_V  # [3, 768]
+```
+
+**权重矩阵的本质**：
+- **是什么**：神经网络的可学习参数
+- **怎么得到**：通过训练数据反向传播学习
+- **存在哪里**：保存在模型文件里（.pth, .safetensors）
+- **作用**：把输入变换成三个不同的"视角"
+
+**代码位置**（`model/model_minimind.py:159-161`）：
+```python
+self.q_proj = nn.Linear(hidden_size, hidden_size, bias=False)  # W_Q
+self.k_proj = nn.Linear(hidden_size, hidden_size, bias=False)  # W_K
+self.v_proj = nn.Linear(hidden_size, hidden_size, bias=False)  # W_V
+```
+
+---
+
+### 3.5 Attention 计算流程
+
+**完整公式**：
+```
+Attention(Q, K, V) = softmax(Q @ K^T / √d_k) @ V
+```
+
+**分步骤**：
+
+```python
+# 步骤 1: 计算相似度分数
+scores = Q @ K.T  # [3, 3] 矩阵，每个词和每个词的相似度
+#        我    爱   编程
+# 我   [1.1, 0.6, 0.4]
+# 爱   [0.6, 1.0, 0.8]
+# 编程 [0.4, 0.8, 1.2]
+
+# 步骤 2: 缩放（防止梯度消失/爆炸）
+scaled_scores = scores / sqrt(head_dim)  # head_dim = 96
+
+# 步骤 3: Softmax 归一化成概率分布
+attn_weights = softmax(scaled_scores, dim=-1)
+# 每一行加起来 = 1
+#        我     爱    编程
+# 我   [0.35, 0.32, 0.33]  # 我关注其他词的权重
+# 爱   [0.25, 0.15, 0.60]  # 爱关注其他词的权重
+# 编程 [0.20, 0.30, 0.50]  # 编程关注其他词的权重
+
+# 步骤 4: 加权求和 Value
+output = attn_weights @ V
+# output[0] = 0.35×V("我") + 0.32×V("爱") + 0.33×V("编程")
+# output[1] = 0.25×V("我") + 0.15×V("爱") + 0.60×V("编程")
+# output[2] = 0.20×V("我") + 0.30×V("爱") + 0.50×V("编程")
+```
+
+**代码位置**（`model/model_minimind.py:205-218`）：
+```python
+scores = (xq @ xk.transpose(-2, -1)) / math.sqrt(self.head_dim)
+scores = F.softmax(scores.float(), dim=-1).type_as(xq)
+output = scores @ xv
+```
+
+---
+
+### 3.6 Multi-Head Attention
+
+**为什么需要多头**？
+
+单头 Attention 只能关注一个方面，多头可以同时关注多个方面：
+
+```
+句子: "我爱编程"
+
+Head 1: 关注语法结构（主谓宾关系）
+Head 2: 关注语义相关性（动词+宾语）
+Head 3: 关注情感倾向（正向/负向）
+...
+Head 8: 关注长距离依赖
+```
+
+**多面性的体现**：就像用多副不同的"眼镜"看同一句话！
+
+---
+
+### 3.7 Multi-Head 的实现
+
+**核心思想**：拆分 → 并行计算 → 合并
+
+```python
+# MiniMind2 配置
+hidden_size = 768
+num_heads = 8
+head_dim = hidden_size / num_heads = 96
+
+# 流程
+输入 X: [batch, seq_len, 768]
+  ↓
+生成 Q、K、V: [batch, seq_len, 768]
+  ↓
+拆分成 8 个头: [batch, 8, seq_len, 96]
+  ↓
+每个头独立计算 Attention
+  ↓
+输出: [batch, 8, seq_len, 96]
+  ↓
+合并（拼接）: [batch, seq_len, 768]
+```
+
+**关键代码**（`model/model_minimind.py:177-220`）：
+
+```python
+# 1. 生成 Q、K、V
+xq, xk, xv = self.q_proj(x), self.k_proj(x), self.v_proj(x)
+
+# 2. 拆分成多头
+xq = xq.view(bsz, seq_len, num_heads, head_dim)
+xk = xk.view(bsz, seq_len, num_heads, head_dim)
+xv = xv.view(bsz, seq_len, num_heads, head_dim)
+
+# 3. 调整维度顺序（方便并行计算）
+xq = xq.transpose(1, 2)  # [batch, num_heads, seq_len, head_dim]
+
+# 4. 应用 RoPE（只对 Q、K）
+xq, xk = apply_rotary_pos_emb(xq, xk, cos, sin)
+
+# 5. 计算 Attention（8个头并行）
+scores = xq @ xk.transpose(-2, -1) / sqrt(head_dim)
+attn_weights = softmax(scores, dim=-1)
+output = attn_weights @ xv  # [batch, 8, seq_len, 96]
+
+# 6. 合并多头
+output = output.transpose(1, 2)  # [batch, seq_len, 8, 96]
+output = output.reshape(bsz, seq_len, 768)  # 拼接成 [batch, seq_len, 768]
+```
+
+**维度计算**：
+- 每个头的维度：`head_dim = hidden_size / num_heads = 768 / 8 = 96`
+- 合并后的维度：`8 × 96 = 768`（恢复原始维度）
+
+**关键不变量**：
+```
+输入维度 = 输出维度 = 768
+heads × head_dim = 768（永远成立）
+```
+
+---
+
+### 3.8 RoPE 在 Attention 中的应用
+
+**位置**：在生成 Q、K 之后，计算 Attention 之前
+
+```python
+流程：
+1. X → Q, K, V（通过权重矩阵）
+2. 拆分成多头
+3. ⭐ 对 Q、K 施加 RoPE（加入位置信息）
+4. 计算 Attention
+5. 合并多头
+```
+
+**为什么只对 Q、K 使用 RoPE，不对 V？**
+
+```
+位置信息的作用：
+  Q @ K^T  → 计算相似度
+            → 需要知道"距离"信息
+            → RoPE 让相近的词相似度更高
+
+  attn @ V → 加权求和内容
+            → 不需要位置信息
+            → V 保持原始语义
+```
+
+**类比**：
+- Q 和 K 是"地图上的位置" → 需要坐标（RoPE）
+- V 是"实际的宝藏" → 不需要坐标，就是内容本身
+
+**代码位置**（`model/model_minimind.py:182`）：
+```python
+# 应用 RoPE
+cos, sin = position_embeddings
+xq, xk = apply_rotary_pos_emb(xq, xk, cos[:seq_len], sin[:seq_len])
+```
+
+---
+
+### 3.9 Attention 完整流程总结
+
+```python
+输入: x = [我, 爱, 编程]  shape: [1, 3, 768]
+
+┌────────────────────────────────────────────┐
+│ 1. 生成 Q、K、V                             │
+│    Q = x @ W_Q  [1, 3, 768]                │
+│    K = x @ W_K  [1, 3, 768]                │
+│    V = x @ W_V  [1, 3, 768]                │
+└────────────────────────────────────────────┘
+              ↓
+┌────────────────────────────────────────────┐
+│ 2. 拆分成 8 个头                            │
+│    Q: [1, 8, 3, 96]                        │
+│    K: [1, 8, 3, 96]                        │
+│    V: [1, 8, 3, 96]                        │
+└────────────────────────────────────────────┘
+              ↓
+┌────────────────────────────────────────────┐
+│ 3. 对 Q、K 施加 RoPE（位置编码）⭐          │
+│    Q_rot = RoPE(Q, cos, sin)               │
+│    K_rot = RoPE(K, cos, sin)               │
+└────────────────────────────────────────────┘
+              ↓
+┌────────────────────────────────────────────┐
+│ 4. 计算 Attention                           │
+│    scores = Q_rot @ K_rot^T / √96          │
+│    scores = softmax(scores)                │
+│    output = scores @ V                     │
+│    output: [1, 8, 3, 96]                   │
+└────────────────────────────────────────────┘
+              ↓
+┌────────────────────────────────────────────┐
+│ 5. 合并 8 个头                              │
+│    output.transpose(1,2).reshape(1,3,768)  │
+│    output: [1, 3, 768]                     │
+└────────────────────────────────────────────┘
+
+输出: [1, 3, 768]  # 每个词融合了上下文信息！
+```
+
+---
+
+## 4. Transformer 架构
 
 ### 3.1 整体结构
 

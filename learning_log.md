@@ -243,21 +243,74 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 
 ---
 
+### 2025-11-10: 深入理解 Attention 注意力机制
+
+#### ✅ 完成事项
+- [x] 理解 Attention 的核心概念（词与词的相关性）
+- [x] 理解 Self-Attention vs Cross-Attention
+- [x] 理解 Q、K、V 的作用和数据库查询类比
+- [x] 理解权重矩阵 W_Q、W_K、W_V 是模型参数
+- [x] 理解 Attention 计算流程（scores → softmax → weighted sum）
+- [x] 理解 Multi-Head Attention 的多面性
+- [x] 理解每个头的维度计算（head_dim = hidden_size / num_heads）
+- [x] 理解多头输出的合并方式（reshape 拼接）
+- [x] 理解 RoPE 在 Attention 中的应用位置
+- [x] 创建 Q、K、V 学习示例代码（attention_qkv_explained.py）
+- [x] 更新 knowledge_base.md 完整的 Attention 章节
+
+#### 💭 个人思考
+
+**2025-11-10：Attention 学习感受**
+- **理解突破**：用数据库查询的类比理解 Q、K、V，太清晰了！
+- **关键认知**：
+  - Q、K、V 不是三种不同的东西，而是同一个输入的三个"视角"
+  - 权重矩阵 W_Q、W_K、W_V 是训练出来的参数，不是固定的
+  - Multi-Head 的"多面性"不是增加 Q、K、V 数量，而是增加 Head 数量
+  - RoPE 只用于 Q、K（计算相似度），不用于 V（内容）
+- **学习方式调整**：一开始觉得很复杂，但把整体架构理清楚后，每个细节都能对上号了
+- **新的疑问**：
+  - Causal Mask 是什么？（看到代码里有）
+  - GQA (Grouped Query Attention) 是什么？（配置里提到）
+  - KV Cache 是什么优化？
+
+**2025-11-10：Multi-Head Attention 的精髓**
+- **核心理解**：就像用 8 副不同的眼镜看同一句话
+  - 眼镜1：看语法
+  - 眼镜2：看语义
+  - 眼镜3：看情感
+  - ...
+  - 最后把 8 个视角融合在一起
+- **数学本质**：
+  - 拆分：768 维 → 8 个 96 维
+  - 并行计算：8 个头独立做 Attention
+  - 合并：8 × 96 = 768（恢复原始维度）
+- **不变量**：输入维度 = 输出维度 = 768
+
+---
+
 ## 🎯 下次学习计划
 
-**当前进度**：Transformer 核心组件学习中（2/4 完成）
+**当前进度**：Transformer 核心组件学习中（3/4 完成）
 - ✅ RMSNorm（归一化）
 - ✅ RoPE（位置编码）
-- ⏳ Attention（注意力机制）
+- ✅ Attention（注意力机制）✨ 今天完成！
 - ⏳ FeedForward（前馈网络）
 
 **下次学习**：
-- [ ] 深入理解 Attention 机制
-  - Q、K、V 的作用
-  - 多头注意力（Multi-Head Attention）
-  - GQA（Grouped Query Attention）
-  - Causal Mask（因果掩码）
-  - KV Cache（推理优化）
+- [ ] FeedForward 前馈网络
+  - SwiGLU 激活函数
+  - 为什么需要 FFN？
+  - FFN 的作用和位置
+- [ ] 完整的 Transformer Block
+  - 所有组件的组合方式
+  - 残差连接的作用
+  - 整体数据流
+
+**可选深入**（以后有时间再学）：
+- GQA (Grouped Query Attention)
+- Causal Mask（因果掩码）
+- KV Cache（推理优化）
+- Flash Attention
 
 **硬件配置记录**：
 - CPU: Apple M4（性能强劲）
@@ -267,5 +320,5 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 
 ---
 
-**最后更新**：2025-11-07
-**学习进度**：第一阶段 - Transformer 核心组件学习中（2/4 完成）
+**最后更新**：2025-11-10
+**学习进度**：第一阶段 - Transformer 核心组件学习中（3/4 完成）
