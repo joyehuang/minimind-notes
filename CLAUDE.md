@@ -203,9 +203,9 @@ This repository has two remotes:
    git commit -m "完成环境搭建和首次运行"
    ```
 
-3. **Push to notes remote**:
+3. **Push to remote**:
    ```bash
-   git push notes master
+   git push origin master
    ```
 
 ### Commit Message Guidelines
@@ -230,13 +230,12 @@ Commit after:
 # After learning session on Attention
 git add notes.md learning_log.md knowledge_base.md learning_materials/
 git commit -m "学习 Attention 注意力机制基础"
-git push notes master
+git push origin master
 ```
 
 ### Important Notes
 
 - **DO NOT** commit generated model weights, datasets, or cache files
-- **DO NOT** push to `origin` (main MiniMind repo) - only push to `notes`
 - All commits should only include learning note files:
   - `notes.md`
   - `learning_log.md`
