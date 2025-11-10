@@ -264,6 +264,11 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 - [x] 理解 Attention vs FeedForward 的分工
 - [x] 创建 FeedForward 学习示例代码（feedforward_explained.py）
 - [x] 更新 knowledge_base.md 完整的 FeedForward 章节
+- [x] 理解 Transformer Block 的组装方式
+- [x] 理解残差连接的作用（保底机制 + 梯度高速公路）
+- [x] 理解 Pre-Norm vs Post-Norm 的区别
+- [x] 理解 MiniMindBlock 的完整数据流
+- [x] 思考学习路径（实践 vs 原理）
 
 #### 💭 个人思考
 
@@ -314,22 +319,76 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
   - 两者缺一不可！
 - **创建学习材料**：feedforward_explained.py
 
+**2025-11-10：Transformer Block 组装理解**
+- **核心问题**：4 个组件如何组合成一个完整的"思考单元"？
+- **关键概念 - 残差连接** ⭐⭐⭐
+  - **初始困惑**：为什么要 `hidden_states += residual`？
+  - **照片修图类比**：
+    - 没有残差：每一步完全覆盖前一步（危险）
+    - 有残差：原始 + 所有调整的累积效果（安全）
+  - **数学本质**：
+    - `y = x + F(x)` → `dy/dx = 1 + dF/dx`
+    - 即使 F 学不到东西（dF/dx → 0），至少还有 1（梯度能传回）
+  - **作用**：
+    - 保底机制：最坏情况输出 = 输入
+    - 增量学习：只需学"在输入基础上调整什么"
+    - 梯度高速公路：梯度可以跳过中间层直接传回
+- **数据流理解**：
+  ```
+  输入 x
+    ├─ 保存 residual
+    ↓
+  RMSNorm #1
+    ↓
+  Attention (+ RoPE)
+    ↓
+  + residual ← 第一个残差连接
+    ├─ 保存当前状态
+    ↓
+  RMSNorm #2
+    ↓
+  FeedForward
+    ↓
+  + residual ← 第二个残差连接
+    ↓
+  输出
+  ```
+- **Pre-Norm vs Post-Norm**：
+  - MiniMind 使用 Pre-Norm（归一化在子层之前）
+  - Pre-Norm 更稳定，适合深层网络（>12层）
+  - 残差路径更"干净"（不被 Norm 打断）
+- **代码位置**：model/model_minimind.py:359-380
+
+**2025-11-10：学习路径的思考**
+- **关键问题**：原仓库能学到这些知识吗？
+- **答案**：可以，但需要自己"挖掘"
+  - 原仓库提供：完整的代码实现 + 简单的说明
+  - 需要自己：阅读代码 + 查外部资料 + 推导数学 + 写示例验证
+- **两种学习路径**：
+  - 路径 A（实践导向）：2 小时训练模型，学"怎么用"
+  - 路径 B（原理导向）：几周深度理解，学"为什么"
+- **我的选择**：原理导向，把隐性知识显性化
+- **收获**：理解更深、记忆更牢、可迁移、可创新
+
 ---
 
 ## 🎯 下次学习计划
 
-**当前进度**：Transformer 核心组件学习中（4/4 完成）✨
-- ✅ RMSNorm（归一化）
-- ✅ RoPE（位置编码）
-- ✅ Attention（注意力机制）
-- ✅ FeedForward（前馈网络）✨ 今天完成！
+**当前进度**：Transformer 架构学习接近完成 ✨
+- ✅ RMSNorm（归一化）- 11-07 完成
+- ✅ RoPE（位置编码）- 11-07 完成
+- ✅ Attention（注意力机制）- 11-10 完成
+- ✅ FeedForward（前馈网络）- 11-10 完成
+- ✅ Transformer Block（组装）- 11-10 完成
+- ⏳ 整体 Transformer 架构（90% 完成）
 
 **下次学习**：
-- [ ] 完整的 Transformer Block
-  - 所有组件的组合方式
-  - 残差连接的作用
-  - 整体数据流
-  - Pre-Norm vs Post-Norm
+- [ ] 完整的 MiniMindModel 架构
+  - 词嵌入层（embed_tokens）
+  - N 个 Transformer Block 的堆叠
+  - 最终的 RMSNorm
+  - 输出层（lm_head）
+  - 自回归生成流程
 
 **可选深入**（以后有时间再学）：
 - GQA (Grouped Query Attention)
@@ -346,4 +405,12 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 ---
 
 **最后更新**：2025-11-10
-**学习进度**：第一阶段 - Transformer 核心组件学习完成（4/4 完成）✨
+**学习进度**：第一阶段 - Transformer 架构学习接近完成（90%）
+
+**今日收获总结**（2025-11-10）：
+- 完成了 4 个核心组件的深度学习（Attention + FeedForward + Block 组装）
+- 理解了残差连接的精髓：保底机制 + 增量学习 + 梯度高速公路
+- 理解了 Pre-Norm 的优势：训练更稳定，适合深层网络
+- 思考了学习路径：选择原理导向，追求深度理解
+- 创建了 2 个学习材料：attention_qkv_explained.py, feedforward_explained.py
+- 更新了完整的 knowledge_base.md：FeedForward 章节 + Transformer 架构章节
