@@ -1,110 +1,267 @@
-# MiniMind 学习笔记
+# MiniMind 训练原理教案
 
-> 本仓库是我个人学习 [MiniMind](https://github.com/jingyaogong/minimind) 项目的学习资料及源码备份
+> 通过对照实验理解 LLM 训练的每个设计选择
 
-## 📚 关于本仓库
+<div align="center">
 
-这是我从零开始学习大语言模型（LLM）的完整记录，基于 MiniMind 开源项目进行深度学习。
+**这不是"命令复制手册"，而是"原理优先"的学习仓库**
 
-**MiniMind** 是一个教育性质的 LLM 训练项目，特点：
-- 仅需 3 块钱成本 + 2 小时即可训练 25.8M 参数的超小语言模型
-- 完整开源：预训练、SFT、LoRA、DPO、RLAIF(PPO/GRPO)、模型蒸馏等全流程
-- 所有核心算法从零使用 PyTorch 实现，不依赖第三方抽象接口
-- 适合入门 LLM 原理和实践
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/pytorch-2.0+-orange.svg)](https://pytorch.org/)
 
-## 📖 学习笔记系统
+[快速开始](#-快速开始) • [学习路线](#-学习路线) • [模块导航](#-模块导航) • [贡献指南](#-贡献指南)
 
-本仓库采用三层笔记结构：
-
-```
-minimind-notes/
-├── notes.md                ← 📌 总索引（从这里开始）
-├── learning_log.md         ← 📝 学习日志（按时间顺序）
-├── knowledge_base.md       ← 📚 知识库（按主题整理）
-└── learning_materials/     ← 💻 可执行示例代码
-```
-
-### 快速导航
-
-- **[notes.md](./notes.md)** - 总索引和快速查找入口
-- **[learning_log.md](./learning_log.md)** - 每日学习进度和思考
-- **[knowledge_base.md](./knowledge_base.md)** - 系统化的知识点整理
-- **[learning_materials/](./learning_materials/)** - 手写示例代码
-
-## 🎯 学习进度
-
-**当前阶段**：Transformer 核心组件学习
-
-- ✅ 环境搭建与模型运行
-- ✅ RMSNorm（归一化机制）
-- ✅ RoPE（旋转位置编码）
-- ⏳ Attention（注意力机制）- 进行中
-- ⏳ FeedForward（前馈网络）
-- ⏳ 完整的 Transformer Block
-
-## 🔧 项目结构
-
-```
-minimind-notes/
-├── model/                    # 模型实现
-│   ├── model_minimind.py    # MiniMind 核心代码
-│   └── model_lora.py        # LoRA 实现
-├── trainer/                  # 训练脚本
-│   ├── train_pretrain.py    # 预训练
-│   ├── train_full_sft.py    # 监督微调
-│   ├── train_dpo.py         # DPO（RLHF）
-│   └── ...                  # 其他训练阶段
-├── dataset/                  # 数据集处理
-├── scripts/                  # 工具脚本
-└── eval_llm.py              # 模型评测和对话
-```
-
-## 🚀 快速开始
-
-```bash
-# 克隆仓库
-git clone https://github.com/joyehuang/minimind-notes.git
-cd minimind-notes
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 下载预训练模型（可选）
-git clone https://huggingface.co/jingyaogong/MiniMind2
-
-# 运行模型对话
-python eval_llm.py --load_from ./MiniMind2
-
-# 运行学习材料
-python learning_materials/rmsnorm_explained.py
-python learning_materials/rope_basics.py
-```
-
-## 📝 学习方法
-
-1. **理论学习**：阅读 `knowledge_base.md` 中的系统化知识
-2. **实践验证**：运行 `learning_materials/` 中的示例代码
-3. **记录思考**：在 `learning_log.md` 中写下每日收获
-4. **深入源码**：对照 `model/model_minimind.py` 理解实现细节
-
-## 🔗 相关资源
-
-- **原项目**：[jingyaogong/minimind](https://github.com/jingyaogong/minimind)
-- **模型权重**：[HuggingFace Collection](https://huggingface.co/collections/jingyaogong/minimind-66caf8d999f5c7fa64f399e5)
-- **数据集**：[ModelScope](https://www.modelscope.cn/datasets/gongjy/minimind_dataset/files) | [HuggingFace](https://huggingface.co/datasets/jingyaogong/minimind_dataset)
-
-## 📄 许可证
-
-本仓库的学习笔记部分遵循 CC BY 4.0 许可。
-
-MiniMind 源代码部分保留原项目的 Apache License 2.0 许可。
-
-## 🙏 致谢
-
-感谢 [MiniMind](https://github.com/jingyaogong/minimind) 项目提供了如此优秀的学习资源！
+</div>
 
 ---
 
-**学习者**：joyehuang
-**开始时间**：2025-11-06
-**当前进度**：Transformer 核心组件学习中（2/4 完成）
+## 🎯 这是什么？
+
+这是一个**模块化的 LLM 训练教案**，帮助你理解现代大语言模型（如 Llama、GPT）的训练原理。
+
+**核心特点**：
+- ✅ **原理优先**：理解"为什么这样设计"，而不只是"怎么运行"
+- ✅ **对照实验**：每个设计选择都通过实验回答"不这样做会怎样"
+- ✅ **模块化**：6 个独立模块，从基础组件到完整架构
+- ✅ **可运行**：所有实验可在普通笔记本上运行（无需 GPU）
+
+**基于项目**：[MiniMind](https://github.com/jingyaogong/minimind) - 从零训练超小语言模型的完整教程
+
+---
+
+## ⚡ 快速开始
+
+### 30 分钟体验核心设计
+
+运行三个关键实验，理解 LLM 的核心设计选择：
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/joyehuang/minimind-notes.git
+cd minimind-notes
+
+# 2. 激活虚拟环境（如果已有）
+source venv/bin/activate
+
+# 3. 实验 1：为什么需要归一化？
+cd modules/01-foundation/01-normalization/experiments
+python exp1_gradient_vanishing.py
+
+# 4. 实验 2：为什么用 RoPE 位置编码？
+cd ../../02-position-encoding/experiments
+python exp1_rope_basics.py
+
+# 5. 实验 3：Attention 如何工作？
+cd ../../03-attention/experiments
+python exp1_attention_basics.py
+```
+
+**你将看到**：
+- 梯度消失的可视化
+- RoPE 旋转编码的原理
+- Attention 权重的计算过程
+
+**下一步**：阅读 [ROADMAP.md](./ROADMAP.md) 选择你的学习路径
+
+---
+
+## 📚 学习路线
+
+根据你的时间和目标，选择合适的路径：
+
+| 路径 | 时长 | 目标 | 链接 |
+|------|------|------|------|
+| ⚡ **快速体验** | 30 分钟 | 理解核心设计选择 | [开始](./ROADMAP.md#-快速体验-30-分钟) |
+| 📚 **系统学习** | 6 小时 | 掌握基础组件 | [开始](./ROADMAP.md#-系统学习-6-小时) |
+| 🎓 **深度掌握** | 30+ 小时 | 从零训练模型 | [开始](./ROADMAP.md#-深度掌握-30-小时) |
+
+详细路线图：[ROADMAP.md](./ROADMAP.md)
+
+---
+
+## 🧱 模块导航
+
+### Tier 1: Foundation（基础组件）
+
+| 模块 | 核心问题 | 实验数 | 状态 |
+|------|---------|--------|------|
+| [01-normalization](modules/01-foundation/01-normalization) | 为什么要归一化？Pre-LN vs Post-LN？ | 2 | ✅ 完整 |
+| [02-position-encoding](modules/01-foundation/02-position-encoding) | 为什么选择 RoPE？如何长度外推？ | 4 | 🟡 实验完成 |
+| [03-attention](modules/01-foundation/03-attention) | QKV 的直觉是什么？为什么多头？ | 3 | 🟡 实验完成 |
+| [04-feedforward](modules/01-foundation/04-feedforward) | FFN 存储什么知识？为什么扩张？ | 1 | 🟡 实验完成 |
+
+### Tier 2: Architecture（架构组装）
+
+| 模块 | 核心问题 | 状态 |
+|------|---------|------|
+| [01-residual-connection](modules/02-architecture/01-residual-connection) | 为什么需要残差？如何稳定梯度？ | 🔜 待开发 |
+| [02-transformer-block](modules/02-architecture/02-transformer-block) | 如何组装组件？为什么这个顺序？ | 🔜 待开发 |
+
+**图例**：
+- ✅ 完整：包含教学文档 + 实验代码 + 自测题
+- 🟡 实验完成：有实验代码，文档待补充
+- 🔜 待开发：仅目录结构
+
+详细导航：[modules/README.md](modules/README.md)
+
+---
+
+## 🔬 实验特色
+
+### 1. 对照实验设计
+
+每个模块通过实验回答核心问题：
+
+**示例**：归一化模块
+
+| 配置 | 是否收敛 | NaN 出现步数 | 最终 Loss |
+|------|---------|-------------|-----------|
+| ❌ NoNorm | 否 | ~500 | NaN |
+| ⚠️ Post-LN | 是 | - | 3.5 |
+| ✅ Pre-LN + RMSNorm | 是 | - | 2.7 |
+
+**结论**：Pre-LN + RMSNorm 最稳定 → 现代 LLM 的标准选择
+
+---
+
+### 2. 渐进式学习
+
+```
+实验 → 直觉 → 理论 → 代码
+  ↓      ↓      ↓      ↓
+10分钟  20分钟  30分钟  10分钟
+```
+
+先跑实验建立直觉，再看理论理解原理，最后读源码掌握实现。
+
+---
+
+### 3. 可在笔记本运行
+
+所有实验基于 **TinyShakespeare**（1MB）或合成数据：
+- ✅ 无需 GPU（CPU/MPS 均可）
+- ✅ 每个实验 < 10 分钟
+- ✅ 总数据量 < 100 MB
+
+---
+
+## 📖 文档结构
+
+每个模块包含：
+
+```
+01-normalization/
+├── README.md           # 模块导航
+├── teaching.md         # 教学文档（Why/What/How）
+├── code_guide.md       # 源码导读（链接到 MiniMind）
+├── quiz.md            # 自测题
+└── experiments/        # 对照实验
+    ├── exp1_*.py
+    ├── exp2_*.py
+    └── results/        # 预期输出
+```
+
+**文档模板**（teaching.md）：
+1. **Why（为什么）**：问题场景 + 直觉理解
+2. **What（是什么）**：数学定义 + 对比表格
+3. **How（怎么验证）**：实验设计 + 预期结果
+
+---
+
+## 🛠️ 技术栈
+
+- **框架**：PyTorch 2.0+
+- **数据**：TinyShakespeare, TinyStories
+- **可视化**：Matplotlib, Seaborn
+- **原项目**：[MiniMind](https://github.com/jingyaogong/minimind)
+
+---
+
+## 🤝 贡献指南
+
+欢迎补充：
+- ✨ 新的对照实验
+- 📊 更好的可视化
+- 🌍 英文翻译
+- 🐛 错误修正
+
+**提交前请确保**：
+- [ ] 实验可独立运行
+- [ ] 代码有充分中文注释
+- [ ] 结果可复现（固定随机种子）
+- [ ] 遵循现有文件结构
+
+---
+
+## 📂 仓库结构
+
+```
+minimind-notes/
+├── modules/                    # 模块化教学（新架构）
+│   ├── common/                # 通用工具
+│   ├── 01-foundation/         # 基础组件
+│   └── 02-architecture/       # 架构组装
+│
+├── docs/                       # 个人学习记录
+│   ├── learning_log.md        # 学习日志
+│   ├── knowledge_base.md      # 知识库
+│   └── notes.md              # 索引
+│
+├── model/                      # MiniMind 原始代码
+├── trainer/                    # 训练脚本
+├── dataset/                    # 数据集
+│
+├── README.md                   # 本文件
+├── ROADMAP.md                  # 学习路线图
+└── CLAUDE.md                   # AI 助手指南
+```
+
+---
+
+## 📜 致谢
+
+本仓库基于以下项目：
+- [MiniMind](https://github.com/jingyaogong/minimind) - 核心代码和训练流程
+- 所有模块链接到 MiniMind 的真实实现
+
+特别感谢 [@jingyaogong](https://github.com/jingyaogong) 开源的 MiniMind 项目！
+
+---
+
+## 🔗 相关资源
+
+### 论文
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer 原始论文
+- [RoFormer: RoPE](https://arxiv.org/abs/2104.09864) - 旋转位置编码
+- [RMSNorm](https://arxiv.org/abs/1910.07467) - 均方根归一化
+
+### 博客
+- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [The Annotated Transformer](http://nlp.seas.harvard.edu/annotated-transformer/)
+
+### 视频
+- [Andrej Karpathy - Let's build GPT](https://www.youtube.com/watch?v=kCc8FmEb1nY)
+
+---
+
+## 📞 联系方式
+
+- 问题反馈：[GitHub Issues](https://github.com/joyehuang/minimind-notes/issues)
+- 原项目：[MiniMind](https://github.com/jingyaogong/minimind)
+
+---
+
+## 📄 License
+
+MIT License - 详见 [LICENSE](LICENSE)
+
+---
+
+<div align="center">
+
+**⭐ 如果这个项目对你有帮助，请给个 Star！**
+
+**准备好了吗？** [开始你的学习之旅](./ROADMAP.md) 🚀
+
+</div>

@@ -2,6 +2,42 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Structure
+
+This repository now has a **dual-track system**:
+
+1. **Public Teaching Track** (`modules/`) - Modular教学架构
+2. **Personal Learning Track** (`docs/`) - 个人学习记录
+
+### modules/ - Public Teaching Modules
+
+```
+modules/
+├── common/              # Shared utilities
+├── 01-foundation/       # Basic components (4 modules)
+└── 02-architecture/     # Architecture assembly (2 modules)
+```
+
+**Each module contains**:
+- `README.md` - Module navigation
+- `teaching.md` - Teaching document (Why/What/How structure)
+- `code_guide.md` - Source code walkthrough
+- `quiz.md` - Self-assessment questions
+- `experiments/` - Hands-on experiments
+
+**When user learns new content**:
+1. Update personal learning track (`docs/`)
+2. If completing a module concept, optionally update/create module in `modules/`
+
+### docs/ - Personal Learning Track
+
+```
+docs/
+├── learning_log.md     # Chronological learning record
+├── knowledge_base.md   # Topic-organized knowledge
+└── notes.md           # Index and navigation
+```
+
 ## Learning Notes Maintenance
 
 **IMPORTANT**: This repository uses a **three-tier note system** for organized learning:
