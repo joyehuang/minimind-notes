@@ -12,10 +12,10 @@
 
 | 模块 | 核心问题 | 预计时长 | 状态 |
 |------|---------|---------|------|
-| [01-normalization](./01-foundation/01-normalization) | 为什么需要归一化？Pre-LN vs Post-LN？ | 1 小时 | 🚧 |
-| [02-position-encoding](./01-foundation/02-position-encoding) | 为什么选择 RoPE？如何实现长度外推？ | 1.5 小时 | 📋 |
-| [03-attention](./01-foundation/03-attention) | QKV 的直觉是什么？为什么需要多头？ | 2 小时 | 📋 |
-| [04-feedforward](./01-foundation/04-feedforward) | FFN 存储了什么知识？为什么需要扩张？ | 1 小时 | 📋 |
+| [01-normalization](./01-foundation/01-normalization) | 为什么需要归一化？Pre-LN vs Post-LN？ | 1 小时 | ✅ |
+| [02-position-encoding](./01-foundation/02-position-encoding) | 为什么选择 RoPE？如何实现长度外推？ | 1.5 小时 | ✅ |
+| [03-attention](./01-foundation/03-attention) | QKV 的直觉是什么？为什么需要多头？ | 2 小时 | ✅ |
+| [04-feedforward](./01-foundation/04-feedforward) | FFN 存储了什么知识？为什么需要扩张？ | 1 小时 | ✅ |
 
 **完成标准**：
 - ✅ 理解每个组件的数学原理
