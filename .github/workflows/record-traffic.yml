@@ -18,58 +18,53 @@ jobs:
         with:
           fetch-depth: 0  # 获取完整历史以便提交
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: pip install requests
-
-      - name: Fetch traffic data
+      - name: Fetch traffic data with curl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
+          echo "Fetching traffic data for $REPO_OWNER/$REPO_NAME..."
+
+          # 使用 curl 获取数据（不需要安装额外依赖）
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: token $GITHUB_TOKEN" \
+               https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/traffic/clones \
+               > /tmp/clones.json
+
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: token $GITHUB_TOKEN" \
+               https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/traffic/views \
+               > /tmp/views.json
+
+          # 检查 API 调用是否成功
+          if ! grep -q '"count"' /tmp/clones.json; then
+            echo "❌ Error fetching clones data"
+            cat /tmp/clones.json
+            exit 1
+          fi
+
+          if ! grep -q '"count"' /tmp/views.json; then
+            echo "❌ Error fetching views data"
+            cat /tmp/views.json
+            exit 1
+          fi
+
+          echo "✅ Successfully fetched traffic data from GitHub API"
+
+      - name: Merge and save traffic data
+        run: |
           python3 << 'EOF'
           import os
           import json
-          import requests
           from datetime import datetime, timezone
 
-          # GitHub API 配置
-          token = os.environ['GITHUB_TOKEN']
-          owner = os.environ['REPO_OWNER']
-          repo = os.environ['REPO_NAME']
+          # 读取 curl 获取的数据
+          with open('/tmp/clones.json', 'r') as f:
+              clones_data = json.load(f)
 
-          headers = {
-              'Authorization': f'token {token}',
-              'Accept': 'application/vnd.github.v3+json'
-          }
-
-          # 获取 clone 数据
-          clones_url = f'https://api.github.com/repos/{owner}/{repo}/traffic/clones'
-          views_url = f'https://api.github.com/repos/{owner}/{repo}/traffic/views'
-
-          print(f"Fetching traffic data for {owner}/{repo}...")
-
-          # 获取 clones
-          clones_resp = requests.get(clones_url, headers=headers)
-          views_resp = requests.get(views_url, headers=headers)
-
-          if clones_resp.status_code != 200:
-              print(f"Error fetching clones: {clones_resp.status_code}")
-              print(clones_resp.text)
-              exit(1)
-
-          if views_resp.status_code != 200:
-              print(f"Error fetching views: {views_resp.status_code}")
-              print(views_resp.text)
-              exit(1)
-
-          clones_data = clones_resp.json()
-          views_data = views_resp.json()
+          with open('/tmp/views.json', 'r') as f:
+              views_data = json.load(f)
 
           # 数据文件路径
           data_file = '.github/traffic-data/traffic-history.json'
