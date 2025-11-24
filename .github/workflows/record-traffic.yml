@@ -1,0 +1,175 @@
+name: Record Repository Traffic
+
+on:
+  schedule:
+    # 每天 UTC 0:00 运行（北京时间 8:00）
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  record-traffic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史以便提交
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch traffic data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import json
+          import requests
+          from datetime import datetime, timezone
+
+          # GitHub API 配置
+          token = os.environ['GITHUB_TOKEN']
+          owner = os.environ['REPO_OWNER']
+          repo = os.environ['REPO_NAME']
+
+          headers = {
+              'Authorization': f'token {token}',
+              'Accept': 'application/vnd.github.v3+json'
+          }
+
+          # 获取 clone 数据
+          clones_url = f'https://api.github.com/repos/{owner}/{repo}/traffic/clones'
+          views_url = f'https://api.github.com/repos/{owner}/{repo}/traffic/views'
+
+          print(f"Fetching traffic data for {owner}/{repo}...")
+
+          # 获取 clones
+          clones_resp = requests.get(clones_url, headers=headers)
+          views_resp = requests.get(views_url, headers=headers)
+
+          if clones_resp.status_code != 200:
+              print(f"Error fetching clones: {clones_resp.status_code}")
+              print(clones_resp.text)
+              exit(1)
+
+          if views_resp.status_code != 200:
+              print(f"Error fetching views: {views_resp.status_code}")
+              print(views_resp.text)
+              exit(1)
+
+          clones_data = clones_resp.json()
+          views_data = views_resp.json()
+
+          # 数据文件路径
+          data_file = '.github/traffic-data/traffic-history.json'
+
+          # 读取现有数据
+          if os.path.exists(data_file):
+              with open(data_file, 'r', encoding='utf-8') as f:
+                  history = json.load(f)
+          else:
+              history = {
+                  'clones': [],
+                  'views': [],
+                  'summary': {
+                      'total_clones': 0,
+                      'total_unique_clones': 0,
+                      'total_views': 0,
+                      'total_unique_views': 0
+                  },
+                  'last_updated': None
+              }
+
+          # 合并新数据（去重）
+          existing_clone_dates = {item['timestamp'] for item in history['clones']}
+          existing_view_dates = {item['timestamp'] for item in history['views']}
+
+          new_clones = 0
+          new_views = 0
+
+          for clone in clones_data.get('clones', []):
+              if clone['timestamp'] not in existing_clone_dates:
+                  history['clones'].append(clone)
+                  existing_clone_dates.add(clone['timestamp'])
+                  new_clones += 1
+
+          for view in views_data.get('views', []):
+              if view['timestamp'] not in existing_view_dates:
+                  history['views'].append(view)
+                  existing_view_dates.add(view['timestamp'])
+                  new_views += 1
+
+          # 按时间排序
+          history['clones'].sort(key=lambda x: x['timestamp'])
+          history['views'].sort(key=lambda x: x['timestamp'])
+
+          # 更新汇总统计
+          history['summary']['total_clones'] = sum(c['count'] for c in history['clones'])
+          history['summary']['total_unique_clones'] = sum(c['uniques'] for c in history['clones'])
+          history['summary']['total_views'] = sum(v['count'] for v in history['views'])
+          history['summary']['total_unique_views'] = sum(v['uniques'] for v in history['views'])
+          history['last_updated'] = datetime.now(timezone.utc).isoformat()
+
+          # 保存数据
+          os.makedirs(os.path.dirname(data_file), exist_ok=True)
+          with open(data_file, 'w', encoding='utf-8') as f:
+              json.dump(history, f, indent=2, ensure_ascii=False)
+
+          print(f"\n✅ Traffic data updated successfully!")
+          print(f"📊 New clones records: {new_clones}")
+          print(f"📊 New views records: {new_views}")
+          print(f"📈 Total clones (all time): {history['summary']['total_clones']} (unique: {history['summary']['total_unique_clones']})")
+          print(f"📈 Total views (all time): {history['summary']['total_views']} (unique: {history['summary']['total_unique_views']})")
+
+          # 设置输出变量
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"new_data={'true' if (new_clones > 0 or new_views > 0) else 'false'}\n")
+              f.write(f"new_clones={new_clones}\n")
+              f.write(f"new_views={new_views}\n")
+
+          EOF
+
+      - name: Commit and push if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .github/traffic-data/
+            git commit -m "记录仓库访问统计 ($(date +'%Y-%m-%d'))"
+            git push
+            echo "committed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit"
+            echo "committed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Summary
+        run: |
+          echo "### 📊 Traffic Recording Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Date**: $(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Data Committed**: ${{ steps.commit.outputs.committed }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f .github/traffic-data/traffic-history.json ]; then
+            echo "#### Latest Statistics" >> $GITHUB_STEP_SUMMARY
+            python3 << 'EOF' >> $GITHUB_STEP_SUMMARY
+          import json
+          with open('.github/traffic-data/traffic-history.json', 'r') as f:
+              data = json.load(f)
+          print(f"- Total Clones: **{data['summary']['total_clones']}** (Unique: **{data['summary']['total_unique_clones']}**)")
+          print(f"- Total Views: **{data['summary']['total_views']}** (Unique: **{data['summary']['total_unique_views']}**)")
+          print(f"- Data Points: {len(data['clones'])} clone records, {len(data['views'])} view records")
+          EOF
+          fi
