@@ -39,6 +39,11 @@
       "timestamp": "2025-11-23T00:00:00Z",
       "count": 2,
       "uniques": 2
+    },
+    {
+      "timestamp": "2025-11-24T00:00:00Z",
+      "count": 16,
+      "uniques": 11
     }
   ],
   "views": [
@@ -94,10 +99,10 @@
     }
   ],
   "summary": {
-    "total_clones": 14,
-    "total_unique_clones": 13,
+    "total_clones": 30,
+    "total_unique_clones": 24,
     "total_views": 77,
     "total_unique_views": 16
   },
-  "last_updated": "2025-11-24T22:44:00.763019+00:00"
+  "last_updated": "2025-11-25T00:45:53.116701+00:00"
 }
