@@ -69,6 +69,11 @@
       "timestamp": "2025-11-29T00:00:00Z",
       "count": 3,
       "uniques": 3
+    },
+    {
+      "timestamp": "2025-11-30T00:00:00Z",
+      "count": 4,
+      "uniques": 4
     }
   ],
   "views": [
@@ -136,13 +141,18 @@
       "timestamp": "2025-11-28T00:00:00Z",
       "count": 4,
       "uniques": 1
+    },
+    {
+      "timestamp": "2025-11-30T00:00:00Z",
+      "count": 3,
+      "uniques": 1
     }
   ],
   "summary": {
-    "total_clones": 48,
-    "total_unique_clones": 42,
-    "total_views": 94,
-    "total_unique_views": 19
+    "total_clones": 52,
+    "total_unique_clones": 46,
+    "total_views": 97,
+    "total_unique_views": 20
   },
-  "last_updated": "2025-11-30T00:54:27.685926+00:00"
+  "last_updated": "2025-12-01T00:59:05.788620+00:00"
 }
