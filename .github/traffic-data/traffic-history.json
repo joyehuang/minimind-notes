@@ -84,6 +84,11 @@
       "timestamp": "2025-12-02T00:00:00Z",
       "count": 17,
       "uniques": 10
+    },
+    {
+      "timestamp": "2025-12-03T00:00:00Z",
+      "count": 40,
+      "uniques": 18
     }
   ],
   "views": [
@@ -169,10 +174,10 @@
     }
   ],
   "summary": {
-    "total_clones": 91,
-    "total_unique_clones": 65,
+    "total_clones": 131,
+    "total_unique_clones": 83,
     "total_views": 101,
     "total_unique_views": 22
   },
-  "last_updated": "2025-12-03T00:48:08.094849+00:00"
+  "last_updated": "2025-12-04T00:48:45.927638+00:00"
 }
