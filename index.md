@@ -110,6 +110,10 @@ features:
 
 ## 🚀 快速开始
 
+<QuickStartTimeline />
+
+### 💻 运行实验
+
 ::: code-group
 
 ```bash [1. 克隆仓库]
