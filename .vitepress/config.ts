@@ -13,6 +13,9 @@ export default defineConfig({
   // 清理 URL
   cleanUrls: true,
 
+  // 忽略死链接检查 (很多链接指向原位置的文件)
+  ignoreDeadLinks: true,
+
   // Head 配置
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
