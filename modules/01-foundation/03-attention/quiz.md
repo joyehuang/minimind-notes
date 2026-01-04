@@ -4,263 +4,185 @@
 
 ---
 
-## 📝 选择题
-
-### Q1: Self-Attention 中为什么要除以 $\sqrt{d_k}$？
-
-A. 为了加速计算
-B. 为了减少参数量
-C. 为了防止 softmax 饱和，稳定梯度
-D. 为了支持更长的序列
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-- 点积的方差随 $d_k$ 增大而增大
-- 当 $d_k$ 很大时，点积值会很大
-- 大数值输入 softmax 会导致梯度接近 0（饱和）
-- 除以 $\sqrt{d_k}$ 使点积的方差稳定在 1 左右
-
-**例子**（d_k=64）：
-- 未缩放：分数可能达到 64（softmax 几乎全是 0 和 1）
-- 缩放后：分数约 8（softmax 分布更平滑）
-
-</details>
-
----
-
-### Q2: Q、K、V 三个矩阵分别代表什么含义？
-
-A. Query=查询、Key=钥匙、Value=价值
-B. Query=问题、Key=关键词、Value=答案
-C. Query=我想找什么、Key=我有什么标签、Value=我的实际内容
-D. Query=输入、Key=输出、Value=中间结果
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**图书馆类比**：
-- **Query（查询）**：你想找什么书？（搜索关键词）
-- **Key（索引）**：每本书的关键词标签
-- **Value（内容）**：书的实际内容
-
-**实际作用**：
-- Q：当前 token 作为"查询者"时关注什么
-- K：当前 token 作为"被查询者"时展示什么
-- V：当前 token 实际要传递的信息
-
-**为什么需要三个不同的投影？**
-- 让模型学习从不同角度看待同一个 token
-- Q 和 K 用于计算"相关性"
-- V 是实际被提取的"内容"
-
-</details>
-
----
-
-### Q3: Multi-Head Attention 的主要优势是什么？
-
-A. 减少计算量
-B. 减少参数量
-C. 让模型学习多种不同的关系模式
-D. 支持更长的序列
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**单头的局限**：
-- 只能学习一种"关注模式"
-- 例如只能关注语法关系，无法同时关注语义关系
-
-**多头的优势**：
-- 不同头学习不同的模式：
-  - Head 1：语法关系（主谓宾）
-  - Head 2：语义关系（同义词）
-  - Head 3：位置关系（相邻词）
-  - Head 4：代词指代关系
-  - ...
-- 最后拼接起来，融合多种信息
-
-**参数量分析**：
-- 单头：hidden_size → hidden_size（一个大投影）
-- 多头：hidden_size → n_heads × head_dim（等价，但分头处理）
-- 总参数量相同，但表达能力更强
-
-</details>
-
----
-
-### Q4: GQA（Grouped Query Attention）的作用是什么？
-
-A. 提高模型精度
-B. 减少 KV Cache 内存，加速推理
-C. 增加模型容量
-D. 支持更多的注意力头
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：B**
-
-**解析**：
-
-**MHA 的问题**：
-- 每个头有独立的 K、V
-- KV Cache 大小 = n_heads × seq_len × head_dim × 2
-- 长序列推理时内存占用很大
-
-**GQA 的解决**：
-- 多个 Q 头共享一组 K、V
-- 例如：8 个 Q 头，2 个 KV 头 → 每 4 个 Q 共享一组 KV
-- KV Cache 减少 75%
-
-**MiniMind 配置**：
-```python
-n_heads = 8        # Q 头数
-n_kv_heads = 2     # KV 头数
-n_rep = 4          # 每组重复次数
-```
-
-**注意**：GQA 在精度上略有损失，但推理速度和内存效率大幅提升
-
-</details>
-
----
-
-### Q5: 因果掩码（Causal Mask）的作用是什么？
-
-A. 防止模型过拟合
-B. 加速训练
-C. 让模型只能看到"过去"的 token，不能看到"未来"
-D. 减少内存使用
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**语言模型的约束**：
-- 生成式模型需要"自回归"：根据前面的词预测下一个词
-- 训练时不能"作弊"看到未来的词
-
-**掩码的实现**：
-```python
-mask = torch.triu(torch.full((seq_len, seq_len), float('-inf')), diagonal=1)
-```
-
-**效果**：
-- 上三角为 $-\infty$
-- softmax($-\infty$) = 0 → 完全忽略未来位置
-- 下三角（包括对角线）正常计算
-
-**示例**（seq_len=4）：
-```
-[[0, -∞, -∞, -∞],
- [0,  0, -∞, -∞],
- [0,  0,  0, -∞],
- [0,  0,  0,  0]]
-```
-- 位置 0 只能看自己
-- 位置 3 可以看 0、1、2、3
-
-</details>
-
----
-
-### Q6: repeat_kv 函数在 GQA 中的作用是什么？
-
-A. 减少 KV 头数
-B. 将 KV 头扩展以匹配 Q 头数
-C. 压缩 KV 信息
-D. 对 KV 进行归一化
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：B**
-
-**解析**：
-
-**GQA 的挑战**：
-- Q 有 8 个头，KV 只有 2 个头
-- 计算 Q·K 时维度不匹配
-
-**repeat_kv 的解决**：
-```python
-def repeat_kv(x, n_rep):
-    # x: [batch, seq, n_kv_heads, head_dim]
-    # n_rep = n_heads // n_kv_heads = 4
-
-    # 扩展并重塑
-    x = x[:, :, :, None, :]  # 添加维度
-    x = x.expand(..., n_rep, ...)  # 复制 4 次
-    return x.reshape(..., n_kv_heads * n_rep, ...)  # 合并
-```
-
-**效果**：
-- 输入：[batch, seq, 2, 64]
-- 输出：[batch, seq, 8, 64]
-- 每个 KV 头被复制 4 次
-
-**为什么不直接训练 8 个 KV 头？**
-- 推理时 KV Cache 更小（只存 2 个头）
-- 训练时也节省内存
-- 精度损失很小
-
-</details>
-
----
-
-### Q7: Flash Attention 相比标准实现的优势是什么？
-
-A. 更高的精度
-B. 更少的参数
-C. 更高的内存效率和速度
-D. 更好的泛化能力
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**标准实现的问题**：
-- 需要存储完整的 attention 矩阵：[batch, heads, seq, seq]
-- 序列长度 4096 → 矩阵大小 16M 个元素
-- 内存是 $O(N^2)$
-
-**Flash Attention 的优化**：
-- 分块计算，不存储完整矩阵
-- 融合多个操作（QK、softmax、×V）
-- 内存是 $O(N)$
-
-**MiniMind 代码**：
-```python
-if self.flash_attn:
-    output = F.scaled_dot_product_attention(xq, xk, xv, attn_mask=mask)
-else:
-    # 手动实现（用于学习）
-    scores = torch.matmul(xq, xk.transpose(-2, -1)) / math.sqrt(self.head_dim)
-    ...
-```
-
-**实际加速**：长序列下可快 2-4 倍
-
-</details>
+## 🎮 交互式自测（推荐）
+
+<script setup>
+const quizData = [
+  {
+    question: 'Self-Attention 中为什么要除以 √d_k？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '为了加速计算' },
+      { label: 'B', text: '为了减少参数量' },
+      { label: 'C', text: '为了防止 softmax 饱和，稳定梯度' },
+      { label: 'D', text: '为了支持更长的序列' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <ul>
+        <li>点积的方差随 d_k 增大而增大</li>
+        <li>当 d_k 很大时，点积值会很大</li>
+        <li>大数值输入 softmax 会导致梯度接近 0（饱和）</li>
+        <li>除以 √d_k 使点积的方差稳定在 1 左右</li>
+      </ul>
+      <strong>例子</strong>（d_k=64）：<ul>
+        <li>未缩放：分数可能达到 64（softmax 几乎全是 0 和 1）</li>
+        <li>缩放后：分数约 8（softmax 分布更平滑）</li>
+      </ul>
+    `
+  },
+  {
+    question: 'Q、K、V 三个矩阵分别代表什么含义？',
+    type: 'single',
+    options: [
+      { label: 'A', text: 'Query=查询、Key=钥匙、Value=价值' },
+      { label: 'B', text: 'Query=问题、Key=关键词、Value=答案' },
+      { label: 'C', text: 'Query=我想找什么、Key=我有什么标签、Value=我的实际内容' },
+      { label: 'D', text: 'Query=输入、Key=输出、Value=中间结果' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>图书馆类比</strong>：<ul>
+        <li><strong>Query（查询）</strong>：你想找什么书？（搜索关键词）</li>
+        <li><strong>Key（索引）</strong>：每本书的关键词标签</li>
+        <li><strong>Value（内容）</strong>：书的实际内容</li>
+      </ul>
+      <strong>实际作用</strong>：<ul>
+        <li>Q：当前 token 作为"查询者"时关注什么</li>
+        <li>K：当前 token 作为"被查询者"时展示什么</li>
+        <li>V：当前 token 实际要传递的信息</li>
+      </ul>
+      <strong>为什么需要三个不同的投影？</strong><br>
+      让模型学习从不同角度看待同一个 token，Q 和 K 用于计算"相关性"，V 是实际被提取的"内容"
+    `
+  },
+  {
+    question: 'Multi-Head Attention 的主要优势是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '减少计算量' },
+      { label: 'B', text: '减少参数量' },
+      { label: 'C', text: '让模型学习多种不同的关系模式' },
+      { label: 'D', text: '支持更长的序列' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>单头的局限</strong>：<ul>
+        <li>只能学习一种"关注模式"</li>
+        <li>例如只能关注语法关系，无法同时关注语义关系</li>
+      </ul>
+      <strong>多头的优势</strong>：不同头学习不同的模式<ul>
+        <li>Head 1：语法关系（主谓宾）</li>
+        <li>Head 2：语义关系（同义词）</li>
+        <li>Head 3：位置关系（相邻词）</li>
+        <li>Head 4：代词指代关系</li>
+      </ul>
+      最后拼接起来，融合多种信息<br><br>
+      <strong>参数量分析</strong>：总参数量相同，但表达能力更强
+    `
+  },
+  {
+    question: 'GQA（Grouped Query Attention）的作用是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '提高模型精度' },
+      { label: 'B', text: '减少 KV Cache 内存，加速推理' },
+      { label: 'C', text: '增加模型容量' },
+      { label: 'D', text: '支持更多的注意力头' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <strong>MHA 的问题</strong>：<ul>
+        <li>每个头有独立的 K、V</li>
+        <li>KV Cache 大小 = n_heads × seq_len × head_dim × 2</li>
+        <li>内存占用大，推理慢</li>
+      </ul>
+      <strong>GQA 的优化</strong>：<ul>
+        <li>多个 Q 头共享一组 K、V</li>
+        <li>例如 8 个 Q 头，只用 2 个 KV 头</li>
+        <li>KV Cache 减少 4 倍</li>
+      </ul>
+      性能影响：精度几乎不损失，但内存和速度显著提升
+    `
+  },
+  {
+    question: '因果掩码（Causal Mask）的作用是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '加速计算' },
+      { label: 'B', text: '防止模型看到未来信息' },
+      { label: 'C', text: '减少参数量' },
+      { label: 'D', text: '提高模型精度' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <strong>问题场景</strong>：生成式模型（如 GPT）需要逐个生成 token<br><br>
+      <strong>因果掩码的作用</strong>：<ul>
+        <li>位置 i 只能看到位置 ≤ i 的 token</li>
+        <li>不能看到位置 > i 的 token（未来信息）</li>
+        <li>确保训练和推理的一致性</li>
+      </ul>
+      <strong>实现</strong>：将未来位置的注意力分数设为 -∞，softmax 后变成 0
+    `
+  },
+  {
+    question: 'repeat_kv 函数在 GQA 中的作用是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '复制 K 和 V 以匹配 Q 的头数' },
+      { label: 'B', text: '增加 KV Cache 大小' },
+      { label: 'C', text: '提高计算精度' },
+      { label: 'D', text: '减少内存使用' }
+    ],
+    correct: [0],
+    explanation: `
+      <strong>正确答案：A</strong><br><br>
+      <strong>GQA 的结构</strong>：<ul>
+        <li>8 个 Q 头</li>
+        <li>2 个 KV 头（每 4 个 Q 头共享 1 个 KV 头）</li>
+      </ul>
+      <strong>repeat_kv 的作用</strong>：<ul>
+        <li>将 KV 从 (2, seq_len, head_dim) 扩展到 (8, seq_len, head_dim)</li>
+        <li>每个 KV 头复制 4 次</li>
+        <li>这样才能与 8 个 Q 头做点积运算</li>
+      </ul>
+      <strong>关键</strong>：复制不占额外内存，只是改变视图
+    `
+  },
+  {
+    question: 'Flash Attention 相比标准实现的优势是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '提高模型精度' },
+      { label: 'B', text: '减少参数量' },
+      { label: 'C', text: '减少 GPU 内存访问，加速计算' },
+      { label: 'D', text: '支持更多的注意力头' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>标准实现的问题</strong>：<ul>
+        <li>需要物化整个 attention 矩阵 (seq_len × seq_len)</li>
+        <li>频繁读写 GPU HBM（慢）</li>
+      </ul>
+      <strong>Flash Attention 的优化</strong>：<ul>
+        <li>分块计算，充分利用 SRAM（快）</li>
+        <li>不物化完整的 attention 矩阵</li>
+        <li>IO 访问减少，速度提升 2-4 倍</li>
+        <li>支持更长序列（内存占用从 O(N²) 降到 O(N)）</li>
+      </ul>
+      数学上完全等价，只是实现优化
+    `
+  }
+]
+</script>
+
+<InteractiveQuiz :questions="quizData" quiz-id="attention" />
 
 ---
 
