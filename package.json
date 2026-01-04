@@ -1,0 +1,25 @@
+{
+  "name": "minimind-notes",
+  "version": "1.0.0",
+  "description": "MiniMind 学习笔记 - VitePress 文档站点",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "keywords": [
+    "LLM",
+    "MiniMind",
+    "Learning Notes",
+    "Transformer",
+    "Deep Learning"
+  ],
+  "author": "joyehuang",
+  "license": "MIT",
+  "devDependencies": {
+    "markdown-it-mathjax3": "^4.3.2",
+    "vitepress": "^1.0.0",
+    "vue": "^3.4.0"
+  }
+}
