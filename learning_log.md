@@ -1,3 +1,8 @@
+---
+title: 学习日志
+description: 记录 MiniMind 学习历程中的每日进度、问题和思考
+---
+
 # MiniMind 学习日志
 
 > 记录每日学习进度、遇到的问题和解决方案

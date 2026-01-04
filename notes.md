@@ -1,3 +1,8 @@
+---
+title: 学习笔记总索引
+description: MiniMind 学习笔记系统的导航入口
+---
+
 # MiniMind 学习笔记 - 总索引
 
 > 这是我学习 MiniMind 项目的笔记系统入口
