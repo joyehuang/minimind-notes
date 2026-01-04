@@ -36,6 +36,12 @@ Thumbs.db
 # Backup
 .git.backup/
 
+# VitePress
+node_modules/
+.vitepress/dist/
+.vitepress/cache/
+package-lock.json
+
 # Other
 website/
 docs-minimind/
