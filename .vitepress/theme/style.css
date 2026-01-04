@@ -1,0 +1,176 @@
+/**
+ * VitePress 自定义样式
+ * 优化网站外观和用户体验
+ */
+
+/* 自定义颜色主题 */
+:root {
+  --vp-c-brand-1: #3b82f6;
+  --vp-c-brand-2: #2563eb;
+  --vp-c-brand-3: #1d4ed8;
+  --vp-c-brand-soft: #3b82f620;
+}
+
+.dark {
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #3b82f6;
+  --vp-c-brand-3: #2563eb;
+  --vp-c-brand-soft: #60a5fa20;
+}
+
+/* 进度容器样式 */
+.progress-container {
+  padding: 1.5rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  margin: 1rem 0;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* 路径卡片样式 */
+.path-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.path-cards > div {
+  padding: 1.5rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider);
+  transition: all 0.3s ease;
+}
+
+.path-cards > div:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--vp-c-brand-soft);
+}
+
+.path-cards h3 {
+  margin-top: 0;
+  color: var(--vp-c-brand-1);
+}
+
+/* 优化表格样式 */
+.vp-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.vp-doc table th,
+.vp-doc table td {
+  padding: 0.75rem;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc table th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.vp-doc table tr:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+/* 优化代码块样式 */
+div[class*='language-'] {
+  margin: 1rem 0;
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+div[class*='language-']:hover {
+  border-color: var(--vp-c-brand-soft);
+}
+
+/* 优化内联代码 */
+.vp-doc :not(pre) > code {
+  background: var(--vp-c-brand-soft);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* 优化链接样式 */
+.vp-doc a {
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-2);
+}
+
+/* 优化提示框样式 */
+.vp-doc .tip,
+.vp-doc .warning,
+.vp-doc .danger,
+.vp-doc .info {
+  border-radius: 8px;
+  border-left-width: 4px;
+}
+
+/* 优化列表样式 */
+.vp-doc ul,
+.vp-doc ol {
+  line-height: 1.8;
+}
+
+.vp-doc li + li {
+  margin-top: 0.5rem;
+}
+
+/* Checkbox 任务列表样式 */
+.vp-doc .task-list-item {
+  list-style-type: none;
+  margin-left: -1.5rem;
+}
+
+.vp-doc .task-list-item input[type='checkbox'] {
+  margin-right: 0.5rem;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .path-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-container {
+    padding: 1rem;
+  }
+}
+
+/* 自定义容器样式增强 */
+.vp-doc .custom-block {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.vp-doc .custom-block:hover {
+  box-shadow: 0 2px 8px var(--vp-c-brand-soft);
+}
+
+/* 图片样式优化 */
+.vp-doc img {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.vp-doc img:hover {
+  transform: scale(1.02);
+}
+
+/* 返回顶部按钮优化 */
+.VPBackToTop {
+  background: var(--vp-c-brand-1) !important;
+}
+
+.VPBackToTop:hover {
+  background: var(--vp-c-brand-2) !important;
+}
