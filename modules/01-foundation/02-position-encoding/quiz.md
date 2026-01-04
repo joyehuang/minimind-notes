@@ -4,135 +4,122 @@
 
 ---
 
-## 📝 选择题
+## 🎮 交互式自测（推荐）
 
-### Q1: 为什么 Attention 需要位置编码？
+<script setup>
+const quizData = [
+  {
+    question: '为什么 Attention 需要位置编码？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '为了加速计算' },
+      { label: 'B', text: '为了减少参数量' },
+      { label: 'C', text: '因为 Attention 本身是排列不变的，无法区分顺序' },
+      { label: 'D', text: '为了支持更长的序列' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <ul>
+        <li>Self-Attention 计算时，只关心"谁和谁相关"</li>
+        <li>不关心"谁在前谁在后"</li>
+        <li>例如 "我喜欢你" 和 "你喜欢我" 会产生相同的注意力模式</li>
+        <li>位置编码让模型能区分不同顺序</li>
+      </ul>
+    `
+  },
+  {
+    question: 'RoPE 的核心思想是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '给每个位置分配一个可学习的向量' },
+      { label: 'B', text: '通过旋转向量来编码位置' },
+      { label: 'C', text: '计算两个词之间的相对距离' },
+      { label: 'D', text: '使用正弦函数生成位置编码' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <ul>
+        <li>RoPE = Rotary Position Embedding（旋转位置编码）</li>
+        <li>核心思想：位置 m → 旋转 mθ 角度</li>
+        <li>通过旋转角度差自动产生相对位置信息</li>
+        <li>与绝对位置编码（A）和原始 Transformer 的正弦编码（D）不同</li>
+      </ul>
+    `
+  },
+  {
+    question: '为什么 RoPE 使用多个不同的频率？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '为了加速计算' },
+      { label: 'B', text: '为了减少内存使用' },
+      { label: 'C', text: '高频编码局部位置，低频编码全局位置' },
+      { label: 'D', text: '为了兼容不同的 head_dim' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>钟表类比</strong>：<ul>
+        <li>秒针（高频）：精确到秒（局部位置）</li>
+        <li>时针（低频）：精确到时（全局位置）</li>
+        <li>组合起来才能表示完整时间</li>
+      </ul>
+      <strong>单频率的问题</strong>：<ul>
+        <li>只用高频：长序列时位置信息模糊（转太多圈）</li>
+        <li>只用低频：短序列时区分度不够（转太慢）</li>
+      </ul>
+      <strong>多频率组合</strong>：可以唯一标识百万级位置
+    `
+  },
+  {
+    question: 'RoPE 应用在 Attention 的哪些部分？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '只有 Query' },
+      { label: 'B', text: '只有 Key' },
+      { label: 'C', text: 'Query 和 Key' },
+      { label: 'D', text: 'Query、Key 和 Value' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <code>xq, xk = apply_rotary_emb(xq, xk, freqs_cis) # V 不需要！</code><br><br>
+      <strong>为什么 V 不需要？</strong><ul>
+        <li>Q 和 K 用于计算注意力分数（需要知道位置关系）</li>
+        <li>V 是被查询的内容（位置信息已通过 Q·K 融入）</li>
+        <li>对 V 应用 RoPE 是多余的</li>
+      </ul>
+    `
+  },
+  {
+    question: 'RoPE 相比绝对位置编码的主要优势是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '计算更快' },
+      { label: 'B', text: '参数更少' },
+      { label: 'C', text: '支持长度外推（训练短序列，推理长序列）' },
+      { label: 'D', text: '实现更简单' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>绝对位置编码</strong>：<ul>
+        <li>每个位置一个向量：<code>pos_embed[0], pos_embed[1], ..., pos_embed[511]</code></li>
+        <li>训练时最长 512 → 推理时遇到位置 600 没有对应编码</li>
+        <li>❌ 无法外推</li>
+      </ul>
+      <strong>RoPE</strong>：<ul>
+        <li>只是旋转角度：位置 600 → 旋转 600θ</li>
+        <li>数学上可以计算任意位置</li>
+        <li>✅ 支持外推（配合 YaRN 效果更好）</li>
+      </ul>
+    `
+  }
+]
+</script>
 
-A. 为了加速计算
-B. 为了减少参数量
-C. 因为 Attention 本身是排列不变的，无法区分顺序
-D. 为了支持更长的序列
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-- Self-Attention 计算时，只关心"谁和谁相关"
-- 不关心"谁在前谁在后"
-- 例如 "我喜欢你" 和 "你喜欢我" 会产生相同的注意力模式
-- 位置编码让模型能区分不同顺序
-
-</details>
-
----
-
-### Q2: RoPE 的核心思想是什么？
-
-A. 给每个位置分配一个可学习的向量
-B. 通过旋转向量来编码位置
-C. 计算两个词之间的相对距离
-D. 使用正弦函数生成位置编码
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：B**
-
-**解析**：
-- RoPE = Rotary Position Embedding（旋转位置编码）
-- 核心思想：位置 m → 旋转 mθ 角度
-- 通过旋转角度差自动产生相对位置信息
-- 与绝对位置编码（A）和原始 Transformer 的正弦编码（D）不同
-
-</details>
-
----
-
-### Q3: 为什么 RoPE 使用多个不同的频率？
-
-A. 为了加速计算
-B. 为了减少内存使用
-C. 高频编码局部位置，低频编码全局位置
-D. 为了兼容不同的 head_dim
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**钟表类比**：
-- 秒针（高频）：精确到秒（局部位置）
-- 时针（低频）：精确到时（全局位置）
-- 组合起来才能表示完整时间
-
-**单频率的问题**：
-- 只用高频：长序列时位置信息模糊（转太多圈）
-- 只用低频：短序列时区分度不够（转太慢）
-
-**多频率组合**：可以唯一标识百万级位置
-
-</details>
-
----
-
-### Q4: RoPE 应用在 Attention 的哪些部分？
-
-A. 只有 Query
-B. 只有 Key
-C. Query 和 Key
-D. Query、Key 和 Value
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-```python
-# MiniMind 代码
-xq, xk = apply_rotary_emb(xq, xk, freqs_cis)
-# V 不需要！
-```
-
-**为什么 V 不需要？**
-- Q 和 K 用于计算注意力分数（需要知道位置关系）
-- V 是被查询的内容（位置信息已通过 Q·K 融入）
-- 对 V 应用 RoPE 是多余的
-
-</details>
-
----
-
-### Q5: RoPE 相比绝对位置编码的主要优势是什么？
-
-A. 计算更快
-B. 参数更少
-C. 支持长度外推（训练短序列，推理长序列）
-D. 实现更简单
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**绝对位置编码**：
-- 每个位置一个向量：`pos_embed[0], pos_embed[1], ..., pos_embed[511]`
-- 训练时最长 512 → 推理时遇到位置 600 没有对应编码
-- ❌ 无法外推
-
-**RoPE**：
-- 只是旋转角度：位置 600 → 旋转 600θ
-- 数学上可以计算任意位置
-- ✅ 支持外推（配合 YaRN 效果更好）
-
-</details>
+<InteractiveQuiz :questions="quizData" quiz-id="position-encoding" />
 
 ---
 

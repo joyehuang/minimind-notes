@@ -4,226 +4,187 @@
 
 ---
 
-## 📝 选择题
-
-### Q1: FeedForward 为什么要"扩张-压缩"？
-
-A. 为了减少计算量
-B. 为了减少参数量
-C. 为了在高维空间中增强表达能力
-D. 为了加速推理
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-- 直接 768 → 768：只是线性变换，表达能力有限
-- 扩张到高维空间：更容易分离不同的模式
-- 激活函数创造非线性边界
-- 压缩回来时保留了判别性特征
-
-**类比**：
-- 在 2D 空间中，一条直线无法分开环形分布的点
-- 映射到 3D 空间后，一个平面就可以分开
-- 然后投影回 2D，结果是非线性的分割
-
-</details>
-
----
-
-### Q2: SwiGLU 使用几个投影矩阵？
-
-A. 1 个
-B. 2 个
-C. 3 个
-D. 4 个
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-SwiGLU 使用三个投影：
-1. `gate_proj`：计算门控信号
-2. `up_proj`：计算值信号
-3. `down_proj`：压缩回原维度
-
-**公式**：
-$$\text{SwiGLU}(x) = W_{\text{down}} \cdot (\text{SiLU}(W_{\text{gate}} \cdot x) \odot W_{\text{up}} \cdot x)$$
-
-**对比标准 FFN**（只有 2 个投影）：
-$$\text{FFN}(x) = W_2 \cdot \text{ReLU}(W_1 \cdot x)$$
-
-</details>
-
----
-
-### Q3: SiLU 激活函数的公式是什么？
-
-A. $\max(0, x)$
-B. $x \cdot \sigma(x)$
-C. $x \cdot \tanh(x)$
-D. $\text{sign}(x) \cdot \max(0, |x|)$
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：B**
-
-**解析**：
-
-$$\text{SiLU}(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}$$
-
-**特点**：
-- 也叫 Swish 激活函数
-- 平滑：处处可导
-- 自门控：输入乘以自己的 sigmoid
-- 非单调：负数部分不完全为 0
-
-**A 是 ReLU**
-**C 是 Mish**（另一种激活函数）
-
-</details>
-
----
-
-### Q4: SwiGLU 中门控机制的作用是什么？
-
-A. 加速计算
-B. 减少参数
-C. 动态控制信息流通
-D. 增加非线性层数
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-```python
-gate = SiLU(gate_proj(x))  # 门控信号
-up = up_proj(x)            # 值信号
-hidden = gate * up         # 逐元素相乘
-```
-
-**门控的作用**：
-- gate ≈ 0：关闭，up 的信息被抑制
-- gate ≈ 1：打开，up 的信息完全通过
-- 0 < gate < 1：部分通过
-
-**直觉**：
-- 像"音量旋钮"控制每个维度
-- 模型学习哪些信息应该放大/抑制
-- 比单纯的激活函数更灵活
-
-</details>
-
----
-
-### Q5: FeedForward 与 Attention 的主要区别是什么？
-
-A. FeedForward 更快
-B. Attention 处理词间关系，FeedForward 独立处理每个位置
-C. FeedForward 参数更少
-D. Attention 使用激活函数，FeedForward 不使用
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：B**
-
-**解析**：
-
-| 组件 | 操作 | 类比 |
-|------|------|------|
-| **Attention** | 有 seq × seq 的交互 | 开会讨论 |
-| **FeedForward** | 每个位置独立处理 | 各自思考 |
-
-**分工**：
-- Attention：信息融合，让词与词交换信息
-- FeedForward：特征变换，深度处理每个词
-
-**计算特点**：
-- Attention：计算复杂度 O(n²d)
-- FeedForward：计算复杂度 O(nd²)
-
-</details>
-
----
-
-### Q6: 为什么 SwiGLU 通常比 ReLU 效果更好？
-
-A. 计算更快
-B. 参数更少
-C. 梯度更平滑，保留部分负数信息
-D. 内存使用更少
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-**ReLU 的问题**：
-```python
-ReLU(x) = max(0, x)
-# x = -1 → 0 (完全丢失)
-# 梯度：x < 0 时梯度为 0 (死神经元)
-```
-
-**SiLU 的优势**：
-```python
-SiLU(x) = x * sigmoid(x)
-# x = -1 → -0.27 (保留部分信息)
-# 梯度：处处非零，平滑
-```
-
-**实验结果**：
-- GLU 系列在 LLM 基准上表现更好
-- 特别是长序列任务
-- 门控机制提供额外的表达能力
-
-</details>
-
----
-
-### Q7: MiniMind 中 intermediate_size 通常是 hidden_size 的几倍？
-
-A. 2 倍
-B. 3 倍
-C. 4 倍
-D. 8 倍
-
-<details>
-<summary>点击查看答案</summary>
-
-**答案：C**
-
-**解析**：
-
-```python
-# MiniMind 配置
-hidden_size = 512
-intermediate_size = 2048  # 4x 扩张
-```
-
-**原因**：
-- 4x 扩张是 Transformer 的标准做法
-- 提供足够的中间空间
-- 参数量和表达能力的平衡
-
-**注意**：
-- 如果用 SwiGLU（3 个投影），有些实现会调整：
-  - intermediate_size = hidden_size × 4 × 2/3
-  - 以保持总参数量与标准 FFN（2 个投影）相同
-
-</details>
+## 🎮 交互式自测（推荐）
+
+<script setup>
+const quizData = [
+  {
+    question: 'FeedForward 为什么要"扩张-压缩"？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '为了减少计算量' },
+      { label: 'B', text: '为了减少参数量' },
+      { label: 'C', text: '为了在高维空间中增强表达能力' },
+      { label: 'D', text: '为了加速推理' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>扩张-压缩架构</strong>：<ul>
+        <li>输入：hidden_size (例如 512)</li>
+        <li>扩张：intermediate_size (例如 2048，4倍)</li>
+        <li>压缩：回到 hidden_size (512)</li>
+      </ul>
+      <strong>为什么要扩张？</strong><ul>
+        <li>在高维空间中，模型有更大的"表达空间"</li>
+        <li>可以学习更复杂的非线性变换</li>
+        <li>增强特征提取能力</li>
+      </ul>
+      <strong>类比</strong>：就像在更大的画布上作画，有更多空间发挥
+    `
+  },
+  {
+    question: 'SwiGLU 使用几个投影矩阵？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '1 个' },
+      { label: 'B', text: '2 个' },
+      { label: 'C', text: '3 个' },
+      { label: 'D', text: '4 个' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>SwiGLU 结构</strong>：<ul>
+        <li><code>w1</code>: hidden_size → intermediate_size（门控路径）</li>
+        <li><code>w2</code>: intermediate_size → hidden_size（输出投影）</li>
+        <li><code>w3</code>: hidden_size → intermediate_size（值路径）</li>
+      </ul>
+      <strong>计算流程</strong>：<br>
+      <code>output = w2(SiLU(w1(x)) * w3(x))</code><br><br>
+      比标准 FFN 多了 w3，用于门控机制
+    `
+  },
+  {
+    question: 'SiLU 激活函数的公式是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: 'max(0, x)' },
+      { label: 'B', text: 'x * sigmoid(x)' },
+      { label: 'C', text: 'tanh(x)' },
+      { label: 'D', text: '1 / (1 + e^(-x))' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <strong>SiLU (Swish) 公式</strong>：<br>
+      <code>SiLU(x) = x · σ(x) = x · (1 / (1 + e^(-x)))</code><br><br>
+      <strong>特点</strong>：<ul>
+        <li>平滑的非线性函数</li>
+        <li>负值不会完全消失（与 ReLU 不同）</li>
+        <li>有界下界（约 -0.28），无上界</li>
+        <li>梯度更平滑，训练更稳定</li>
+      </ul>
+      <strong>对比</strong>：ReLU = max(0, x)，SiLU 更柔和
+    `
+  },
+  {
+    question: 'SwiGLU 中门控机制的作用是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '加速计算' },
+      { label: 'B', text: '减少参数量' },
+      { label: 'C', text: '选择性地控制信息流' },
+      { label: 'D', text: '防止梯度消失' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>门控机制</strong>：<br>
+      <code>gate = SiLU(w1(x))</code><br>
+      <code>value = w3(x)</code><br>
+      <code>output = gate * value</code><br><br>
+      <strong>作用</strong>：<ul>
+        <li>gate 决定"开多大"</li>
+        <li>value 决定"传什么信息"</li>
+        <li>两者相乘实现选择性传递</li>
+        <li>类似 LSTM 的门控思想</li>
+      </ul>
+      模型可以学习在不同位置控制信息流的强度
+    `
+  },
+  {
+    question: 'FeedForward 与 Attention 的主要区别是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: 'FFN 有更多参数' },
+      { label: 'B', text: 'FFN 独立处理每个位置，Attention 混合所有位置' },
+      { label: 'C', text: 'FFN 计算更快' },
+      { label: 'D', text: 'FFN 效果更好' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <strong>Attention</strong>：<ul>
+        <li>混合所有位置的信息</li>
+        <li>位置 i 的输出依赖于所有位置</li>
+        <li>负责"信息交互"</li>
+      </ul>
+      <strong>FeedForward</strong>：<ul>
+        <li>独立处理每个位置</li>
+        <li>位置 i 的输出只依赖位置 i</li>
+        <li>负责"特征变换"</li>
+      </ul>
+      <strong>比喻</strong>：Attention 是讨论（交流信息），FFN 是个人思考（深化理解）
+    `
+  },
+  {
+    question: '为什么 SwiGLU 通常比 ReLU 效果更好？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '计算更快' },
+      { label: 'B', text: '参数更少' },
+      { label: 'C', text: '门控机制提供更丰富的非线性，梯度更平滑' },
+      { label: 'D', text: '实现更简单' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>ReLU 的局限</strong>：<ul>
+        <li>硬截断：负值直接变 0</li>
+        <li>梯度不连续</li>
+        <li>Dead ReLU 问题（神经元永久失活）</li>
+      </ul>
+      <strong>SwiGLU 的优势</strong>：<ul>
+        <li>平滑的激活函数（SiLU）</li>
+        <li>门控机制增加表达能力</li>
+        <li>梯度更稳定，训练更容易</li>
+        <li>实验证明在 LLM 上效果更好</li>
+      </ul>
+      代价：计算量略增加（3个投影 vs 2个）
+    `
+  },
+  {
+    question: 'MiniMind 中 intermediate_size 通常是 hidden_size 的几倍？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '2 倍' },
+      { label: 'B', text: '4 倍' },
+      { label: 'C', text: '8 倍' },
+      { label: 'D', text: '16 倍' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <strong>标准配置</strong>：<ul>
+        <li>hidden_size = 512 → intermediate_size = 2048 (4倍)</li>
+        <li>hidden_size = 768 → intermediate_size = 3072 (4倍)</li>
+      </ul>
+      <strong>为什么是 4 倍？</strong><ul>
+        <li>平衡表达能力和计算成本</li>
+        <li>Llama、GPT 等主流模型都用 4 倍</li>
+        <li>实验证明是较好的折中</li>
+      </ul>
+      <strong>变体</strong>：<ul>
+        <li>MoE 模型可能用更大倍数</li>
+        <li>小模型可能用 2-3 倍节省参数</li>
+      </ul>
+    `
+  }
+]
+</script>
+
+<InteractiveQuiz :questions="quizData" quiz-id="feedforward" />
 
 ---
 
