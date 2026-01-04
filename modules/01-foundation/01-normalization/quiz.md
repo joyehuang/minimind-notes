@@ -4,7 +4,123 @@
 
 ---
 
-## 📝 选择题
+## 🎮 交互式自测（推荐）
+
+<script setup>
+const quizData = [
+  {
+    question: '梯度消失问题的根本原因是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '学习率设置太小' },
+      { label: 'B', text: '深层网络中激活值的分布随层数变化而失控' },
+      { label: 'C', text: '优化器选择不当' },
+      { label: 'D', text: '数据集太小' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      梯度消失的根本原因是深层网络中，激活值的标准差会随着层数增加而衰减。
+      <ul>
+        <li>当标准差变得非常小（接近 0）时，反向传播的梯度也会变小</li>
+        <li>最终导致前面几层的权重几乎无法更新</li>
+        <li>归一化通过控制每一层的激活分布来解决这个问题</li>
+      </ul>
+    `
+  },
+  {
+    question: 'RMSNorm 和 LayerNorm 的主要区别是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: 'RMSNorm 有更多可学习参数' },
+      { label: 'B', text: 'RMSNorm 不减均值，只除以 RMS' },
+      { label: 'C', text: 'RMSNorm 只能用于 Transformer' },
+      { label: 'D', text: 'RMSNorm 效果比 LayerNorm 差' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      <ul>
+        <li>LayerNorm: <code>(x - μ) / σ</code>（减均值，除以标准差）</li>
+        <li>RMSNorm: <code>x / RMS(x)</code>（只除以均方根，不减均值）</li>
+        <li>RMSNorm 更简单、更快（减少一步计算）</li>
+        <li>在 LLM 训练中效果相当，但 RMSNorm 速度提升 7-64%</li>
+      </ul>
+    `
+  },
+  {
+    question: 'Pre-LN 相比 Post-LN 的优势是什么？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '计算速度更快' },
+      { label: 'B', text: '使用更少参数' },
+      { label: 'C', text: '残差路径更干净，梯度流更稳定' },
+      { label: 'D', text: '不需要学习率调整' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      <strong>Post-LN</strong>（旧方案）：<code>x = LayerNorm(x + Attention(x))</code>
+      <ul>
+        <li>梯度需要经过 LayerNorm，可能被打断</li>
+      </ul>
+      <strong>Pre-LN</strong>（现代方案）：<code>x = x + Attention(Norm(x))</code>
+      <ul>
+        <li>残差路径上没有 Norm，梯度可以直接传播</li>
+        <li>深层网络（>12 层）更稳定</li>
+        <li>学习率容忍度更高</li>
+      </ul>
+    `
+  },
+  {
+    question: '在 MiniMind 的一个 TransformerBlock 中，有几个 RMSNorm？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '1 个' },
+      { label: 'B', text: '2 个' },
+      { label: 'C', text: '4 个' },
+      { label: 'D', text: '8 个' }
+    ],
+    correct: [1],
+    explanation: `
+      <strong>正确答案：B</strong><br><br>
+      每个 TransformerBlock 有 <strong>2 个 RMSNorm</strong>：
+      <ol>
+        <li><strong>attention_norm</strong>：在 Attention 之前</li>
+        <li><strong>ffn_norm</strong>：在 FeedForward 之前</li>
+      </ol>
+      数据流：<code>x → Norm #1 → Attention → + residual → Norm #2 → FFN → + residual → output</code><br><br>
+      MiniMind-small 有 8 个 Block，所以总共 16 个 RMSNorm。
+    `
+  },
+  {
+    question: '为什么 RMSNorm 的 forward 方法中要用 .float() 和 .type_as(x)？',
+    type: 'single',
+    options: [
+      { label: 'A', text: '为了节省内存' },
+      { label: 'B', text: '为了提高计算速度' },
+      { label: 'C', text: '为了避免 FP16/BF16 下的数值下溢' },
+      { label: 'D', text: '为了兼容旧版 PyTorch' }
+    ],
+    correct: [2],
+    explanation: `
+      <strong>正确答案：C</strong><br><br>
+      FP16/BF16 精度较低，归一化计算中的小数值容易下溢（变成 0）：
+      <ul>
+        <li><code>.float()</code>：转为 FP32，用高精度计算</li>
+        <li><code>.type_as(x)</code>：转回原始数据类型，保持一致性</li>
+      </ul>
+      流程：输入 (BF16) → .float() (FP32) → 归一化 → .type_as(x) (BF16) → 输出
+    `
+  }
+]
+</script>
+
+<InteractiveQuiz :questions="quizData" quiz-id="normalization" />
+
+---
+
+## 📝 选择题（传统格式）
 
 ### Q1: 梯度消失问题的根本原因是什么？
 
