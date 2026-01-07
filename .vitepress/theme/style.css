@@ -12,10 +12,63 @@
 }
 
 .dark {
-  --vp-c-brand-1: #60a5fa;
-  --vp-c-brand-2: #3b82f6;
-  --vp-c-brand-3: #2563eb;
-  --vp-c-brand-soft: #60a5fa20;
+  /* shadcn/ui 暗黑模式色系 */
+  --vp-c-brand-1: #fafafa;
+  --vp-c-brand-2: #e4e4e7;
+  --vp-c-brand-3: #d4d4d8;
+  --vp-c-brand-soft: rgba(250, 250, 250, 0.1);
+
+  /* 背景 - shadcn zinc dark */
+  --vp-c-bg: #09090b;
+  --vp-c-bg-alt: #09090b;
+  --vp-c-bg-soft: #18181b;
+  --vp-c-bg-mute: #27272a;
+
+  /* 文字 - shadcn 暗黑模式 */
+  --vp-c-text-1: #fafafa;
+  --vp-c-text-2: #a1a1aa;
+  --vp-c-text-3: #71717a;
+
+  /* 分割线 - shadcn border */
+  --vp-c-divider: #27272a;
+  --vp-c-divider-light: #18181b;
+
+  /* 自定义扩展颜色 */
+  --vp-c-accent-bg: #27272a;
+  --vp-c-accent-text: #fafafa;
+  --vp-c-muted-bg: #18181b;
+  --vp-c-muted-text: #a1a1aa;
+
+  /* Hero 文字颜色 */
+  --vp-c-hero-text: #fafafa;
+  --vp-c-hero-tagline: #a1a1aa;
+}
+
+/* 确保 VitePress 默认文字颜色正确应用 */
+.dark .VPHome {
+  color: var(--vp-c-text-1);
+}
+
+.dark .VPHome h1,
+.dark .VPHome h2,
+.dark .VPHome h3 {
+  color: var(--vp-c-text-1);
+}
+
+.dark .VPHome p {
+  color: var(--vp-c-text-2);
+}
+
+.dark .VPHero h1 {
+  color: var(--vp-c-hero-text) !important;
+}
+
+.dark .VPHero .tagline {
+  color: var(--vp-c-hero-tagline) !important;
+}
+
+.dark .VPHero .text {
+  color: var(--vp-c-text-1) !important;
 }
 
 /* 进度容器样式 */
@@ -59,6 +112,8 @@
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .vp-doc table th,
@@ -74,6 +129,25 @@
 
 .vp-doc table tr:hover {
   background: var(--vp-c-bg-soft);
+}
+
+/* 暗夜主题表格增强 - shadcn 风格 */
+.dark .vp-doc table {
+  border: 1px solid var(--vp-c-divider);
+}
+
+.dark .vp-doc table th {
+  background: var(--vp-c-accent-bg);
+  color: var(--vp-c-text-1);
+  border-color: var(--vp-c-divider);
+}
+
+.dark .vp-doc table td {
+  border-color: var(--vp-c-divider);
+}
+
+.dark .vp-doc table tr:hover {
+  background: var(--vp-c-muted-bg);
 }
 
 /* 优化代码块样式 */
@@ -112,6 +186,37 @@ div[class*='language-']:hover {
 .vp-doc .info {
   border-radius: 8px;
   border-left-width: 4px;
+}
+
+/* 暗夜主题提示框增强 - shadcn 风格 */
+.dark .vp-doc .custom-block {
+  background: var(--vp-c-muted-bg);
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-1);
+}
+
+.dark .vp-doc .tip {
+  background: rgba(250, 250, 250, 0.05);
+  border-color: var(--vp-c-divider);
+  border-left: 3px solid var(--vp-c-brand-1);
+}
+
+.dark .vp-doc .warning {
+  background: rgba(250, 204, 21, 0.08);
+  border-color: rgba(250, 204, 21, 0.2);
+  border-left: 3px solid #facc15;
+}
+
+.dark .vp-doc .danger {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  border-left: 3px solid #ef4444;
+}
+
+.dark .vp-doc .info {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.2);
+  border-left: 3px solid #3b82f6;
 }
 
 /* 优化列表样式 */
@@ -166,6 +271,12 @@ div[class*='language-']:hover {
   transform: scale(1.02);
 }
 
+/* 暗夜主题图片增强 - shadcn 风格 */
+.dark .vp-doc img {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--vp-c-divider);
+}
+
 /* 返回顶部按钮优化 */
 .VPBackToTop {
   background: var(--vp-c-brand-1) !important;
@@ -174,3 +285,119 @@ div[class*='language-']:hover {
 .VPBackToTop:hover {
   background: var(--vp-c-brand-2) !important;
 }
+
+/* 暗夜主题发光效果 - shadcn 风格 */
+.dark .VPBackToTop {
+  background: var(--vp-c-brand-1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark .VPBackToTop:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Hero 区域暗夜优化 - shadcn 风格 */
+.dark .VPHome {
+  background: #09090b;
+}
+
+/* 暗夜主题导航栏优化 - shadcn 风格 */
+.dark .VPNavBar {
+  background: rgba(9, 9, 11, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* 暗夜主题侧边栏优化 - shadcn 风格 */
+.dark .VPSidebar {
+  background: #09090b;
+  border-right: 1px solid var(--vp-c-divider);
+}
+
+/* 暗夜主题卡片阴影优化 - shadcn 风格 */
+.dark .feature-card,
+.dark .path-card,
+.dark .module-card {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .feature-card:hover,
+.dark .path-card:hover,
+.dark .module-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* 暗夜主题按钮优化 - shadcn 风格 */
+.dark .VPButton {
+  transition: all 0.2s ease;
+}
+
+.dark .VPButton.brand {
+  background: var(--vp-c-brand-1);
+  color: #09090b;
+  font-weight: 500;
+}
+
+.dark .VPButton.brand:hover {
+  background: var(--vp-c-brand-2);
+  transform: translateY(-1px);
+}
+
+.dark .VPButton.alt {
+  background: var(--vp-c-accent-bg);
+  color: var(--vp-c-text-1);
+  border: 1px solid var(--vp-c-divider);
+}
+
+.dark .VPButton.alt:hover {
+  background: var(--vp-c-muted-bg);
+  border-color: var(--vp-c-text-2);
+}
+
+/* 暗夜主题代码块优化 - shadcn 风格 */
+.dark div[class*='language-'] {
+  border-color: var(--vp-c-divider);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark div[class*='language-']:hover {
+  border-color: var(--vp-c-text-2);
+}
+
+/* 暗夜主题内联代码优化 - shadcn 风格 */
+.dark .vp-doc :not(pre) > code {
+  background: var(--vp-c-accent-bg);
+  color: var(--vp-c-brand-1);
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* 暗夜主题链接优化 - shadcn 风格 */
+.dark .vp-doc a {
+  color: var(--vp-c-brand-1);
+  transition: color 0.2s ease;
+}
+
+.dark .vp-doc a:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration: underline;
+}
+
+/* 暗夜主题滚动条优化 - shadcn 风格 */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-3);
+}
+

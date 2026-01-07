@@ -4,6 +4,10 @@ import { injectSpeedInsights } from '@vercel/speed-insights'
 import { inject } from '@vercel/analytics'
 import QuickStartTimeline from './components/QuickStartTimeline.vue'
 import InteractiveQuiz from './components/InteractiveQuiz.vue'
+import FeaturesCards from './components/FeaturesCards.vue'
+import LearningPathCards from './components/LearningPathCards.vue'
+import ModulesGrid from './components/ModulesGrid.vue'
+import TerminalCode from './components/TerminalCode.vue'
 import './style.css'
 
 // 注入 Vercel Analytics 和 Speed Insights
@@ -18,5 +22,9 @@ export default {
     // 注册全局组件
     app.component('QuickStartTimeline', QuickStartTimeline)
     app.component('InteractiveQuiz', InteractiveQuiz)
+    app.component('FeaturesCards', FeaturesCards)
+    app.component('LearningPathCards', LearningPathCards)
+    app.component('ModulesGrid', ModulesGrid)
+    app.component('TerminalCode', TerminalCode)
   }
 }
