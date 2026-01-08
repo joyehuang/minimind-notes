@@ -18,8 +18,87 @@ export default defineConfig({
 
   // Head 配置
   head: [
+    // 基础配置
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
+
+    // SEO Meta Tags
+    ['meta', { name: 'keywords', content: 'MiniMind, LLM, Transformer, 大语言模型, 深度学习, 机器学习, 人工智能, PyTorch, 教程, 学习笔记' }],
+    ['meta', { name: 'author', content: 'joyehuang' }],
+    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'googlebot', content: 'index, follow' }],
+
+    // Open Graph Meta Tags (for social media sharing)
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'MiniMind 学习笔记' }],
+    ['meta', { property: 'og:title', content: 'MiniMind 学习笔记 - 深入理解 LLM 训练的每个设计选择' }],
+    ['meta', { property: 'og:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择，包含模块化教学、代码示例和实践指南' }],
+    ['meta', { property: 'og:url', content: 'https://minimind.wiki' }],
+    ['meta', { property: 'og:image', content: 'https://minimind.wiki/og-image.png' }],
+    ['meta', { property: 'og:locale', content: 'zh_CN' }],
+
+    // Twitter Card Meta Tags
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'MiniMind 学习笔记 - 深入理解 LLM 训练' }],
+    ['meta', { name: 'twitter:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择' }],
+    ['meta', { name: 'twitter:image', content: 'https://minimind.wiki/og-image.png' }],
+
+    // Mobile Meta Tags
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0' }],
+    ['meta', { name: 'format-detection', content: 'telephone=no' }],
+
+    // Canonical URL
+    ['link', { rel: 'canonical', href: 'https://minimind.wiki' }],
+
+    // Structured Data (JSON-LD) for better SEO
+    ['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'MiniMind 学习笔记',
+      description: '深入理解 LLM 训练的每个设计选择 - 通过对照实验彻底理解大语言模型训练',
+      url: 'https://minimind.wiki',
+      author: {
+        '@type': 'Person',
+        name: 'joyehuang',
+        url: 'https://github.com/joyehuang'
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'MiniMind',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://minimind.wiki/logo.svg'
+        }
+      },
+      inLanguage: 'zh-CN',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://minimind.wiki/?q={search_term_string}',
+        'query-input': 'required name=search_term_string'
+      }
+    })],
+
+    // Structured Data for Educational Content
+    ['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Course',
+      name: 'MiniMind LLM 训练教程',
+      description: '从零开始学习大语言模型训练，包含 Transformer、注意力机制、位置编码等核心概念',
+      provider: {
+        '@type': 'Organization',
+        name: 'MiniMind',
+        sameAs: 'https://github.com/jingyaogong/minimind'
+      },
+      educationalLevel: 'Intermediate',
+      inLanguage: 'zh-CN',
+      isAccessibleForFree: true,
+      url: 'https://minimind.wiki',
+      hasCourseInstance: {
+        '@type': 'CourseInstance',
+        courseMode: 'online',
+        courseWorkload: 'PT30H'
+      }
+    })],
   ],
 
   // 主题配置
@@ -267,6 +346,6 @@ export default defineConfig({
 
   // 站点地图
   sitemap: {
-    hostname: 'https://minimind-notes.vercel.app'
+    hostname: 'https://minimind.wiki'
   }
 })

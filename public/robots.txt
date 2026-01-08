@@ -1,0 +1,12 @@
+# https://minimind.wiki/robots.txt
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow crawling of specific paths
+Disallow: /node_modules/
+Disallow: /.vitepress/cache/
+Disallow: /.git/
+
+# Sitemap location
+Sitemap: https://minimind.wiki/sitemap.xml
