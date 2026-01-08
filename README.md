@@ -10,9 +10,15 @@
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/pytorch-2.0+-orange.svg)](https://pytorch.org/)
 
-[快速开始](#-快速开始) • [学习路线](#-学习路线) • [模块导航](#-模块导航) • [贡献指南](#-贡献指南)
+**[🌐 在线访问网站](https://minimind.wiki)** • [快速开始](#-快速开始) • [学习路线](#-学习路线) • [模块导航](#-模块导航) • [贡献指南](#-贡献指南)
 
 </div>
+
+---
+
+## 🌐 在线访问
+
+**🎉 网站已上线！** 访问 **[https://minimind.wiki](https://minimind.wiki)** 在线浏览完整文档和交互式内容。
 
 ---
 
@@ -231,6 +237,9 @@ minimind-notes/
 
 ## 🔗 相关资源
 
+### 在线网站
+- **[minimind.wiki](https://minimind.wiki)** - 在线访问完整文档和交互式内容
+
 ### 论文
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer 原始论文
 - [RoFormer: RoPE](https://arxiv.org/abs/2104.09864) - 旋转位置编码
@@ -261,6 +270,8 @@ MIT License - 详见 [LICENSE](LICENSE)
 <div align="center">
 
 **⭐ 如果这个项目对你有帮助，请给个 Star！**
+
+**🌐 访问在线网站：** [https://minimind.wiki](https://minimind.wiki)
 
 **准备好了吗？** [开始你的学习之旅](./ROADMAP.md) 🚀
 
