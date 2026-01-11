@@ -30,7 +30,7 @@
   <a href="#-快速开始">⚡ 快速开始</a> • 
   <a href="#-学习路线">🗺️ 学习路线</a> • 
   <a href="#-模块导航">📦 模块导航</a> • 
-  <a href="README_EN.md">🇺🇸 English Readme</a>
+  <a href="README_en.md">🇺🇸 English Readme</a>
 </p>
 
 </div>
