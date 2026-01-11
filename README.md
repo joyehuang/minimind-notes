@@ -1,24 +1,47 @@
-# MiniMind 训练原理教案
-
-> 通过对照实验理解 LLM 训练的每个设计选择
-
 <div align="center">
 
-**这不是"命令复制手册"，而是"原理优先"的学习仓库**
+# 🧠 MiniMind | LLM 训练原理教案
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/pytorch-2.0+-orange.svg)](https://pytorch.org/)
+<p>
+  <strong>从 0 到 1 理解大模型：这不是"复制粘贴手册"，而是"原理优先"的实验场</strong>
+  <br>
+  <em>From 0 to 1: Not a "copy-paste" manual, but a principle-first experimental lab for LLMs.</em>
+</p>
 
-**[🌐 在线访问网站](https://minimind.wiki)** • [快速开始](#-快速开始) • [学习路线](#-学习路线) • [模块导航](#-模块导航) • [贡献指南](#-贡献指南)
+<p>
+  <a href="https://minimind.wiki">
+    <img src="https://img.shields.io/badge/Documentation-Wiki-blue?style=for-the-badge&logo=read-the-docs" alt="Website">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+  </a>
+  <a href="https://pytorch.org/">
+    <img src="https://img.shields.io/badge/PyTorch-2.0+-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
+  </a>
+</p>
+
+<h3>
+  🎉 完整交互式文档已上线 / Full Documentation Live
+  <br>
+  <a href="https://minimind.wiki">👉 https://minimind.wiki 👈</a>
+</h3>
+
+<p>
+  <a href="#-快速开始">⚡ 快速开始</a> • 
+  <a href="#-学习路线">🗺️ 学习路线</a> • 
+  <a href="#-模块导航">📦 模块导航</a> • 
+  <a href="README_EN.md">🇺🇸 English Readme</a>
+</p>
 
 </div>
 
 ---
 
-## 🌐 在线访问
+## 📖 简介 (Introduction)
 
-**🎉 网站已上线！** 访问 **[https://minimind.wiki](https://minimind.wiki)** 在线浏览完整文档和交互式内容。
+MiniMind 旨在通过极其精简的代码和**对照实验**，帮助开发者通过实践深入理解大语言模型（LLM）的训练机制。不仅告诉你“怎么做”，更通过实验数据告诉你“为什么要这么做”。
+
+> **Why this project?** Understand every design choice in LLM training through comparative experiments.
 
 ---
 
