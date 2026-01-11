@@ -3,6 +3,21 @@
 User-agent: *
 Allow: /
 
+# Disallow crawling of internal documentation
+Disallow: /CLAUDE
+Disallow: /CODE_OF_CONDUCT
+Disallow: /NOTE_UPDATE_GUIDE
+Disallow: /PR_DESCRIPTION
+Disallow: /README
+Disallow: /README_en
+Disallow: /SEO_SETUP_SUMMARY
+Disallow: /VITEPRESS_DEV_PLAN
+Disallow: /VITEPRESS_MIGRATION_PLAN
+Disallow: /VITEPRESS_RECOMMENDED_STRUCTURE
+Disallow: /VITEPRESS_SETUP_GUIDE
+Disallow: /docs-index-example
+Disallow: /dataset/
+
 # Disallow crawling of specific paths
 Disallow: /node_modules/
 Disallow: /.vitepress/cache/
