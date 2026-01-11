@@ -50,6 +50,15 @@ export default defineConfig({
     // Canonical URL
     ['link', { rel: 'canonical', href: 'https://minimind.wiki' }],
 
+    // Google Analytics 4
+    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-7B7HTLDJ65' }],
+    ['script', {}, `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7B7HTLDJ65');
+    `],
+
     // Structured Data (JSON-LD) for better SEO
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
@@ -346,6 +355,29 @@ export default defineConfig({
 
   // 站点地图
   sitemap: {
-    hostname: 'https://minimind.wiki'
+    hostname: 'https://minimind.wiki',
+    transformItems: (items) => {
+      // 排除不应该被索引的内部文档
+      const excludePatterns = [
+        '/CLAUDE',
+        '/CODE_OF_CONDUCT',
+        '/NOTE_UPDATE_GUIDE',
+        '/PR_DESCRIPTION',
+        '/README',
+        '/README_en',
+        '/SEO_SETUP_SUMMARY',
+        '/VITEPRESS_DEV_PLAN',
+        '/VITEPRESS_MIGRATION_PLAN',
+        '/VITEPRESS_RECOMMENDED_STRUCTURE',
+        '/VITEPRESS_SETUP_GUIDE',
+        '/docs-index-example',
+        '/dataset/dataset'
+      ]
+
+      return items.filter((item) => {
+        // 检查 URL 是否包含排除的路径
+        return !excludePatterns.some(pattern => item.url.includes(pattern))
+      })
+    }
   }
 })
