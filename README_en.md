@@ -59,6 +59,43 @@ This is a **modular LLM training tutorial** that helps you understand the traini
 
 ---
 
+## 👥 Who is This For?
+
+### 🎯 **Perfect for Students Seeking LLM Internships/Jobs!**
+
+This project is especially designed for students who want to enter the LLM field. By systematically learning LLM training principles, you will:
+- ✅ **Ace Interviews**: Deep understanding of Transformer, Attention, RoPE, and other core mechanisms helps you excel in technical interviews
+- ✅ **Stand Out**: Complete comparative experiments to showcase your deep understanding of LLM principles, making your resume more competitive
+- ✅ **Quick Start**: Understand modern LLM (Llama, GPT) training pipelines from scratch, not just a "framework user"
+- ✅ **Career Growth**: Master LLM training principles to build a solid foundation for future LLM-related work
+
+---
+
+### 🎓 Students and Researchers
+- **🎯 Students Seeking LLM Internships/Jobs**: Systematically learn LLM training principles to improve technical interview success rates
+- **📚 ML/DL Students**: Deeply understand the internal mechanisms of Transformers and LLMs, move beyond theory
+- **🔬 Graduate Students/PhD Candidates**: Understand LLM training principles to provide a solid foundation for research and paper writing
+- **💡 Researchers**: Understand design choices in modern LLM architectures and their underlying principles to inspire research directions
+
+### 💻 Developers
+- **🤖 AI/ML Engineers**: Progress from "knowing how to use frameworks" to "understanding principles" to solve real problems with confidence
+- **🌐 Full-Stack Developers**: Interested in LLMs and want to systematically learn training mechanisms to expand your tech stack
+- **⚙️ Algorithm Engineers**: Need to optimize or improve LLM training pipelines, understanding principles is key to making the right decisions
+
+### 🚀 Learners
+- **📖 With PyTorch Basics**: Familiar with basic deep learning concepts, want to dive deep into LLMs
+- **🛠️ Hands-on Learners**: Prefer understanding through experiments and code, not just theory
+- **🔍 Seek Deep Understanding**: Not satisfied with "getting code to work", want to know "why it's designed this way"
+
+### ❌ Not For
+- Complete beginners (suggest learning PyTorch basics first)
+- Users who only want to quickly deploy models without understanding principles
+- Users needing production-ready code and best practices (this project focuses on teaching)
+
+**💪 If you're preparing for LLM job interviews or want to deeply understand LLM training principles, this project is for you!** 🚀
+
+---
+
 ## ⚡ Quick Start
 
 ### 30-Minute Experience of Core Design

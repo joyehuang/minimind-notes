@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   // 站点信息
-  title: 'MiniMind 学习笔记',
+  title: 'minimind从零理解llm训练',
   description: '深入理解 LLM 训练的每个设计选择',
   lang: 'zh-CN',
 
@@ -30,8 +30,8 @@ export default defineConfig({
 
     // Open Graph Meta Tags (for social media sharing)
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:site_name', content: 'MiniMind 学习笔记' }],
-    ['meta', { property: 'og:title', content: 'MiniMind 学习笔记 - 深入理解 LLM 训练的每个设计选择' }],
+    ['meta', { property: 'og:site_name', content: 'minimind从零理解llm训练' }],
+    ['meta', { property: 'og:title', content: 'minimind从零理解llm训练 - 深入理解 LLM 训练的每个设计选择' }],
     ['meta', { property: 'og:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择，包含模块化教学、代码示例和实践指南' }],
     ['meta', { property: 'og:url', content: 'https://minimind.wiki' }],
     ['meta', { property: 'og:image', content: 'https://minimind.wiki/og-image.png' }],
@@ -39,7 +39,7 @@ export default defineConfig({
 
     // Twitter Card Meta Tags
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:title', content: 'MiniMind 学习笔记 - 深入理解 LLM 训练' }],
+    ['meta', { name: 'twitter:title', content: 'minimind从零理解llm训练 - 深入理解 LLM 训练' }],
     ['meta', { name: 'twitter:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择' }],
     ['meta', { name: 'twitter:image', content: 'https://minimind.wiki/og-image.png' }],
 
@@ -63,7 +63,7 @@ export default defineConfig({
     ['script', { type: 'application/ld+json' }, JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'MiniMind 学习笔记',
+      name: 'minimind从零理解llm训练',
       description: '深入理解 LLM 训练的每个设计选择 - 通过对照实验彻底理解大语言模型训练',
       url: 'https://minimind.wiki',
       author: {

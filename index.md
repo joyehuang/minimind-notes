@@ -2,8 +2,8 @@
 layout: home
 
 hero:
-  name: "MiniMind"
-  text: "训练原理教案"
+  name: "minimind"
+  text: "从零理解llm训练"
   tagline: 不再黑盒训练 — 通过对照实验彻底理解 LLM 的每个设计选择
   actions:
     - theme: brand
