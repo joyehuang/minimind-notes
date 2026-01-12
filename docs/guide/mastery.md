@@ -1,6 +1,7 @@
 ---
-title: 深度掌握 (30+小时)
-description: 从零训练一个完整的LLM
+title: 深度掌握 (30+小时) | minimind从零理解llm训练
+description: 从零训练一个完整的LLM。深入掌握大语言模型的完整训练流程，包括数据准备、模型架构、训练策略和优化技巧。
+keywords: LLM完整训练, 大模型训练, 从零训练LLM, Transformer完整教程, LLM深度掌握
 ---
 
 # 🎓 深度掌握 (30+小时)

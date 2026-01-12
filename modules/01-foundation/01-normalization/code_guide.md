@@ -1,3 +1,9 @@
+---
+title: Normalization 代码导读 | minimind从零理解llm训练
+description: 深入理解 MiniMind 中 RMSNorm 的真实实现。通过源码分析掌握归一化层的代码细节，包括 Pre-LN 和 Post-LN 的实现差异。
+keywords: RMSNorm代码, LayerNorm实现, 归一化源码, Pre-LN代码, Post-LN代码, LLM训练代码, Transformer源码
+---
+
 # Normalization 代码导读
 
 > 理解 MiniMind 中 RMSNorm 的真实实现

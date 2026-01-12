@@ -1,3 +1,9 @@
+---
+title: Attention（注意力机制）模块 | minimind从零理解llm训练
+description: 深入理解 Self-Attention 如何工作，以及 Q、K、V 的直觉。通过对照实验理解多头注意力、缩放点积注意力的原理和实现。
+keywords: 注意力机制, Attention, Self-Attention, QKV, 多头注意力, Transformer注意力, LLM训练
+---
+
 # 03. Attention（注意力机制）
 
 > Self-Attention 如何工作？Q、K、V 的直觉是什么？

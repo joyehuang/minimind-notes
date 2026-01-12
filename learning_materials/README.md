@@ -1,3 +1,9 @@
+---
+title: 学习辅助材料 | minimind从零理解llm训练
+description: 学习辅助材料包含帮助理解 MiniMind 核心概念的可执行示例代码。包括归一化、位置编码、注意力机制和前馈网络的实践代码。
+keywords: LLM代码示例, Transformer代码, 深度学习代码, PyTorch示例, LLM实践代码
+---
+
 # 📚 学习辅助材料
 
 这个文件夹包含了帮助理解 MiniMind 核心概念的可执行示例代码。

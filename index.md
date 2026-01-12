@@ -1,5 +1,8 @@
 ---
 layout: home
+title: minimind从零理解llm训练 | 深入理解 LLM 训练的每个设计选择
+description: 通过对照实验彻底理解大语言模型训练的每个设计选择。模块化教学、代码示例和实践指南，适合准备大模型岗位面试的同学。
+keywords: LLM训练, 大模型训练, Transformer教程, 深度学习教程, LLM面试准备, 大模型实习准备, 从零学习LLM
 
 hero:
   name: "minimind"

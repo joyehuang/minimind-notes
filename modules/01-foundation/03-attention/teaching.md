@@ -1,3 +1,9 @@
+---
+title: Attention（注意力机制）教学文档 | minimind从零理解llm训练
+description: 深入理解 Self-Attention 如何让模型"关注"相关信息。通过对照实验理解 QKV 机制、多头注意力、缩放点积注意力的原理和实现。
+keywords: 注意力机制, Attention, Self-Attention, QKV, 多头注意力, Multi-Head Attention, Transformer注意力, LLM注意力机制
+---
+
 # Attention（注意力机制）教学文档
 
 > 理解 Self-Attention 如何让模型"关注"相关信息

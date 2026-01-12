@@ -1,6 +1,7 @@
 ---
-title: 快速体验 (30分钟)
-description: 通过3个关键实验快速理解LLM核心设计选择
+title: 快速体验 (30分钟) | minimind从零理解llm训练
+description: 通过3个关键实验快速理解LLM核心设计选择。适合想要快速了解大模型训练原理的同学，特别是准备大模型岗位面试的同学。
+keywords: LLM快速入门, 大模型训练入门, Transformer快速学习, LLM面试准备, 30分钟学习LLM
 ---
 
 # ⚡ 快速体验 (30分钟)

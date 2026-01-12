@@ -1,3 +1,9 @@
+---
+title: FeedForward 自测题 | minimind从零理解llm训练
+description: FeedForward（前馈网络）模块自测题，检验你对扩张-压缩结构、SwiGLU 激活函数和 FFN 知识存储的理解程度。
+keywords: 前馈网络自测题, FeedForward测试, FFN测试题, Transformer前馈网络测试, LLM训练测试
+---
+
 # FeedForward 自测题
 
 > 完成以下题目检验你的理解程度

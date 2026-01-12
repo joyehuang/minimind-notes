@@ -1,3 +1,9 @@
+---
+title: Normalization（归一化）模块导航 | minimind从零理解llm训练
+description: Normalization（归一化）模块学习导航，包含教学文档、代码导读和自测题。理解为什么深层网络需要归一化，以及 RMSNorm 如何稳定训练。
+keywords: 归一化, Normalization, RMSNorm, LayerNorm, Pre-LN, Post-LN, LLM训练教程
+---
+
 # 01. Normalization（归一化）
 
 > 为什么深层网络需要归一化？RMSNorm 如何稳定训练？

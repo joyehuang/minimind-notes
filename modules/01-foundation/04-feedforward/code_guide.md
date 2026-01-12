@@ -1,3 +1,9 @@
+---
+title: FeedForward 代码导读 | minimind从零理解llm训练
+description: 深入理解 MiniMind 中 FeedForward（前馈网络）的真实实现。通过源码分析掌握扩张-压缩结构和 SwiGLU 激活函数的代码细节。
+keywords: FeedForward代码, 前馈网络实现, FFN源码, SwiGLU代码, Transformer前馈网络源码, LLM前馈网络代码
+---
+
 # FeedForward 代码导读
 
 > 理解 MiniMind 中 FeedForward 的真实实现

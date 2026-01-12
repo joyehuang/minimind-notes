@@ -1,3 +1,9 @@
+---
+title: Architecture（架构组装）模块 | minimind从零理解llm训练
+description: 将基础组件组装成完整的 Transformer。理解残差连接、Transformer Block 的组装顺序和架构设计原理。
+keywords: Transformer架构, 架构组装, 残差连接, Transformer Block, LLM架构设计
+---
+
 # Tier 2: Architecture（架构组装）
 
 > 将基础组件组装成完整的 Transformer

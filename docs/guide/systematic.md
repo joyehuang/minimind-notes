@@ -1,6 +1,7 @@
 ---
-title: 系统学习 (6小时)
-description: 完整掌握Transformer所有基础组件
+title: 系统学习 (6小时) | minimind从零理解llm训练
+description: 完整掌握Transformer所有基础组件。系统学习归一化、位置编码、注意力机制和前馈网络，深入理解LLM训练原理。
+keywords: LLM系统学习, Transformer系统教程, 大模型训练教程, 深度学习系统学习, LLM基础组件
 ---
 
 # 📚 系统学习 (6小时)

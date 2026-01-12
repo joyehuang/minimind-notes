@@ -1,3 +1,9 @@
+---
+title: Position Encoding 代码导读 | minimind从零理解llm训练
+description: 深入理解 MiniMind 中 RoPE（旋转位置编码）的真实实现。通过源码分析掌握位置编码的代码细节，包括旋转矩阵的计算和应用。
+keywords: RoPE代码, 位置编码实现, 旋转位置编码源码, Transformer位置编码代码, LLM位置编码
+---
+
 # Position Encoding 代码导读
 
 > 理解 MiniMind 中 RoPE 的真实实现

@@ -1,3 +1,9 @@
+---
+title: Normalization 自测题 | minimind从零理解llm训练
+description: Normalization（归一化）模块自测题，检验你对梯度消失、RMSNorm、Pre-LN 和 Post-LN 的理解程度。包含交互式题目和理论题。
+keywords: Normalization自测题, 归一化测试, LLM训练测试, Transformer测试题, 深度学习自测
+---
+
 # Normalization 自测题
 
 > 完成以下题目检验你的理解程度

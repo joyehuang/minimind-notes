@@ -1,3 +1,9 @@
+---
+title: Attention（注意力机制）模块导航 | minimind从零理解llm训练
+description: Attention（注意力机制）模块学习导航，包含教学文档、代码导读和自测题。理解 Self-Attention 如何工作，以及 Q、K、V 的直觉。
+keywords: 注意力机制, Attention, Self-Attention, QKV, Transformer注意力教程
+---
+
 # 03. Attention（注意力机制）
 
 > Self-Attention 如何工作？Q、K、V 的直觉是什么？

@@ -1,5 +1,8 @@
 ---
 layout: home
+title: MiniMind 学习指南 | minimind从零理解llm训练
+description: MiniMind 学习指南首页，提供快速体验、系统学习和深度掌握三条学习路径。从零开始理解大语言模型训练，适合准备大模型岗位面试的同学。
+keywords: LLM学习指南, 大模型训练教程, Transformer教程, LLM面试准备, 大模型实习准备
 
 hero:
   name: "MiniMind"

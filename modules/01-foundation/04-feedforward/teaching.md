@@ -1,3 +1,9 @@
+---
+title: FeedForward（前馈网络）教学文档 | minimind从零理解llm训练
+description: 深入理解前馈网络的"扩张-压缩"结构和 SwiGLU 激活函数。通过对照实验理解 FFN 如何存储知识，以及为什么需要扩张因子。
+keywords: 前馈网络, FeedForward, FFN, SwiGLU, 激活函数, Transformer前馈网络, LLM训练
+---
+
 # FeedForward（前馈网络）教学文档
 
 > 理解"扩张-压缩"结构和 SwiGLU 激活函数

@@ -1,3 +1,9 @@
+---
+title: Position Encoding 自测题 | minimind从零理解llm训练
+description: Position Encoding（位置编码）模块自测题，检验你对 RoPE、绝对位置编码、相对位置编码和长度外推的理解程度。
+keywords: 位置编码自测题, RoPE测试, Transformer位置编码测试, LLM训练测试题
+---
+
 # Position Encoding 自测题
 
 > 完成以下题目检验你的理解程度

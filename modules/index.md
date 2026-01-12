@@ -1,3 +1,9 @@
+---
+title: MiniMind 模块化教学 | minimind从零理解llm训练
+description: 通过对照实验理解 LLM 训练的每个设计选择。模块化教学包含基础组件（归一化、位置编码、注意力、前馈网络）和架构组装。
+keywords: LLM训练教程, Transformer教程, 模块化教学, 大模型训练, 深度学习教程, LLM面试准备
+---
+
 # MiniMind 模块化教学
 
 > 通过对照实验理解 LLM 训练的每个设计选择

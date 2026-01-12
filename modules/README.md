@@ -1,3 +1,9 @@
+---
+title: MiniMind 模块化教学导航 | minimind从零理解llm训练
+description: MiniMind 模块化教学导航，通过对照实验理解 LLM 训练的每个设计选择。包含基础组件和架构组装的完整学习路径。
+keywords: LLM训练教程, Transformer教程, 模块化教学, 大模型训练, 深度学习教程
+---
+
 # MiniMind 模块化教学
 
 > 通过对照实验理解 LLM 训练的每个设计选择

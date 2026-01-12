@@ -1,3 +1,9 @@
+---
+title: Position Encoding（位置编码）教学文档 | minimind从零理解llm训练
+description: 深入理解 Transformer 如何处理位置信息，以及 RoPE（旋转位置编码）的工作原理。通过对照实验理解绝对位置编码 vs 相对位置编码的区别，掌握长度外推技术。
+keywords: 位置编码, Position Encoding, RoPE, 旋转位置编码, 绝对位置编码, 相对位置编码, 长度外推, Transformer位置编码
+---
+
 # Position Encoding（位置编码）教学文档
 
 > 理解 Transformer 如何处理位置信息，以及 RoPE 的工作原理

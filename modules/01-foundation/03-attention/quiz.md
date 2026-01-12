@@ -1,3 +1,9 @@
+---
+title: Attention 自测题 | minimind从零理解llm训练
+description: Attention（注意力机制）模块自测题，检验你对 QKV、多头注意力、缩放点积注意力和注意力权重的理解程度。
+keywords: 注意力机制自测题, Attention测试, QKV测试题, Transformer注意力测试, LLM训练测试
+---
+
 # Attention 自测题
 
 > 完成以下题目检验你的理解程度

@@ -1,3 +1,9 @@
+---
+title: Attention 代码导读 | minimind从零理解llm训练
+description: 深入理解 MiniMind 中 Attention（注意力机制）的真实实现。通过源码分析掌握 QKV 计算、多头注意力、缩放点积注意力的代码细节。
+keywords: Attention代码, 注意力机制实现, QKV源码, 多头注意力代码, Transformer注意力源码, LLM注意力代码
+---
+
 # Attention 代码导读
 
 > 理解 MiniMind 中 Attention 的真实实现

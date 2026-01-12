@@ -1,3 +1,9 @@
+---
+title: FeedForward（前馈网络）模块导航 | minimind从零理解llm训练
+description: FeedForward（前馈网络）模块学习导航，包含教学文档、代码导读和自测题。理解为什么需要"扩张-压缩"结构，以及 SwiGLU 有什么优势。
+keywords: 前馈网络, FeedForward, FFN, SwiGLU, Transformer前馈网络教程
+---
+
 # 04. FeedForward（前馈网络）
 
 > 为什么需要"扩张-压缩"？SwiGLU 有什么优势？

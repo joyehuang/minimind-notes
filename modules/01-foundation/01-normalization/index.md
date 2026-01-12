@@ -1,3 +1,9 @@
+---
+title: Normalization（归一化）模块 | minimind从零理解llm训练
+description: 深入理解为什么深层网络需要归一化，以及 RMSNorm 如何稳定训练。通过对照实验理解 Pre-LN vs Post-LN 的区别，掌握梯度消失和梯度爆炸的解决方案。
+keywords: 归一化, Normalization, RMSNorm, LayerNorm, Pre-LN, Post-LN, 梯度消失, 梯度爆炸, LLM训练
+---
+
 # 01. Normalization（归一化）
 
 > 为什么深层网络需要归一化？RMSNorm 如何稳定训练？

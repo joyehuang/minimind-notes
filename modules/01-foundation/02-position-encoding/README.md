@@ -1,3 +1,9 @@
+---
+title: Position Encoding（位置编码）模块导航 | minimind从零理解llm训练
+description: Position Encoding（位置编码）模块学习导航，包含教学文档、代码导读和自测题。理解为什么 Transformer 需要位置信息，以及 RoPE 如何工作。
+keywords: 位置编码, Position Encoding, RoPE, 旋转位置编码, Transformer位置编码教程
+---
+
 # 02. Position Encoding（位置编码）
 
 > 为什么 Transformer 需要位置信息？RoPE 如何工作？

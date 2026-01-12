@@ -1,3 +1,9 @@
+---
+title: Foundation（基础组件）模块 | minimind从零理解llm训练
+description: 理解 Transformer 的基本构建块，包括归一化、位置编码、注意力机制和前馈网络。通过对照实验深入理解每个组件的设计原理。
+keywords: Transformer基础组件, 归一化, 位置编码, 注意力机制, 前馈网络, LLM基础组件
+---
+
 # Tier 1: Foundation（基础组件）
 
 > 理解 Transformer 的基本构建块
