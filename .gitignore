@@ -40,6 +40,10 @@ Thumbs.db
 node_modules/
 .vitepress/dist/
 .vitepress/cache/
+.vitepress/.temp/
+
+# Claude AI
+.claude/
 
 # Other
 website/

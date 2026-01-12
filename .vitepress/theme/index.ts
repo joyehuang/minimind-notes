@@ -2,6 +2,7 @@
 import DefaultTheme from 'vitepress/theme'
 import { injectSpeedInsights } from '@vercel/speed-insights'
 import { inject } from '@vercel/analytics'
+import Layout from './Layout.vue'
 import QuickStartTimeline from './components/QuickStartTimeline.vue'
 import InteractiveQuiz from './components/InteractiveQuiz.vue'
 import FeaturesCards from './components/FeaturesCards.vue'
@@ -18,6 +19,7 @@ if (typeof window !== 'undefined') {
 
 export default {
   extends: DefaultTheme,
+  Layout,
   enhanceApp({ app }) {
     // 注册全局组件
     app.component('QuickStartTimeline', QuickStartTimeline)
