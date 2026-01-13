@@ -1,6 +1,7 @@
 ---
-title: 学习笔记总索引
-description: MiniMind 学习笔记系统的导航入口
+title: 学习笔记总索引 | minimind从零理解llm训练
+description: MiniMind 学习笔记系统的导航入口。包含学习日志、知识库和学习辅助材料的完整索引，帮助快速查找学习资源。
+keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习笔记, 深度学习笔记
 ---
 
 # MiniMind 学习笔记 - 总索引

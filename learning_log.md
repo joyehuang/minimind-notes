@@ -1,6 +1,7 @@
 ---
-title: 学习日志
-description: 记录 MiniMind 学习历程中的每日进度、问题和思考
+title: 学习日志 | minimind从零理解llm训练
+description: 记录 MiniMind 学习历程中的每日进度、问题和思考。包含环境搭建、模型运行、性能测试等学习过程的详细记录。
+keywords: LLM学习日志, 大模型学习记录, Transformer学习笔记, 深度学习学习过程
 ---
 
 # MiniMind 学习日志

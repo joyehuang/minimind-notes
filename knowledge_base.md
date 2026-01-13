@@ -1,6 +1,7 @@
 ---
-title: 知识库
-description: 系统化整理的技术知识、概念解释和问答记录
+title: 知识库 | minimind从零理解llm训练
+description: 系统化整理的技术知识、概念解释和问答记录。包含归一化机制、位置编码、注意力机制等 LLM 核心概念的详细解释。
+keywords: LLM知识库, Transformer知识库, 大模型知识库, 深度学习知识库, LLM概念解释
 ---
 
 # MiniMind 知识库
