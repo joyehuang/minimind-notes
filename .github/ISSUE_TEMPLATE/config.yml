@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/joyehuang/minimind-notes/discussions
+    about: 提问、讨论、分享学习心得
+  - name: 📖 在线文档
+    url: https://minimind.wiki
+    about: 访问完整的在线文档和交互式内容
+  - name: 🌐 原项目 MiniMind
+    url: https://github.com/jingyaogong/minimind
+    about: 查看原项目 MiniMind 的代码和文档

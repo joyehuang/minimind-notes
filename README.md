@@ -246,11 +246,19 @@ python exp1_attention_basics.py
 
 ## 🤝 贡献指南
 
-欢迎补充：
+欢迎各种形式的贡献！我们特别欢迎：
 - ✨ 新的对照实验
 - 📊 更好的可视化
 - 🌍 英文翻译
 - 🐛 错误修正
+- 📖 文档改进
+
+**快速开始**：
+- 📋 [查看完整贡献指南](.github/CONTRIBUTING.md)
+- 🐛 [报告 Bug](https://github.com/joyehuang/minimind-notes/issues/new?template=bug_report.md)
+- ✨ [建议新功能](https://github.com/joyehuang/minimind-notes/issues/new?template=feature_request.md)
+- 🔬 [建议新实验](https://github.com/joyehuang/minimind-notes/issues/new?template=experiment_suggestion.md)
+- 💬 [参与讨论](https://github.com/joyehuang/minimind-notes/discussions)
 
 **提交前请确保**：
 - [ ] 实验可独立运行
