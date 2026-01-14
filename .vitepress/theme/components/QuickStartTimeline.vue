@@ -6,10 +6,10 @@
           <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
           </svg>
-          30分钟快速体验
+          {{ copy.badge }}
         </div>
-        <h2>通过 3 个关键实验理解核心设计</h2>
-        <p>每个实验只需 5-10 分钟，在 CPU 上即可运行，快速掌握 LLM 训练的核心秘密</p>
+        <h2>{{ copy.title }}</h2>
+        <p>{{ copy.description }}</p>
       </div>
 
       <div class="timeline-wrapper">
@@ -48,7 +48,7 @@
           <div class="step-card-wrapper">
             <div class="step-card">
               <div class="step-header">
-                <div class="step-number">Step 0{{ index + 1 }}</div>
+                <div class="step-number">{{ copy.stepLabel }} 0{{ index + 1 }}</div>
                 <div class="step-duration">
                   <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
@@ -72,7 +72,7 @@
               </div>
 
               <a :href="step.link" class="step-button">
-                开始实验
+                {{ copy.cta }}
                 <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
@@ -84,8 +84,8 @@
       </div>
 
       <div class="section-footer">
-        <a href="/ROADMAP" class="footer-link">
-          查看完整学习路线图
+        <a :href="withLocale('/ROADMAP')" class="footer-link">
+          {{ copy.footer }}
           <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
@@ -97,39 +97,94 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useLocale } from '../i18n'
 
 const activeStep = ref(0)
+const { isEn, localePath } = useLocale()
+const withLocale = (path: string) => `${localePath.value}${path}`
 
-const steps = [
-  {
-    icon: 'chart',
-    title: '为什么需要归一化？',
-    description: '观察梯度消失现象，理解 RMSNorm 如何稳定训练过程',
-    duration: '5 分钟',
-    module: '归一化模块',
-    link: '/modules/01-foundation/01-normalization/teaching',
-    completed: false
-  },
-  {
-    icon: 'compass',
-    title: '为什么用 RoPE？',
-    description: '对比绝对位置编码，理解旋转位置编码在外推性上的优势',
-    duration: '10 分钟',
-    module: '位置编码模块',
-    link: '/modules/01-foundation/02-position-encoding/teaching',
-    completed: false
-  },
-  {
-    icon: 'link',
-    title: '为什么需要残差连接？',
-    description: '实验验证深层网络训练的梯度流问题，见证残差连接的威力',
-    duration: '5 分钟',
-    module: '残差连接模块',
-    link: '/modules/02-architecture/01-residual-connection/teaching',
-    completed: false
-  }
-]
+const copy = computed(() =>
+  isEn.value
+    ? {
+        badge: 'Quick Start in 30 Minutes',
+        title: 'Understand core design choices with 3 experiments',
+        description: 'Each experiment takes 5–10 minutes on CPU. Quickly grasp the essentials behind LLM training.',
+        stepLabel: 'Step',
+        cta: 'Start Experiments',
+        footer: 'View the full learning roadmap'
+      }
+    : {
+        badge: '30分钟快速体验',
+        title: '通过 3 个关键实验理解核心设计',
+        description: '每个实验只需 5-10 分钟，在 CPU 上即可运行，快速掌握 LLM 训练的核心秘密',
+        stepLabel: '步骤',
+        cta: '开始实验',
+        footer: '查看完整学习路线图'
+      }
+)
+
+const steps = computed(() =>
+  isEn.value
+    ? [
+        {
+          icon: 'chart',
+          title: 'Why normalization?',
+          description: 'Observe gradient vanishing and see how RMSNorm stabilizes training.',
+          duration: '5 min',
+          module: 'Normalization',
+          link: withLocale('/modules/01-foundation/01-normalization/'),
+          completed: false
+        },
+        {
+          icon: 'compass',
+          title: 'Why RoPE?',
+          description: 'Compare absolute position encoding and learn why RoPE extrapolates better.',
+          duration: '10 min',
+          module: 'Position Encoding',
+          link: withLocale('/modules/01-foundation/02-position-encoding/'),
+          completed: false
+        },
+        {
+          icon: 'link',
+          title: 'Why residual connections?',
+          description: 'Validate gradient flow issues in deep nets and see the power of residuals.',
+          duration: '5 min',
+          module: 'Residual Connection',
+          link: withLocale('/modules/02-architecture/01-residual-connection/'),
+          completed: false
+        }
+      ]
+    : [
+        {
+          icon: 'chart',
+          title: '为什么需要归一化？',
+          description: '观察梯度消失现象，理解 RMSNorm 如何稳定训练过程',
+          duration: '5 分钟',
+          module: '归一化模块',
+          link: withLocale('/modules/01-foundation/01-normalization/'),
+          completed: false
+        },
+        {
+          icon: 'compass',
+          title: '为什么用 RoPE？',
+          description: '对比绝对位置编码，理解旋转位置编码在外推性上的优势',
+          duration: '10 分钟',
+          module: '位置编码模块',
+          link: withLocale('/modules/01-foundation/02-position-encoding/'),
+          completed: false
+        },
+        {
+          icon: 'link',
+          title: '为什么需要残差连接？',
+          description: '实验验证深层网络训练的梯度流问题，见证残差连接的威力',
+          duration: '5 分钟',
+          module: '残差连接模块',
+          link: withLocale('/modules/02-architecture/01-residual-connection/'),
+          completed: false
+        }
+      ]
+)
 </script>
 
 <style scoped>

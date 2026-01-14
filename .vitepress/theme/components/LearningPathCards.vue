@@ -2,9 +2,9 @@
   <section class="learning-path-section">
     <div class="path-container">
       <div class="path-header">
-        <div class="header-badge">选择你的学习路径</div>
-        <h2>根据时间和目标选择合适的学习路线</h2>
-        <p>不同路径适合不同需求 — 从快速体验到深度掌握，循序渐进</p>
+        <div class="header-badge">{{ copy.badge }}</div>
+        <h2>{{ copy.title }}</h2>
+        <p>{{ copy.description }}</p>
       </div>
 
       <div class="paths-grid">
@@ -47,7 +47,7 @@
             </div>
 
             <a :href="path.link" class="path-button">
-              开始学习
+              {{ copy.cta }}
               <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
@@ -63,35 +63,89 @@
 </template>
 
 <script setup lang="ts">
-const paths = [
-  {
-    icon: 'zap',
-    title: '快速体验',
-    duration: '30 分钟',
-    description: '用 3 个实验快速理解 LLM 训练的核心设计选择，适合初次接触',
-    badge: '最受欢迎',
-    variant: 'primary',
-    link: '/ROADMAP#-快速体验-30-分钟'
-  },
-  {
-    icon: 'book',
-    title: '系统学习',
-    duration: '6 小时',
-    description: '完整掌握 Transformer 的所有基础组件，适合系统学习',
-    badge: '系统全面',
-    variant: 'secondary',
-    link: '/ROADMAP#-系统学习-6-小时'
-  },
-  {
-    icon: 'graduation',
-    title: '深度掌握',
-    duration: '30+ 小时',
-    description: '从零开始完整训练你的第一个 LLM，适合深入研究',
-    badge: '终极挑战',
-    variant: 'tertiary',
-    link: '/ROADMAP#-深度掌握-30-小时'
-  }
-]
+import { computed } from 'vue'
+import { useLocale } from '../i18n'
+
+const { isEn, localePath } = useLocale()
+const withLocale = (path: string) => `${localePath.value}${path}`
+
+const copy = computed(() =>
+  isEn.value
+    ? {
+        badge: 'Pick Your Learning Path',
+        title: 'Choose the best path for your time and goals',
+        description: 'Different paths for different needs — from quick taste to deep mastery.',
+        cta: 'Start Learning'
+      }
+    : {
+        badge: '选择你的学习路径',
+        title: '根据时间和目标选择合适的学习路线',
+        description: '不同路径适合不同需求 — 从快速体验到深度掌握，循序渐进',
+        cta: '开始学习'
+      }
+)
+
+const paths = computed(() =>
+  isEn.value
+    ? [
+        {
+          icon: 'zap',
+          title: 'Quick Start',
+          duration: '30 min',
+          description: 'Use 3 experiments to grasp key LLM design choices. Great for first timers.',
+          badge: 'Most Popular',
+          variant: 'primary',
+          link: withLocale('/ROADMAP#quick-start-30-min')
+        },
+        {
+          icon: 'book',
+          title: 'Systematic Study',
+          duration: '6 hours',
+          description: 'Master all Transformer fundamentals with a complete, structured path.',
+          badge: 'Comprehensive',
+          variant: 'secondary',
+          link: withLocale('/ROADMAP#systematic-study-6-hours')
+        },
+        {
+          icon: 'graduation',
+          title: 'Deep Mastery',
+          duration: '30+ hours',
+          description: 'Train a full LLM from scratch and go deep into architecture and training.',
+          badge: 'Ultimate Challenge',
+          variant: 'tertiary',
+          link: withLocale('/ROADMAP#deep-mastery-30-hours')
+        }
+      ]
+    : [
+        {
+          icon: 'zap',
+          title: '快速体验',
+          duration: '30 分钟',
+          description: '用 3 个实验快速理解 LLM 训练的核心设计选择，适合初次接触',
+          badge: '最受欢迎',
+          variant: 'primary',
+          link: withLocale('/ROADMAP#-快速体验-30-分钟')
+        },
+        {
+          icon: 'book',
+          title: '系统学习',
+          duration: '6 小时',
+          description: '完整掌握 Transformer 的所有基础组件，适合系统学习',
+          badge: '系统全面',
+          variant: 'secondary',
+          link: withLocale('/ROADMAP#-系统学习-6-小时')
+        },
+        {
+          icon: 'graduation',
+          title: '深度掌握',
+          duration: '30+ 小时',
+          description: '从零开始完整训练你的第一个 LLM，适合深入研究',
+          badge: '终极挑战',
+          variant: 'tertiary',
+          link: withLocale('/ROADMAP#-深度掌握-30-小时')
+        }
+      ]
+)
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
       <div class="question-header">
         <span class="question-number">Q{{ qIndex + 1 }}</span>
         <h3 class="question-title">{{ question.question }}</h3>
-        <span v-if="question.type === 'multiple'" class="question-badge">多选</span>
+        <span v-if="question.type === 'multiple'" class="question-badge">{{ copy.multiple }}</span>
       </div>
 
       <div class="options">
@@ -49,7 +49,7 @@
       <div v-if="submitted" class="explanation">
         <div class="explanation-header">
           <span class="explanation-icon">💡</span>
-          <strong>解析</strong>
+          <strong>{{ copy.explanation }}</strong>
         </div>
         <div class="explanation-content" v-html="question.explanation"></div>
       </div>
@@ -62,51 +62,51 @@
         :disabled="!canSubmit"
         @click="submitQuiz"
       >
-        {{ canSubmit ? '提交答案' : '请完成所有题目' }}
+        {{ canSubmit ? copy.submit : copy.completeAll }}
       </button>
       <button v-else class="reset-button" @click="resetQuiz">
-        重新答题
+        {{ copy.retry }}
       </button>
     </div>
 
     <div v-if="submitted" class="quiz-results">
       <div class="results-header">
-        <h3>📊 答题统计</h3>
+        <h3>📊 {{ copy.resultsTitle }}</h3>
       </div>
       <div class="results-score">
         <div class="score-circle" :class="scoreLevel">
           <div class="score-value">{{ score }}</div>
           <div class="score-total">/ {{ questions.length }}</div>
         </div>
-        <div class="score-percentage">正确率: {{ scorePercentage }}%</div>
+        <div class="score-percentage">{{ copy.accuracy }}: {{ scorePercentage }}%</div>
       </div>
       <div class="results-feedback">
         <div v-if="scorePercentage === 100" class="feedback feedback-perfect">
           <div class="feedback-icon">🎉</div>
-          <div class="feedback-title">完美!</div>
+          <div class="feedback-title">{{ copy.feedback.perfectTitle }}</div>
           <div class="feedback-text">
-            恭喜你全部答对！你对本模块的理解非常扎实。可以继续学习下一个模块了！
+            {{ copy.feedback.perfectText }}
           </div>
         </div>
         <div v-else-if="scorePercentage >= 80" class="feedback feedback-great">
           <div class="feedback-icon">👍</div>
-          <div class="feedback-title">很好!</div>
+          <div class="feedback-title">{{ copy.feedback.greatTitle }}</div>
           <div class="feedback-text">
-            你已经掌握了大部分知识点。建议复习一下错题，巩固理解后继续前进。
+            {{ copy.feedback.greatText }}
           </div>
         </div>
         <div v-else-if="scorePercentage >= 60" class="feedback feedback-good">
           <div class="feedback-icon">💪</div>
-          <div class="feedback-title">继续加油!</div>
+          <div class="feedback-title">{{ copy.feedback.goodTitle }}</div>
           <div class="feedback-text">
-            你已经理解了基础概念，但还需要加深理解。建议回到 teaching.md 复习一下，然后重新测试。
+            {{ copy.feedback.goodText }}
           </div>
         </div>
         <div v-else class="feedback feedback-needs-work">
           <div class="feedback-icon">📚</div>
-          <div class="feedback-title">需要加强</div>
+          <div class="feedback-title">{{ copy.feedback.needsWorkTitle }}</div>
           <div class="feedback-text">
-            建议先回到 teaching.md 系统学习一遍，运行实验代码加深理解，然后再来测试。不要着急，慢慢来！
+            {{ copy.feedback.needsWorkText }}
           </div>
         </div>
       </div>
@@ -116,6 +116,51 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useLocale } from '../i18n'
+
+const { isEn } = useLocale()
+
+const copy = computed(() =>
+  isEn.value
+    ? {
+        multiple: 'Multiple',
+        explanation: 'Explanation',
+        submit: 'Submit Answers',
+        completeAll: 'Please answer all questions',
+        retry: 'Retry',
+        resultsTitle: 'Quiz Results',
+        accuracy: 'Accuracy',
+        feedback: {
+          perfectTitle: 'Perfect!',
+          perfectText: 'You got everything right. Solid understanding — move on to the next module!',
+          greatTitle: 'Great!',
+          greatText: 'You’ve mastered most of the concepts. Review the mistakes and keep going.',
+          goodTitle: 'Keep it up!',
+          goodText: 'You understand the basics but need more depth. Revisit teaching.md and retry.',
+          needsWorkTitle: 'Needs Work',
+          needsWorkText: 'Go back to teaching.md, run the experiments, then try again — take it slow!'
+        }
+      }
+    : {
+        multiple: '多选',
+        explanation: '解析',
+        submit: '提交答案',
+        completeAll: '请完成所有题目',
+        retry: '重新答题',
+        resultsTitle: '答题统计',
+        accuracy: '正确率',
+        feedback: {
+          perfectTitle: '完美!',
+          perfectText: '恭喜你全部答对！你对本模块的理解非常扎实。可以继续学习下一个模块了！',
+          greatTitle: '很好!',
+          greatText: '你已经掌握了大部分知识点。建议复习一下错题，巩固理解后继续前进。',
+          goodTitle: '继续加油!',
+          goodText: '你已经理解了基础概念，但还需要加深理解。建议回到 teaching.md 复习一下，然后重新测试。',
+          needsWorkTitle: '需要加强',
+          needsWorkText: '建议先回到 teaching.md 系统学习一遍，运行实验代码加深理解，然后再来测试。不要着急，慢慢来！'
+        }
+      }
+)
 
 interface QuizOption {
   label: string
