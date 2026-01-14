@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useData } from 'vitepress'
+import { getBreadcrumbMappings, getHomeLabel } from '../i18n/breadcrumbs'
 
 interface BreadcrumbItem {
   '@type': 'ListItem'
@@ -15,18 +16,22 @@ interface BreadcrumbListSchema {
 }
 
 export function useBreadcrumbSchema() {
-  const { page } = useData()
+  const { page, lang } = useData()
 
   const breadcrumbSchema = computed<BreadcrumbListSchema | null>(() => {
     const path = page.value.relativePath
     const parts = path.replace(/\.md$/, '').split('/')
     const items: BreadcrumbItem[] = []
 
+    // 获取当前语言的映射和首页标签
+    const pathMappings = getBreadcrumbMappings(lang.value)
+    const homeLabel = getHomeLabel(lang.value)
+
     // 添加首页
     items.push({
       '@type': 'ListItem',
       position: 1,
-      name: '首页',
+      name: homeLabel,
       item: 'https://minimind.wiki/',
     })
 
@@ -41,34 +46,8 @@ export function useBreadcrumbSchema() {
 
       currentPath += (currentPath ? '/' : '') + part
 
-      // 生成面包屑名称
-      let name = part
-
-      // 特殊路径映射
-      const pathMappings: Record<string, string> = {
-        'docs': '学习指南',
-        'guide': '学习指南',
-        'quick-start': '快速体验',
-        'systematic': '系统学习',
-        'mastery': '深度掌握',
-        'modules': '模块教学',
-        '01-foundation': '基础组件',
-        '02-architecture': '架构组装',
-        '01-normalization': 'Normalization（归一化）',
-        '02-position-encoding': 'Position Encoding（位置编码）',
-        '03-attention': 'Attention（注意力机制）',
-        '04-feedforward': 'FeedForward（前馈网络）',
-        'teaching': '教学文档',
-        'code_guide': '代码导读',
-        'quiz': '自测题',
-        'learning_log': '学习日志',
-        'knowledge_base': '知识库',
-        'notes': '笔记索引',
-        'learning_materials': '学习材料',
-        'ROADMAP': '学习路线图',
-      }
-
-      name = pathMappings[part] || part
+      // 使用 i18n 映射生成面包屑名称
+      const name = pathMappings[part] || part
 
       // 跳过 guide 作为单独的面包屑
       if (part === 'guide') continue
