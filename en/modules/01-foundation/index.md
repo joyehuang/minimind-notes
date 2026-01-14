@@ -1,6 +1,6 @@
 ﻿---
 title: Foundation Modules | MiniMind LLM Training
-description: Understand Transformer building blocks: normalization, position encoding, attention, and feedforward. Learn through experiments and theory.
+description: "Understand Transformer building blocks: normalization, position encoding, attention, and feedforward. Learn through experiments and theory."
 keywords: Transformer fundamentals, normalization, position encoding, attention, feedforward
 ---
 
