@@ -370,18 +370,97 @@ export default defineConfig({
         '/README',
         '/README_en',
         '/SEO_SETUP_SUMMARY',
+        '/SEO_OPTIMIZATION_PLAN',
         '/VITEPRESS_DEV_PLAN',
         '/VITEPRESS_MIGRATION_PLAN',
         '/VITEPRESS_RECOMMENDED_STRUCTURE',
         '/VITEPRESS_SETUP_GUIDE',
+        '/BREADCRUMB_I18N_GUIDE',
         '/docs-index-example',
         '/dataset/dataset'
       ]
 
-      return items.filter((item) => {
-        // 检查 URL 是否包含排除的路径
-        return !excludePatterns.some(pattern => item.url.includes(pattern))
-      })
+      return items
+        .filter((item) => {
+          // 检查 URL 是否包含排除的路径
+          return !excludePatterns.some(pattern => item.url.includes(pattern))
+        })
+        .map((item) => {
+          // 根据 URL 设置优先级和更新频率
+          let priority = 0.5
+          let changefreq = 'monthly'
+
+          // 首页 - 最高优先级
+          if (item.url === 'https://minimind.wiki/') {
+            priority = 1.0
+            changefreq = 'weekly'
+          }
+          // 学习路线图 - 高优先级
+          else if (item.url.includes('/ROADMAP')) {
+            priority = 0.9
+            changefreq = 'weekly'
+          }
+          // 学习指南页面 - 高优先级
+          else if (
+            item.url.includes('/docs/') ||
+            item.url.includes('/docs/guide/')
+          ) {
+            priority = 0.8
+            changefreq = 'weekly'
+          }
+          // 模块教学页面 - 高优先级
+          else if (item.url.includes('/modules/')) {
+            // 模块首页
+            if (
+              item.url.endsWith('/modules/') ||
+              item.url.includes('/modules/index')
+            ) {
+              priority = 0.9
+              changefreq = 'weekly'
+            }
+            // 模块分类页面
+            else if (
+              item.url.includes('/01-foundation/') ||
+              item.url.includes('/02-architecture/')
+            ) {
+              // 分类首页
+              if (
+                item.url.match(/\/(01-foundation|02-architecture)\/?$/) ||
+                item.url.match(/\/(01-foundation|02-architecture)\/index$/)
+              ) {
+                priority = 0.85
+                changefreq = 'weekly'
+              }
+              // 具体模块内容（teaching, code_guide, quiz）
+              else {
+                priority = 0.8
+                changefreq = 'weekly'
+              }
+            }
+          }
+          // 学习笔记页面 - 高优先级且频繁更新
+          else if (
+            item.url.includes('/learning_log') ||
+            item.url.includes('/knowledge_base') ||
+            item.url.includes('/notes')
+          ) {
+            priority = 0.7
+            changefreq = 'daily'
+          }
+          // 学习材料
+          else if (item.url.includes('/learning_materials')) {
+            priority = 0.6
+            changefreq = 'weekly'
+          }
+
+          return {
+            ...item,
+            priority,
+            changefreq,
+            // 添加最后修改时间（使用当前时间作为默认值，实际应该从 git 获取）
+            lastmod: item.lastmod || new Date().toISOString(),
+          }
+        })
     }
   }
 })
