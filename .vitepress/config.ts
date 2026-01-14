@@ -1,367 +1,490 @@
-import { defineConfig } from 'vitepress'
+﻿import { defineConfig } from 'vitepress'
+
+const siteUrl = 'https://minimind.wiki'
+
+const sharedHead = [
+  ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+  ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' }],
+  ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }],
+  ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
+  ['link', { rel: 'manifest', href: '/site.webmanifest' }],
+  ['meta', { name: 'theme-color', content: '#3b82f6' }],
+  ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0' }],
+  ['meta', { name: 'format-detection', content: 'telephone=no' }],
+  ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-7B7HTLDJ65' }],
+  ['script', {}, `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7B7HTLDJ65');
+  `]
+]
+
+const zhHead = [
+  ['meta', { name: 'keywords', content: 'MiniMind, LLM, Transformer, 训练原理, 归一化, 位置编码, 注意力机制, PyTorch, 教学, 实验' }],
+  ['meta', { name: 'author', content: 'joyehuang' }],
+  ['meta', { name: 'robots', content: 'index, follow' }],
+  ['meta', { name: 'googlebot', content: 'index, follow' }],
+  ['meta', { property: 'og:type', content: 'website' }],
+  ['meta', { property: 'og:site_name', content: 'minimind从零理解llm训练' }],
+  ['meta', { property: 'og:title', content: 'minimind从零理解llm训练 - 从原理出发的 LLM 实验课' }],
+  ['meta', { property: 'og:description', content: '通过可执行实验深入理解 LLM 训练的关键设计选择，包含教学文档、实验代码与学习笔记。' }],
+  ['meta', { property: 'og:image', content: `${siteUrl}/og-image.png` }],
+  ['meta', { property: 'og:locale', content: 'zh_CN' }],
+  ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+  ['meta', { name: 'twitter:title', content: 'minimind从零理解llm训练 - 从原理出发的 LLM 实验课' }],
+  ['meta', { name: 'twitter:description', content: '通过可执行实验深入理解 LLM 训练的关键设计选择。' }],
+  ['meta', { name: 'twitter:image', content: `${siteUrl}/og-image.png` }],
+  ['script', { type: 'application/ld+json' }, JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'minimind从零理解llm训练',
+    description: '通过可执行实验深入理解 LLM 训练的关键设计选择。',
+    url: siteUrl,
+    author: {
+      '@type': 'Person',
+      name: 'joyehuang',
+      url: 'https://github.com/joyehuang'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'MiniMind',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.svg`
+      }
+    },
+    inLanguage: 'zh-CN',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteUrl}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string'
+    }
+  })],
+  ['script', { type: 'application/ld+json' }, JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: 'MiniMind LLM 训练入门与进阶',
+    description: '从原理出发理解 Transformer、归一化、位置编码、注意力与完整训练流程。',
+    provider: {
+      '@type': 'Organization',
+      name: 'MiniMind',
+      sameAs: 'https://github.com/jingyaogong/minimind'
+    },
+    educationalLevel: 'Intermediate',
+    inLanguage: 'zh-CN',
+    isAccessibleForFree: true,
+    url: siteUrl,
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'online',
+      courseWorkload: 'PT30H'
+    }
+  })]
+]
+
+const enHead = [
+  ['meta', { name: 'keywords', content: 'MiniMind, LLM, Transformer, training principles, normalization, position encoding, attention, PyTorch, tutorial, experiments' }],
+  ['meta', { name: 'author', content: 'joyehuang' }],
+  ['meta', { name: 'robots', content: 'index, follow' }],
+  ['meta', { name: 'googlebot', content: 'index, follow' }],
+  ['meta', { property: 'og:type', content: 'website' }],
+  ['meta', { property: 'og:site_name', content: 'MiniMind LLM Training' }],
+  ['meta', { property: 'og:title', content: 'MiniMind LLM Training - Principle-first experimental lab' }],
+  ['meta', { property: 'og:description', content: 'Understand LLM training with executable experiments, teaching docs, and practical notes.' }],
+  ['meta', { property: 'og:image', content: `${siteUrl}/og-image.png` }],
+  ['meta', { property: 'og:locale', content: 'en_US' }],
+  ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+  ['meta', { name: 'twitter:title', content: 'MiniMind LLM Training - Principle-first experimental lab' }],
+  ['meta', { name: 'twitter:description', content: 'Understand LLM training with executable experiments, teaching docs, and practical notes.' }],
+  ['meta', { name: 'twitter:image', content: `${siteUrl}/og-image.png` }],
+  ['script', { type: 'application/ld+json' }, JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'MiniMind LLM Training',
+    description: 'Understand LLM training with executable experiments and principle-first lessons.',
+    url: `${siteUrl}/en/`,
+    author: {
+      '@type': 'Person',
+      name: 'joyehuang',
+      url: 'https://github.com/joyehuang'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'MiniMind',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.svg`
+      }
+    },
+    inLanguage: 'en',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteUrl}/en/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string'
+    }
+  })],
+  ['script', { type: 'application/ld+json' }, JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: 'MiniMind LLM Training Principles',
+    description: 'Principle-first understanding of Transformer components and full training workflows.',
+    provider: {
+      '@type': 'Organization',
+      name: 'MiniMind',
+      sameAs: 'https://github.com/jingyaogong/minimind'
+    },
+    educationalLevel: 'Intermediate',
+    inLanguage: 'en',
+    isAccessibleForFree: true,
+    url: `${siteUrl}/en/`,
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'online',
+      courseWorkload: 'PT30H'
+    }
+  })]
+]
+
+const toRoute = (relativePath: string) => {
+  const normalized = `/${relativePath.replace(/\\/g, '/')}`
+  if (normalized.endsWith('/index.md')) {
+    return normalized.slice(0, -'index.md'.length)
+  }
+  return normalized.replace(/\.md$/, '')
+}
 
 export default defineConfig({
-  // 站点信息
+  lang: 'zh-CN',
   title: 'minimind从零理解llm训练',
   description: '深入理解 LLM 训练的每个设计选择',
-  lang: 'zh-CN',
-
-  // 源目录配置 - 关键: 指向根目录以读取现有文件
   srcDir: '.',
   outDir: '.vitepress/dist',
-
-  // 清理 URL
   cleanUrls: true,
-
-  // 忽略死链接检查 (很多链接指向原位置的文件)
   ignoreDeadLinks: true,
-
-  // Head 配置
-  head: [
-    // Favicon 配置
-    ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
-    ['link', { rel: 'manifest', href: '/site.webmanifest' }],
-    ['meta', { name: 'theme-color', content: '#3b82f6' }],
-
-    // SEO Meta Tags
-    ['meta', { name: 'keywords', content: 'MiniMind, LLM, Transformer, 大语言模型, 深度学习, 机器学习, 人工智能, PyTorch, 教程, 学习笔记' }],
-    ['meta', { name: 'author', content: 'joyehuang' }],
-    ['meta', { name: 'robots', content: 'index, follow' }],
-    ['meta', { name: 'googlebot', content: 'index, follow' }],
-
-    // Open Graph Meta Tags (for social media sharing)
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:site_name', content: 'minimind从零理解llm训练' }],
-    ['meta', { property: 'og:title', content: 'minimind从零理解llm训练 - 深入理解 LLM 训练的每个设计选择' }],
-    ['meta', { property: 'og:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择，包含模块化教学、代码示例和实践指南' }],
-    ['meta', { property: 'og:url', content: 'https://minimind.wiki' }],
-    ['meta', { property: 'og:image', content: 'https://minimind.wiki/og-image.png' }],
-    ['meta', { property: 'og:locale', content: 'zh_CN' }],
-
-    // Twitter Card Meta Tags
-    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:title', content: 'minimind从零理解llm训练 - 深入理解 LLM 训练' }],
-    ['meta', { name: 'twitter:description', content: '通过对照实验彻底理解大语言模型训练的每个设计选择' }],
-    ['meta', { name: 'twitter:image', content: 'https://minimind.wiki/og-image.png' }],
-
-    // Mobile Meta Tags
-    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0' }],
-    ['meta', { name: 'format-detection', content: 'telephone=no' }],
-
-    // Canonical URL
-    ['link', { rel: 'canonical', href: 'https://minimind.wiki' }],
-
-    // Google Analytics 4
-    ['script', { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-7B7HTLDJ65' }],
-    ['script', {}, `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-7B7HTLDJ65');
-    `],
-
-    // Structured Data (JSON-LD) for better SEO
-    ['script', { type: 'application/ld+json' }, JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: 'minimind从零理解llm训练',
-      description: '深入理解 LLM 训练的每个设计选择 - 通过对照实验彻底理解大语言模型训练',
-      url: 'https://minimind.wiki',
-      author: {
-        '@type': 'Person',
-        name: 'joyehuang',
-        url: 'https://github.com/joyehuang'
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'MiniMind',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://minimind.wiki/logo.svg'
-        }
-      },
-      inLanguage: 'zh-CN',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: 'https://minimind.wiki/?q={search_term_string}',
-        'query-input': 'required name=search_term_string'
-      }
-    })],
-
-    // Structured Data for Educational Content
-    ['script', { type: 'application/ld+json' }, JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Course',
-      name: 'MiniMind LLM 训练教程',
-      description: '从零开始学习大语言模型训练，包含 Transformer、注意力机制、位置编码等核心概念',
-      provider: {
-        '@type': 'Organization',
-        name: 'MiniMind',
-        sameAs: 'https://github.com/jingyaogong/minimind'
-      },
-      educationalLevel: 'Intermediate',
-      inLanguage: 'zh-CN',
-      isAccessibleForFree: true,
-      url: 'https://minimind.wiki',
-      hasCourseInstance: {
-        '@type': 'CourseInstance',
-        courseMode: 'online',
-        courseWorkload: 'PT30H'
-      }
-    })],
-  ],
-
-  // 主题配置
-  themeConfig: {
-    // Logo
-    logo: '/logo.svg',
-
-    // 顶部导航
-    nav: [
-      { text: '首页', link: '/docs/' },
-      {
-        text: '📚 学习指南',
-        items: [
-          { text: '⚡ 快速体验 (30分钟)', link: '/docs/guide/quick-start' },
-          { text: '📚 系统学习 (6小时)', link: '/docs/guide/systematic' },
-          { text: '🎓 深度掌握 (30小时)', link: '/docs/guide/mastery' },
-          { text: '🗺️ 完整路线图', link: '/ROADMAP' },
-        ]
-      },
-      {
-        text: '🧱 模块教学',
-        items: [
-          { text: '模块总览', link: '/modules/' },
-          { text: '基础组件', link: '/modules/01-foundation/' },
-          { text: '架构组装', link: '/modules/02-architecture/' },
-        ]
-      },
-      {
-        text: '📝 我的笔记',
-        items: [
-          { text: '📅 学习日志', link: '/learning_log' },
-          { text: '📚 知识库', link: '/knowledge_base' },
-          { text: '🗂️ 总索引', link: '/notes' },
-        ]
-      },
-    ],
-
-    // 侧边栏
-    sidebar: {
-      '/docs/guide/': [
-        {
-          text: '🚀 学习指南',
-          items: [
-            { text: '⚡ 快速体验', link: '/docs/guide/quick-start' },
-            { text: '📚 系统学习', link: '/docs/guide/systematic' },
-            { text: '🎓 深度掌握', link: '/docs/guide/mastery' },
-            { text: '🗺️ 完整路线图', link: '/ROADMAP' },
-          ]
-        }
-      ],
-
-      '/modules/': [
-        {
-          text: '📖 模块总览',
-          items: [
-            { text: '模块导航', link: '/modules/' },
-          ]
-        },
-        {
-          text: '🧱 基础组件 (Foundation)',
-          collapsed: false,
-          items: [
+  head: sharedHead,
+  locales: {
+    root: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      title: 'minimind从零理解llm训练',
+      description: '深入理解 LLM 训练的每个设计选择',
+      head: zhHead,
+      themeConfig: {
+        nav: [
+          { text: '文档', link: '/docs/' },
+          {
+            text: '学习路线',
+            items: [
+              { text: '快速体验 (30分钟)', link: '/docs/guide/quick-start' },
+              { text: '系统学习 (6小时)', link: '/docs/guide/systematic' },
+              { text: '深度掌握 (30+小时)', link: '/docs/guide/mastery' },
+              { text: 'Roadmap', link: '/ROADMAP' }
+            ]
+          },
+          {
+            text: '模块教学',
+            items: [
+              { text: '模块总览', link: '/modules/' },
+              { text: '基础组件', link: '/modules/01-foundation/' },
+              { text: '架构组装', link: '/modules/02-architecture/' }
+            ]
+          },
+          {
+            text: '学习笔记',
+            items: [
+              { text: '学习日志', link: '/learning_log' },
+              { text: '知识库', link: '/knowledge_base' },
+              { text: '总索引', link: '/notes' }
+            ]
+          }
+        ],
+        sidebar: {
+          '/docs/guide/': [
             {
-              text: '01 归一化 (Normalization)',
-              link: '/modules/01-foundation/01-normalization/',
+              text: '学习路线',
               items: [
-                { text: '📖 教学文档', link: '/modules/01-foundation/01-normalization/teaching' },
-                { text: '💻 代码导读', link: '/modules/01-foundation/01-normalization/code_guide' },
-                { text: '❓ 自测题', link: '/modules/01-foundation/01-normalization/quiz' },
+                { text: '快速体验', link: '/docs/guide/quick-start' },
+                { text: '系统学习', link: '/docs/guide/systematic' },
+                { text: '深度掌握', link: '/docs/guide/mastery' },
+                { text: 'Roadmap', link: '/ROADMAP' }
+              ]
+            }
+          ],
+          '/modules/': [
+            {
+              text: '模块总览',
+              items: [
+                { text: '模块导航', link: '/modules/' }
               ]
             },
             {
-              text: '02 位置编码 (Position Encoding)',
-              link: '/modules/01-foundation/02-position-encoding/',
+              text: '基础组件 (Foundation)',
+              collapsed: false,
               items: [
-                { text: '📖 教学文档', link: '/modules/01-foundation/02-position-encoding/teaching' },
-                { text: '💻 代码导读', link: '/modules/01-foundation/02-position-encoding/code_guide' },
-                { text: '❓ 自测题', link: '/modules/01-foundation/02-position-encoding/quiz' },
+                { text: '01 归一化 (Normalization)', link: '/modules/01-foundation/01-normalization/' },
+                { text: '02 位置编码 (Position Encoding)', link: '/modules/01-foundation/02-position-encoding/' },
+                { text: '03 注意力机制 (Attention)', link: '/modules/01-foundation/03-attention/' },
+                { text: '04 前馈网络 (FeedForward)', link: '/modules/01-foundation/04-feedforward/' }
               ]
             },
             {
-              text: '03 注意力机制 (Attention)',
-              link: '/modules/01-foundation/03-attention/',
+              text: '架构组装 (Architecture)',
               items: [
-                { text: '📖 教学文档', link: '/modules/01-foundation/03-attention/teaching' },
-                { text: '💻 代码导读', link: '/modules/01-foundation/03-attention/code_guide' },
-                { text: '❓ 自测题', link: '/modules/01-foundation/03-attention/quiz' },
+                { text: '架构总览', link: '/modules/02-architecture/' }
+              ]
+            }
+          ],
+          '/': [
+            {
+              text: '开始',
+              items: [
+                { text: '文档', link: '/docs/' },
+                { text: '快速体验', link: '/docs/guide/quick-start' }
               ]
             },
             {
-              text: '04 前馈网络 (FeedForward)',
-              link: '/modules/01-foundation/04-feedforward/',
+              text: '学习笔记',
               items: [
-                { text: '📖 教学文档', link: '/modules/01-foundation/04-feedforward/teaching' },
-                { text: '💻 代码导读', link: '/modules/01-foundation/04-feedforward/code_guide' },
-                { text: '❓ 自测题', link: '/modules/01-foundation/04-feedforward/quiz' },
+                { text: '学习日志', link: '/learning_log' },
+                { text: '知识库', link: '/knowledge_base' },
+                { text: '总索引', link: '/notes' }
               ]
             },
+            {
+              text: '模块教学',
+              items: [
+                { text: '模块总览', link: '/modules/' },
+                { text: '基础组件', link: '/modules/01-foundation/' },
+                { text: '架构组装', link: '/modules/02-architecture/' }
+              ]
+            },
+            {
+              text: '资源',
+              items: [
+                { text: 'Roadmap', link: '/ROADMAP' },
+                { text: '学习材料', link: '/learning_materials/README' }
+              ]
+            }
           ]
         },
-        {
-          text: '🏗️ 架构组装 (Architecture)',
-          items: [
-            { text: '架构总览', link: '/modules/02-architecture/' },
-          ]
-        }
-      ],
-
-      '/': [
-        {
-          text: '🚀 开始',
-          items: [
-            { text: '首页', link: '/docs/' },
-            { text: '学习指南', link: '/docs/guide/quick-start' },
-          ]
-        },
-        {
-          text: '📝 我的学习笔记',
-          items: [
-            { text: '📅 学习日志', link: '/learning_log' },
-            { text: '📚 知识库', link: '/knowledge_base' },
-            { text: '🗂️ 总索引', link: '/notes' },
-          ]
-        },
-        {
-          text: '🧱 模块化教学',
-          items: [
-            { text: '模块总览', link: '/modules/' },
-            { text: '基础组件', link: '/modules/01-foundation/' },
-            { text: '架构组装', link: '/modules/02-architecture/' },
-          ]
-        },
-        {
-          text: '💻 代码示例',
-          items: [
-            { text: '示例总览', link: '/learning_materials/README' },
-          ]
-        },
-        {
-          text: '📖 参考文档',
-          items: [
-            { text: 'Claude 使用指南', link: '/CLAUDE' },
-            { text: '笔记更新指南', link: '/NOTE_UPDATE_GUIDE' },
-            { text: '学习路线图', link: '/ROADMAP' },
-          ]
-        }
-      ]
-    },
-
-    // 社交链接
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/joyehuang/minimind-notes' }
-    ],
-
-    // 搜索
-    search: {
-      provider: 'local',
-      options: {
-        locales: {
-          root: {
-            translations: {
-              button: {
-                buttonText: '搜索文档',
-                buttonAriaLabel: '搜索文档'
-              },
-              modal: {
-                noResultsText: '无法找到相关结果',
-                resetButtonTitle: '清除查询条件',
-                footer: {
-                  selectText: '选择',
-                  navigateText: '切换',
-                  closeText: '关闭'
+        search: {
+          provider: 'local',
+          options: {
+            locales: {
+              root: {
+                translations: {
+                  button: {
+                    buttonText: '搜索',
+                    buttonAriaLabel: '搜索'
+                  },
+                  modal: {
+                    noResultsText: '没有找到结果',
+                    resetButtonTitle: '清除查询',
+                    footer: {
+                      selectText: '选择',
+                      navigateText: '切换',
+                      closeText: '关闭'
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        },
+        footer: {
+          message: '基于 <a href="https://github.com/jingyaogong/minimind" target="_blank">MiniMind</a> 的学习笔记与实验',
+          copyright: 'Copyright © 2025 joyehuang'
+        },
+        editLink: {
+          pattern: 'https://github.com/joyehuang/minimind-notes/edit/main/:path',
+          text: '在 GitHub 上编辑此页'
+        },
+        lastUpdated: {
+          text: '更新时间',
+          formatOptions: {
+            dateStyle: 'short',
+            timeStyle: 'short'
+          }
+        },
+        docFooter: {
+          prev: '上一页',
+          next: '下一页'
+        },
+        outline: {
+          level: [2, 3],
+          label: '本页目录'
+        },
+        returnToTopLabel: '返回顶部',
+        sidebarMenuLabel: '菜单',
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '切换到浅色模式',
+        darkModeSwitchTitle: '切换到深色模式'
       }
     },
-
-    // 页脚
-    footer: {
-      message: '基于 <a href="https://github.com/jingyaogong/minimind" target="_blank">MiniMind</a> 项目的学习笔记',
-      copyright: 'Copyright © 2025 joyehuang'
-    },
-
-    // 编辑链接
-    editLink: {
-      pattern: 'https://github.com/joyehuang/minimind-notes/edit/main/:path',
-      text: '在 GitHub 上编辑此页'
-    },
-
-    // 最后更新时间
-    lastUpdated: {
-      text: '最后更新于',
-      formatOptions: {
-        dateStyle: 'short',
-        timeStyle: 'short'
+    en: {
+      label: 'English',
+      lang: 'en-US',
+      title: 'MiniMind LLM Training',
+      description: 'Principle-first experimental lab for understanding LLM training',
+      head: enHead,
+      themeConfig: {
+        nav: [
+          { text: 'Docs', link: '/en/docs/' },
+          {
+            text: 'Learning Paths',
+            items: [
+              { text: 'Quick Start (30 min)', link: '/en/docs/guide/quick-start' },
+              { text: 'Systematic Study (6 hours)', link: '/en/docs/guide/systematic' },
+              { text: 'Deep Mastery (30+ hours)', link: '/en/docs/guide/mastery' },
+              { text: 'Roadmap', link: '/en/ROADMAP' }
+            ]
+          },
+          {
+            text: 'Modules',
+            items: [
+              { text: 'Modules Overview', link: '/en/modules/' },
+              { text: 'Foundation', link: '/en/modules/01-foundation/' },
+              { text: 'Architecture', link: '/en/modules/02-architecture/' }
+            ]
+          }
+        ],
+        sidebar: {
+          '/en/docs/guide/': [
+            {
+              text: 'Learning Paths',
+              items: [
+                { text: 'Quick Start', link: '/en/docs/guide/quick-start' },
+                { text: 'Systematic Study', link: '/en/docs/guide/systematic' },
+                { text: 'Deep Mastery', link: '/en/docs/guide/mastery' },
+                { text: 'Roadmap', link: '/en/ROADMAP' }
+              ]
+            }
+          ],
+          '/en/modules/': [
+            {
+              text: 'Modules Overview',
+              items: [
+                { text: 'Modules Navigator', link: '/en/modules/' }
+              ]
+            },
+            {
+              text: 'Foundation',
+              collapsed: false,
+              items: [
+                { text: '01 Normalization', link: '/en/modules/01-foundation/01-normalization/' },
+                { text: '02 Position Encoding', link: '/en/modules/01-foundation/02-position-encoding/' },
+                { text: '03 Attention', link: '/en/modules/01-foundation/03-attention/' },
+                { text: '04 FeedForward', link: '/en/modules/01-foundation/04-feedforward/' }
+              ]
+            },
+            {
+              text: 'Architecture',
+              items: [
+                { text: 'Architecture Overview', link: '/en/modules/02-architecture/' }
+              ]
+            }
+          ],
+          '/en/': [
+            {
+              text: 'Start Here',
+              items: [
+                { text: 'Docs', link: '/en/docs/' },
+                { text: 'Quick Start', link: '/en/docs/guide/quick-start' }
+              ]
+            },
+            {
+              text: 'Learning Paths',
+              items: [
+                { text: 'Quick Start', link: '/en/docs/guide/quick-start' },
+                { text: 'Systematic Study', link: '/en/docs/guide/systematic' },
+                { text: 'Deep Mastery', link: '/en/docs/guide/mastery' }
+              ]
+            },
+            {
+              text: 'Modules',
+              items: [
+                { text: 'Modules Overview', link: '/en/modules/' },
+                { text: 'Foundation', link: '/en/modules/01-foundation/' },
+                { text: 'Architecture', link: '/en/modules/02-architecture/' }
+              ]
+            },
+            {
+              text: 'Resources',
+              items: [
+                { text: 'Roadmap', link: '/en/ROADMAP' }
+              ]
+            }
+          ]
+        },
+        search: {
+          provider: 'local'
+        },
+        footer: {
+          message: 'Built on <a href="https://github.com/jingyaogong/minimind" target="_blank">MiniMind</a> for learning and experiments',
+          copyright: 'Copyright © 2025 joyehuang'
+        },
+        editLink: {
+          pattern: 'https://github.com/joyehuang/minimind-notes/edit/main/:path',
+          text: 'Edit this page on GitHub'
+        },
+        lastUpdated: {
+          text: 'Last updated',
+          formatOptions: {
+            dateStyle: 'short',
+            timeStyle: 'short'
+          }
+        },
+        docFooter: {
+          prev: 'Previous',
+          next: 'Next'
+        },
+        outline: {
+          level: [2, 3],
+          label: 'On this page'
+        },
+        returnToTopLabel: 'Back to top',
+        sidebarMenuLabel: 'Menu',
+        darkModeSwitchLabel: 'Theme',
+        lightModeSwitchTitle: 'Switch to light theme',
+        darkModeSwitchTitle: 'Switch to dark theme'
       }
-    },
-
-    // 文档页脚导航
-    docFooter: {
-      prev: '上一页',
-      next: '下一页'
-    },
-
-    // 大纲配置
-    outline: {
-      level: [2, 3],
-      label: '目录'
-    },
-
-    // 返回顶部
-    returnToTopLabel: '返回顶部',
-
-    // 侧边栏菜单标签
-    sidebarMenuLabel: '菜单',
-
-    // 深色模式标签
-    darkModeSwitchLabel: '外观',
-    lightModeSwitchTitle: '切换到浅色模式',
-    darkModeSwitchTitle: '切换到深色模式',
+    }
   },
+  themeConfig: {
+    logo: '/logo.svg',
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/joyehuang/minimind-notes' }
+    ]
+  },
+  transformHead: ({ pageData }) => {
+    const route = toRoute(pageData.relativePath)
+    const isEn = route.startsWith('/en/')
+    const zhRoute = isEn ? route.replace(/^\/en/, '') : route
+    const enRoute = isEn ? route : `/en${route === '/' ? '/' : route}`
 
-  // Markdown 配置
+    return [
+      ['link', { rel: 'canonical', href: `${siteUrl}${route}` }],
+      ['link', { rel: 'alternate', hreflang: 'zh-CN', href: `${siteUrl}${zhRoute}` }],
+      ['link', { rel: 'alternate', hreflang: 'en-US', href: `${siteUrl}${enRoute}` }],
+      ['link', { rel: 'alternate', hreflang: 'x-default', href: `${siteUrl}${zhRoute}` }],
+      ['meta', { property: 'og:url', content: `${siteUrl}${route}` }]
+    ]
+  },
   markdown: {
-    // 启用数学公式支持
     math: true,
-
-    // 代码块行号
     lineNumbers: true,
-
-    // 图片懒加载
     image: {
       lazyLoading: true
     },
-
-    // 主题配置
     theme: {
       light: 'github-light',
       dark: 'github-dark'
     }
   },
-
-  // 站点地图
   sitemap: {
-    hostname: 'https://minimind.wiki',
+    hostname: siteUrl,
     transformItems: (items) => {
-      // 排除不应该被索引的内部文档
       const excludePatterns = [
         '/CLAUDE',
         '/CODE_OF_CONDUCT',
@@ -379,8 +502,7 @@ export default defineConfig({
       ]
 
       return items.filter((item) => {
-        // 检查 URL 是否包含排除的路径
-        return !excludePatterns.some(pattern => item.url.includes(pattern))
+        return !excludePatterns.some((pattern) => item.url.includes(pattern))
       })
     }
   }

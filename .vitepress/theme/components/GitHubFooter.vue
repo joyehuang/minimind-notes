@@ -1,7 +1,7 @@
 <template>
   <div class="github-footer">
     <p class="github-footer-text">
-      发现错误或有疑问？欢迎在 
+      {{ copy.prefix }}
       <a 
         href="https://github.com/joyehuang/minimind-notes" 
         target="_blank" 
@@ -10,13 +10,28 @@
       >
         GitHub
       </a>
-      提 Issue 或 Star 支持我们！
+      {{ copy.suffix }}
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
-// GitHub 页脚组件
+import { computed } from 'vue'
+import { useLocale } from '../i18n'
+
+const { isEn } = useLocale()
+
+const copy = computed(() =>
+  isEn.value
+    ? {
+        prefix: 'Found an error or have a question? Open an issue or star us on ',
+        suffix: '!'
+      }
+    : {
+        prefix: '发现错误或有疑问？欢迎在 ',
+        suffix: ' 提 Issue 或 Star 支持我们！'
+      }
+)
 </script>
 
 <style scoped>

@@ -2,9 +2,9 @@
   <section class="modules-section">
     <div class="modules-container">
       <div class="modules-header">
-        <div class="header-badge">模块导航</div>
-        <h2>从基础组件到完整架构</h2>
-        <p>模块化学习路径 — 每个模块独立完整，可按任意顺序学习</p>
+        <div class="header-badge">{{ copy.badge }}</div>
+        <h2>{{ copy.title }}</h2>
+        <p>{{ copy.description }}</p>
       </div>
 
       <!-- Tier 1 -->
@@ -17,9 +17,9 @@
               <rect x="14" y="14" width="7" height="7" />
               <rect x="3" y="14" width="7" height="7" />
             </svg>
-            Tier 1 · Foundation
+            {{ copy.tier1Label }}
           </div>
-          <p class="tier-description">基础组件 — 掌握 Transformer 的核心模块</p>
+          <p class="tier-description">{{ copy.tier1Description }}</p>
         </div>
 
         <div class="module-cards">
@@ -77,7 +77,7 @@
                   <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
                   </svg>
-                  <span>{{ module.experiments }} 个实验</span>
+                  <span>{{ module.experiments }} {{ module.experiments === 1 ? copy.experimentLabel : copy.experimentsLabel }}</span>
                 </div>
               </div>
             </div>
@@ -100,9 +100,9 @@
               <path d="M2 17l10 5 10-5" />
               <path d="M2 12l10 5 10-5" />
             </svg>
-            Tier 2 · Architecture
+            {{ copy.tier2Label }}
           </div>
-          <p class="tier-description">架构组装 — 将基础组件组合成完整 Transformer</p>
+          <p class="tier-description">{{ copy.tier2Description }}</p>
         </div>
 
         <div class="module-cards">
@@ -161,15 +161,15 @@
       <div class="status-legend">
         <div class="legend-item">
           <span class="legend-dot status-complete"></span>
-          <span>完整：包含教学文档 + 实验代码 + 自测题</span>
+          <span>{{ copy.legendComplete }}</span>
         </div>
         <div class="legend-item">
           <span class="legend-dot status-partial"></span>
-          <span>实验完成：有实验代码，文档待补充</span>
+          <span>{{ copy.legendPartial }}</span>
         </div>
         <div class="legend-item">
           <span class="legend-dot status-planned"></span>
-          <span>待开发：仅目录结构</span>
+          <span>{{ copy.legendPlanned }}</span>
         </div>
       </div>
     </div>
@@ -177,65 +177,174 @@
 </template>
 
 <script setup lang="ts">
-const tier1Modules = [
-  {
-    id: '01-normalization',
-    icon: 'waves',
-    title: '归一化',
-    question: '为什么必须归一化？Pre-LN 和 Post-LN 差异有多大？',
-    experiments: 2,
-    status: 'complete',
-    link: '/modules/01-foundation/01-normalization/'
-  },
-  {
-    id: '02-position-encoding',
-    icon: 'compass',
-    title: '位置编码',
-    question: 'RoPE 为什么成为标配？它真的比其他方案好吗？',
-    experiments: 4,
-    status: 'complete',
-    link: '/modules/01-foundation/02-position-encoding/'
-  },
-  {
-    id: '03-attention',
-    icon: 'eye',
-    title: '注意力机制',
-    question: 'QKV 到底在做什么？多头是必需还是过度设计？',
-    experiments: 3,
-    status: 'complete',
-    link: '/modules/01-foundation/03-attention/'
-  },
-  {
-    id: '04-feedforward',
-    icon: 'layers',
-    title: '前馈网络',
-    question: 'FFN 为什么能存储知识？扩张比 4x 是最佳选择吗？',
-    experiments: 1,
-    status: 'complete',
-    link: '/modules/01-foundation/04-feedforward/'
-  }
-]
+import { computed } from 'vue'
+import { useLocale } from '../i18n'
 
-const tier2Modules = [
-  {
-    id: '01-residual-connection',
-    icon: 'link',
-    title: '残差连接',
-    question: '深层网络训练的救星？还是另有玄机？',
-    status: 'planned',
-    link: '/modules/02-architecture/01-residual-connection/'
-  },
-  {
-    id: '02-transformer-block',
-    icon: 'box',
-    title: 'Transformer Block',
-    question: '组件组装的黄金顺序 — 为什么是这一个？',
-    status: 'planned',
-    link: '/modules/02-architecture/02-transformer-block/'
-  }
-]
+const { isEn, localePath } = useLocale()
+const withLocale = (path: string) => `${localePath.value}${path}`
+
+const copy = computed(() =>
+  isEn.value
+    ? {
+        badge: 'Module Navigator',
+        title: 'From core components to full architecture',
+        description: 'Modular learning path — each module is self-contained and can be learned in any order.',
+        tier1Label: 'Tier 1 · Foundation',
+        tier1Description: 'Core components — master the building blocks of Transformer',
+        tier2Label: 'Tier 2 · Architecture',
+        tier2Description: 'Assembly — combine components into a full Transformer',
+        experimentLabel: 'experiment',
+        experimentsLabel: 'experiments',
+        legendComplete: 'Complete: teaching + experiments + quiz',
+        legendPartial: 'Experiments done: docs in progress',
+        legendPlanned: 'Planned: structure only'
+      }
+    : {
+        badge: '模块导航',
+        title: '从基础组件到完整架构',
+        description: '模块化学习路径 — 每个模块独立完整，可按任意顺序学习',
+        tier1Label: 'Tier 1 · 基础组件',
+        tier1Description: '基础组件 — 掌握 Transformer 的核心模块',
+        tier2Label: 'Tier 2 · 架构组装',
+        tier2Description: '架构组装 — 将基础组件组合成完整 Transformer',
+        experimentLabel: '个实验',
+        experimentsLabel: '个实验',
+        legendComplete: '完整：包含教学文档 + 实验代码 + 自测题',
+        legendPartial: '实验完成：有实验代码，文档待补充',
+        legendPlanned: '待开发：仅目录结构'
+      }
+)
+
+const tier1Modules = computed(() =>
+  isEn.value
+    ? [
+        {
+          id: '01-normalization',
+          icon: 'waves',
+          title: 'Normalization',
+          question: 'Why is normalization necessary? How different are Pre-LN and Post-LN?',
+          experiments: 2,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/01-normalization/')
+        },
+        {
+          id: '02-position-encoding',
+          icon: 'compass',
+          title: 'Position Encoding',
+          question: 'Why did RoPE become the default? Is it really better?',
+          experiments: 4,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/02-position-encoding/')
+        },
+        {
+          id: '03-attention',
+          icon: 'eye',
+          title: 'Attention',
+          question: 'What do Q/K/V really do? Are multi-heads necessary or overkill?',
+          experiments: 3,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/03-attention/')
+        },
+        {
+          id: '04-feedforward',
+          icon: 'layers',
+          title: 'FeedForward',
+          question: 'Why can FFN store knowledge? Is 4x expansion optimal?',
+          experiments: 1,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/04-feedforward/')
+        }
+      ]
+    : [
+        {
+          id: '01-normalization',
+          icon: 'waves',
+          title: '归一化',
+          question: '为什么必须归一化？Pre-LN 和 Post-LN 差异有多大？',
+          experiments: 2,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/01-normalization/')
+        },
+        {
+          id: '02-position-encoding',
+          icon: 'compass',
+          title: '位置编码',
+          question: 'RoPE 为什么成为标配？它真的比其他方案好吗？',
+          experiments: 4,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/02-position-encoding/')
+        },
+        {
+          id: '03-attention',
+          icon: 'eye',
+          title: '注意力机制',
+          question: 'QKV 到底在做什么？多头是必需还是过度设计？',
+          experiments: 3,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/03-attention/')
+        },
+        {
+          id: '04-feedforward',
+          icon: 'layers',
+          title: '前馈网络',
+          question: 'FFN 为什么能存储知识？扩张比 4x 是最佳选择吗？',
+          experiments: 1,
+          status: 'complete',
+          link: withLocale('/modules/01-foundation/04-feedforward/')
+        }
+      ]
+)
+
+const tier2Modules = computed(() =>
+  isEn.value
+    ? [
+        {
+          id: '01-residual-connection',
+          icon: 'link',
+          title: 'Residual Connection',
+          question: 'The savior for deep nets — or something else?',
+          status: 'planned',
+          link: withLocale('/modules/02-architecture/01-residual-connection/')
+        },
+        {
+          id: '02-transformer-block',
+          icon: 'box',
+          title: 'Transformer Block',
+          question: 'The golden assembly order — why this one?',
+          status: 'planned',
+          link: withLocale('/modules/02-architecture/02-transformer-block/')
+        }
+      ]
+    : [
+        {
+          id: '01-residual-connection',
+          icon: 'link',
+          title: '残差连接',
+          question: '深层网络训练的救星？还是另有玄机？',
+          status: 'planned',
+          link: withLocale('/modules/02-architecture/01-residual-connection/')
+        },
+        {
+          id: '02-transformer-block',
+          icon: 'box',
+          title: 'Transformer Block',
+          question: '组件组装的黄金顺序 — 为什么是这一个？',
+          status: 'planned',
+          link: withLocale('/modules/02-architecture/02-transformer-block/')
+        }
+      ]
+)
 
 function getStatusText(status: string): string {
+  if (isEn.value) {
+    const statusMap = {
+      complete: 'Complete',
+      partial: 'Experiments done',
+      planned: 'Planned'
+    }
+    return statusMap[status] || status
+  }
+
   const statusMap = {
     complete: '完整',
     partial: '实验完成',
