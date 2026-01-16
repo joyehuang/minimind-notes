@@ -193,18 +193,27 @@ onMounted(() => {
   // Initialize empty answers
   userAnswers.value = props.questions.map(() => [])
 
-  // Try to load from localStorage
-  try {
-    const saved = localStorage.getItem(storageKey.value)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.submitted) {
-        userAnswers.value = parsed.answers
-        submitted.value = true
+  // Defer localStorage access to avoid blocking initial render
+  const loadSavedState = () => {
+    try {
+      const saved = localStorage.getItem(storageKey.value)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed.submitted) {
+          userAnswers.value = parsed.answers
+          submitted.value = true
+        }
       }
+    } catch (e) {
+      // Ignore localStorage errors
     }
-  } catch (e) {
-    // Ignore localStorage errors
+  }
+
+  // Load state during idle time
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    requestIdleCallback(loadSavedState)
+  } else {
+    setTimeout(loadSavedState, 0)
   }
 })
 
