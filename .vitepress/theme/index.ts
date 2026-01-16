@@ -12,9 +12,20 @@ import TerminalCode from './components/TerminalCode.vue'
 import './style.css'
 
 // 注入 Vercel Analytics 和 Speed Insights
+// 使用 requestIdleCallback 延迟加载，避免阻塞主线程
 if (typeof window !== 'undefined') {
-  inject()
-  injectSpeedInsights()
+  const loadAnalytics = () => {
+    inject()
+    injectSpeedInsights()
+  }
+
+  // 使用 requestIdleCallback 在浏览器空闲时加载
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadAnalytics)
+  } else {
+    // 降级方案：使用 setTimeout
+    setTimeout(loadAnalytics, 1)
+  }
 }
 
 export default {
