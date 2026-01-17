@@ -11,12 +11,7 @@
       <div class="tier-section">
         <div class="tier-header">
           <div class="tier-badge tier-1">
-            <svg class="tier-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-            </svg>
+            <Icon name="grid" class-name="tier-icon" />
             {{ copy.tier1Label }}
           </div>
           <p class="tier-description">{{ copy.tier1Description }}</p>
@@ -30,41 +25,14 @@
             class="module-card"
           >
             <div class="module-icon-wrapper">
-              <svg v-if="module.icon === 'waves'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              <svg v-else-if="module.icon === 'compass'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10" />
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-              </svg>
-              <svg v-else-if="module.icon === 'eye'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              <svg v-else-if="module.icon === 'layers'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                <polyline points="2 17 12 22 22 17" />
-                <polyline points="2 12 12 17 22 12" />
-              </svg>
+              <Icon :name="module.icon" class-name="module-icon" />
             </div>
 
             <div class="module-content">
               <div class="module-header">
                 <span class="module-id">{{ module.id }}</span>
                 <span class="module-status" :class="`status-${module.status}`">
-                  <svg v-if="module.status === 'complete'" class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <svg v-else-if="module.status === 'partial'" class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <svg v-else class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="16" />
-                    <line x1="8" y1="12" x2="16" y2="12" />
-                  </svg>
+                  <Icon :name="getStatusIcon(module.status)" class-name="status-icon" />
                   {{ getStatusText(module.status) }}
                 </span>
               </div>
@@ -74,18 +42,14 @@
 
               <div v-if="module.experiments" class="module-meta">
                 <div class="meta-item">
-                  <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                  </svg>
+                  <Icon name="tool" class-name="meta-icon" />
                   <span>{{ module.experiments }} {{ module.experiments === 1 ? copy.experimentLabel : copy.experimentsLabel }}</span>
                 </div>
               </div>
             </div>
 
             <div class="module-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              <Icon name="chevron-right" class-name="arrow-icon" />
             </div>
           </a>
         </div>
@@ -95,11 +59,7 @@
       <div class="tier-section">
         <div class="tier-header">
           <div class="tier-badge tier-2">
-            <svg class="tier-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+            <Icon name="layers-alt" class-name="tier-icon" />
             {{ copy.tier2Label }}
           </div>
           <p class="tier-description">{{ copy.tier2Description }}</p>
@@ -114,32 +74,14 @@
             :class="{ 'module-locked': module.status === 'planned' }"
           >
             <div class="module-icon-wrapper">
-              <svg v-if="module.icon === 'link'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
-              <svg v-else-if="module.icon === 'box'" class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
+              <Icon :name="module.icon" class-name="module-icon" />
             </div>
 
             <div class="module-content">
               <div class="module-header">
                 <span class="module-id">{{ module.id }}</span>
                 <span class="module-status" :class="`status-${module.status}`">
-                  <svg v-if="module.status === 'complete'" class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <svg v-else-if="module.status === 'partial'" class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <svg v-else class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
+                  <Icon :name="getStatusIcon(module.status)" class-name="status-icon" />
                   {{ getStatusText(module.status) }}
                 </span>
               </div>
@@ -149,9 +91,7 @@
             </div>
 
             <div class="module-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              <Icon name="chevron-right" class-name="arrow-icon" />
             </div>
           </a>
         </div>
@@ -180,6 +120,7 @@
 import { computed } from 'vue'
 import { useLocale } from '../i18n'
 import { MODULES_COPY, createTier1Modules, createTier2Modules, STATUS_TEXT } from '../constants/modules'
+import Icon from './Icon.vue'
 
 const { isEn, localePath } = useLocale()
 
@@ -193,6 +134,15 @@ const tier2Modules = computed(() => createTier2Modules(localePath.value, isEn.va
 function getStatusText(status: string): string {
   const statusMap = isEn.value ? STATUS_TEXT.en : STATUS_TEXT.zh
   return statusMap[status] || status
+}
+
+function getStatusIcon(status: string): string {
+  const iconMap: Record<string, string> = {
+    complete: 'check',
+    partial: 'clock',
+    planned: 'lock'
+  }
+  return iconMap[status] || 'clock'
 }
 </script>
 

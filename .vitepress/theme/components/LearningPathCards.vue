@@ -18,17 +18,7 @@
           <div class="card-background"></div>
           <div class="card-content">
             <div class="path-icon-wrapper">
-              <svg v-if="path.icon === 'zap'" class="path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-              <svg v-else-if="path.icon === 'book'" class="path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-              </svg>
-              <svg v-else-if="path.icon === 'graduation'" class="path-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                <path d="M6 12v5c3 3 9 3 12 0v-5" />
-              </svg>
+              <Icon :name="path.icon" class-name="path-icon" />
             </div>
 
             <div class="path-badge" :class="`badge-${path.variant}`">
@@ -66,6 +56,7 @@
 import { computed } from 'vue'
 import { useLocale } from '../i18n'
 import { LEARNING_PATH_COPY, createLearningPaths } from '../constants/learning-paths'
+import Icon from './Icon.vue'
 
 const { isEn, localePath } = useLocale()
 

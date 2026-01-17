@@ -15,28 +15,7 @@
           :style="{ animationDelay: `${index * 0.1}s` }"
         >
           <div class="feature-icon-wrapper">
-            <svg v-if="feature.icon === 'lightbulb'" class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M9 18h6" />
-              <path d="M10 22h4" />
-              <path d="M12 2v1" />
-              <path d="M12 18v-2.5" />
-              <path d="M12 15.5a5.5 5.5 0 1 0-4-8.5" />
-            </svg>
-            <svg v-else-if="feature.icon === 'flask'" class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M10 2v7.31" />
-              <path d="M14 2v7.31" />
-              <path d="M8.5 2h7" />
-              <path d="M14 9.3a6.5 6.5 0 1 1-4 0" />
-              <path d="M5.3 21h13.4" />
-            </svg>
-            <svg v-else-if="feature.icon === 'blocks'" class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
-            <svg v-else-if="feature.icon === 'zap'" class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-            </svg>
+            <Icon :name="feature.icon" class-name="feature-icon" />
           </div>
 
           <div class="feature-content">
@@ -55,6 +34,7 @@
 import { computed } from 'vue'
 import { useLocale } from '../i18n'
 import { FEATURES_COPY, FEATURES_DATA } from '../constants/features'
+import Icon from './Icon.vue'
 
 const { isEn } = useLocale()
 
