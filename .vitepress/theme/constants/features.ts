@@ -38,7 +38,7 @@ export const FEATURES_DATA = {
     {
       icon: 'flask',
       title: 'Controlled Experiments',
-      description: 'Show, don't tell — run experiments to see what breaks without a design.'
+      description: 'Show, don\'t tell — run experiments to see what breaks without a design.'
     },
     {
       icon: 'blocks',

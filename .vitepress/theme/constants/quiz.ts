@@ -37,7 +37,7 @@ export const QUIZ_TRANSLATIONS = {
       perfectTitle: 'Perfect!',
       perfectText: 'You got everything right. Solid understanding — move on to the next module!',
       greatTitle: 'Great!',
-      greatText: 'You've mastered most of the concepts. Review the mistakes and keep going.',
+      greatText: 'You\'ve mastered most of the concepts. Review the mistakes and keep going.',
       goodTitle: 'Keep it up!',
       goodText: 'You understand the basics but need more depth. Revisit teaching.md and retry.',
       needsWorkTitle: 'Needs Work',
