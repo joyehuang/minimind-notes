@@ -1,4 +1,5 @@
 ﻿import { defineConfig } from 'vitepress'
+import { generateBreadcrumbSchema } from './theme/utils/breadcrumbSchema'
 
 const siteUrl = 'https://minimind.wiki'
 
@@ -463,13 +464,25 @@ export default defineConfig({
     const zhRoute = isEn ? route.replace(/^\/en/, '') : route
     const enRoute = isEn ? route : `/en${route === '/' ? '/' : route}`
 
-    return [
+    const headTags: any[] = [
       ['link', { rel: 'canonical', href: `${siteUrl}${route}` }],
       ['link', { rel: 'alternate', hreflang: 'zh-CN', href: `${siteUrl}${zhRoute}` }],
       ['link', { rel: 'alternate', hreflang: 'en-US', href: `${siteUrl}${enRoute}` }],
       ['link', { rel: 'alternate', hreflang: 'x-default', href: `${siteUrl}${zhRoute}` }],
       ['meta', { property: 'og:url', content: `${siteUrl}${route}` }]
     ]
+
+    // Add BreadcrumbList structured data (server-side, no DOM manipulation)
+    const breadcrumbSchema = generateBreadcrumbSchema(pageData)
+    if (breadcrumbSchema) {
+      headTags.push([
+        'script',
+        { type: 'application/ld+json', 'data-schema': 'breadcrumb' },
+        JSON.stringify(breadcrumbSchema)
+      ])
+    }
+
+    return headTags
   },
   markdown: {
     math: true,
