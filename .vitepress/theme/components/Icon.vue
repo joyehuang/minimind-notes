@@ -1,10 +1,12 @@
 <template>
   <svg :class="className" aria-hidden="true">
-    <use :href="`/icons-sprite.svg#icon-${name}`" />
+    <use :href="`${withBase('/icons-sprite.svg')}#icon-${name}`" />
   </svg>
 </template>
 
 <script setup lang="ts">
+import { withBase } from 'vitepress'
+
 interface Props {
   name: string
   className?: string

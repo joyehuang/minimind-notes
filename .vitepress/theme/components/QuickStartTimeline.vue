@@ -3,9 +3,7 @@
     <div class="quickstart-container">
       <div class="section-header">
         <div class="header-badge">
-          <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
+          <Icon name="zap" class-name="badge-icon" />
           {{ copy.badge }}
         </div>
         <h2>{{ copy.title }}</h2>
@@ -24,23 +22,8 @@
         >
           <div class="step-marker">
             <div class="marker-inner">
-              <svg v-if="step.completed" class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <svg v-else-if="step.icon === 'chart'" class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M3 3v18h18" />
-                <path d="M18 17V9" />
-                <path d="M13 17V5" />
-                <path d="M8 17v-3" />
-              </svg>
-              <svg v-else-if="step.icon === 'compass'" class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10" />
-                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
-              </svg>
-              <svg v-else-if="step.icon === 'link'" class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
+              <Icon v-if="step.completed" name="check" class-name="check-icon" />
+              <Icon v-else :name="step.icon" class-name="step-icon" />
             </div>
             <div class="marker-glow"></div>
           </div>
@@ -50,10 +33,7 @@
               <div class="step-header">
                 <div class="step-number">{{ copy.stepLabel }} 0{{ index + 1 }}</div>
                 <div class="step-duration">
-                  <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
+                  <Icon name="clock" class-name="clock-icon" />
                   {{ step.duration }}
                 </div>
               </div>
@@ -63,20 +43,14 @@
 
               <div class="step-meta">
                 <span class="module-tag">
-                  <svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                    <line x1="7" y1="7" x2="7.01" y2="7" />
-                  </svg>
+                  <Icon name="tag" class-name="tag-icon" />
                   {{ step.module }}
                 </span>
               </div>
 
               <a :href="step.link" class="step-button">
                 {{ copy.cta }}
-                <svg class="button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
+                <Icon name="arrow-right" class-name="button-arrow" />
               </a>
             </div>
           </div>
@@ -86,10 +60,7 @@
       <div class="section-footer">
         <a :href="withLocale('/ROADMAP')" class="footer-link">
           {{ copy.footer }}
-          <svg class="link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
+          <Icon name="arrow-right" class-name="link-arrow" />
         </a>
       </div>
     </div>
@@ -99,6 +70,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useLocale } from '../i18n'
+import Icon from './Icon.vue'
 
 const activeStep = ref(0)
 const { isEn, localePath } = useLocale()
