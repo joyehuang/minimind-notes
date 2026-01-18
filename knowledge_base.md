@@ -950,6 +950,349 @@ MiniMindConfig(
 
 ---
 
+### 5.3 三层架构详解
+
+MiniMind 采用**三层架构设计**：
+
+```
+第 1 层：MiniMindForCausalLM（接口层）
+  ├─ 接收用户输入
+  ├─ 调用核心模型
+  └─ 返回预测结果
+    ↓
+第 2 层：MiniMindModel（核心层）
+  ├─ 词嵌入
+  ├─ Transformer Blocks（8层）
+  └─ 最终归一化
+    ↓
+第 3 层：lm_head（输出层）
+  └─ 投影到词汇表
+```
+
+---
+
+### 5.4 第 1 层：MiniMindForCausalLM
+
+**代码位置**：`model/model_minimind.py:439-471`
+
+**作用**：对外接口，负责输入输出
+
+```python
+class MiniMindForCausalLM:
+    def __init__(self, config):
+        self.model = MiniMindModel(config)      # 核心模型
+        self.lm_head = nn.Linear(768, 6400)      # 输出层
+        # 权重共享（重要！）
+        self.model.embed_tokens.weight = self.lm_head.weight
+```
+
+**数据流**：
+```
+输入：token IDs [245, 1023, 562]
+  ↓
+MiniMindModel: [batch, seq_len, 768]
+  ↓
+lm_head: [batch, seq_len, 6400]
+  ↓
+输出：logits（每个词的分数）
+```
+
+---
+
+### 5.5 第 2 层：MiniMindModel
+
+**代码位置**：`model/model_minimind.py:383-436`
+
+MiniMindModel 包含 **4 个核心组件**：
+
+#### **组件 1：词嵌入层（embed_tokens）**
+
+**作用**：token ID → 向量
+
+```python
+self.embed_tokens = nn.Embedding(6400, 768)
+# 权重矩阵：[6400, 768]
+# 6400 行，每行是一个词的 768 维向量
+```
+
+**为什么需要？**
+- Token ID 只是整数（245, 1023, 562）
+- 整数没有语义信息（245 和 246 在数值上相近，但词义可能完全不同）
+- 映射到高维向量后，才能表达"相似度"、"语义关系"
+
+**例子**：
+```python
+token_id = 245  # "我"
+vector = embed_tokens.weight[245]  # [0.12, 0.56, ..., 0.89]
+# 相似的词有相似的向量
+# "我" 和 "你" 的向量可能很接近
+# "我" 和 "苹果" 的向量距离较远
+```
+
+---
+
+#### **组件 2：8 个 Transformer Block**
+
+**代码位置**：`model/model_minimind.py:390`
+
+```python
+self.layers = nn.ModuleList([
+    MiniMindBlock(0, config),
+    MiniMindBlock(1, config),
+    ...
+    MiniMindBlock(7, config)
+])
+```
+
+**数据流**：
+```
+输入（嵌入后）: [batch, seq_len, 768]
+  ↓
+Block 0: Attention + FFN → [batch, seq_len, 768]
+  ↓
+Block 1: Attention + FFN → [batch, seq_len, 768]
+  ↓
+...
+  ↓
+Block 7: Attention + FFN → [batch, seq_len, 768]
+  ↓
+输出: [batch, seq_len, 768]
+```
+
+**每层的作用**（逐步细化）：
+- 第 0-1 层：基础词关系
+- 第 2-3 层：语法和句法
+- 第 4-5 层：语义理解
+- 第 6-7 层：高层推理
+
+**类比**：像修改文档 8 次
+- 第 1 遍：改错别字
+- 第 2 遍：改语法
+- 第 3 遍：改表达
+- 第 8 遍：最终润色
+
+---
+
+#### **组件 3：最终 RMSNorm**
+
+**代码位置**：`model/model_minimind.py:391, 428`
+
+```python
+self.norm = RMSNorm(768)
+# 在 forward 中
+hidden_states = self.norm(hidden_states)
+```
+
+**为什么需要？**
+- 8 个 Block 累积后，数值可能偏离正常范围
+- 最终 RMSNorm 确保输出到 `lm_head` 的数值稳定
+- 类比：做完 8 道工序，最后质检一次
+
+---
+
+#### **组件 4：RoPE 预计算**
+
+**代码位置**：`model/model_minimind.py:393-397`
+
+```python
+freqs_cos, freqs_sin = precompute_freqs_cis(
+    dim=96,              # head_dim
+    end=32768,           # max_position_embeddings
+    rope_base=1000000.0
+)
+self.register_buffer("freqs_cos", freqs_cos)
+self.register_buffer("freqs_sin", freqs_sin)
+```
+
+**为什么预计算？**
+- RoPE 频率是**固定的**（对所有句子都一样）
+- 计算一次，到处复用 → 效率大幅提升
+- 每个 Block 都会用到，预计算避免重复计算
+
+---
+
+### 5.6 第 3 层：输出层（lm_head）
+
+**代码位置**：`model/model_minimind.py:446, 465`
+
+**作用**：隐藏状态 → 词汇表分数
+
+```python
+self.lm_head = nn.Linear(768, 6400)
+# 权重矩阵：[6400, 768]
+```
+
+**计算过程**：
+```python
+hidden_state = [0.12, 0.56, ..., 0.89]  # 768维
+  ↓
+logits = lm_head(hidden_state)
+  ↓
+logits = [
+    -2.3,   # token 0 的分数
+    5.8,    # token 1 的分数
+    ...
+    8.4,    # token 562 的分数 ← 最高分
+]  # 6400 个分数
+```
+
+**下一步**：
+- Softmax → 概率分布
+- 采样或 argmax → 预测下一个词
+
+---
+
+### 5.7 完整数据流
+
+从输入到输出的完整流程：
+
+```python
+用户输入: "我爱编程"
+  ↓
+分词器: [245, 1023, 562]
+  ↓
+─────────────────────────────────────────
+│ MiniMindForCausalLM                   │
+│   ↓                                   │
+│ ┌───────────────────────────────────┐ │
+│ │ MiniMindModel                     │ │
+│ │   ↓                               │ │
+│ │ embed_tokens                      │ │
+│ │   [245,1023,562] → [3, 768]       │ │
+│ │   ↓                               │ │
+│ │ Block 0:                          │ │
+│ │   RMSNorm → Attention → 残差     │ │
+│ │   RMSNorm → FFN → 残差           │ │
+│ │   ↓                               │ │
+│ │ Block 1-7: （相同结构）           │ │
+│ │   ↓                               │ │
+│ │ 最终 RMSNorm                      │ │
+│ │   ↓                               │ │
+│ │ Output: [3, 768]                  │ │
+│ └───────────────────────────────────┘ │
+│   ↓                                   │
+│ lm_head                               │
+│   [3, 768] → [3, 6400]                │
+│   ↓                                   │
+─────────────────────────────────────────
+  ↓
+Logits: [
+  [...],  # "我" 之后的预测
+  [...],  # "爱" 之后的预测
+  [...]   # "编程" 之后的预测
+]
+  ↓
+取最后位置: logits[-1]
+  ↓
+Softmax + 采样
+  ↓
+预测: "吗"
+  ↓
+输出: "我爱编程吗"
+```
+
+---
+
+### 5.8 权重共享（Weight Tying）⭐
+
+**代码位置**：`model/model_minimind.py:447`
+
+```python
+self.model.embed_tokens.weight = self.lm_head.weight
+```
+
+**什么是权重共享？**
+
+让 `embed_tokens` 和 `lm_head` 使用**同一个权重矩阵**。
+
+**矩阵对比**：
+
+```python
+# 不共享（传统做法）
+embed_tokens.weight: [6400, 768]  # 矩阵 A
+lm_head.weight:      [6400, 768]  # 矩阵 B（独立）
+# 总参数：6400×768×2 = 9,830,400
+
+# 共享（MiniMind 做法）
+shared_weight:       [6400, 768]  # 只有一个矩阵
+embed_tokens.weight = shared_weight
+lm_head.weight      = shared_weight  # 指向同一个对象
+# 总参数：6400×768 = 4,915,200
+# 省了：4,915,200 个参数（一半！）
+```
+
+**为什么合理？**
+
+1. **语义相关**：
+   - 输入嵌入：token ID → 向量（编码）
+   - 输出投影：向量 → token ID（解码）
+   - 编码和解码应该用同一套"词典"
+
+2. **节省内存**：
+   - 原本需要 9.8M 参数
+   - 现在只需 4.9M 参数
+   - **省一半内存**！
+
+3. **训练效果更好**：
+   - 两个层共享知识
+   - 输入输出保持一致性
+
+**类比**：
+- 翻译时用同一本双语字典
+- 不需要两本独立的字典
+
+**数学解释**：
+
+```python
+# 输出预测 token 245 ("我") 的分数
+hidden = [...]  # 某个 768 维向量
+
+# 不共享
+score = lm_head.weight[245] @ hidden
+
+# 共享（用嵌入向量）
+score = embed_tokens.weight[245] @ hidden
+
+# 含义：hidden 和 "我" 的嵌入向量的相似度
+# 相似度高 → score 高 → 预测 "我"
+```
+
+---
+
+### 5.9 Pre-Norm vs Post-Norm
+
+MiniMind 使用 **Pre-Norm**（归一化在子层之前）：
+
+**Pre-Norm（MiniMind）**：
+```python
+# Attention 部分
+residual = x
+x = self.self_attn(self.input_layernorm(x))  # 先归一化
+x = x + residual  # 残差连接
+
+# FeedForward 部分
+residual = x
+x = self.mlp(self.post_attention_layernorm(x))  # 先归一化
+x = x + residual  # 残差连接
+```
+
+**Post-Norm（早期 Transformer）**：
+```python
+# Attention 部分
+x = self.layernorm(x + self.self_attn(x))  # 先残差，后归一化
+
+# FeedForward 部分
+x = self.layernorm(x + self.mlp(x))  # 先残差，后归一化
+```
+
+**Pre-Norm 的优势**：
+- ✅ 对**深层网络**（>12层）更稳定
+- ✅ 训练更容易（梯度流动更好）
+- ✅ 所有现代 LLM 都用这个（GPT-3、Llama、Claude）
+- ✅ 残差路径更"干净"（不被 Norm 打断）
+
+---
+
 ## 问答记录
 
 ### 关于归一化
@@ -1170,6 +1513,128 @@ scores = xq @ xk.transpose(-2, -1)
 
 ---
 
+**Q15: MiniMindModel 和 MiniMindForCausalLM 有什么区别？**
+
+A: 两者分工明确：
+
+- **MiniMindForCausalLM**（接口层）：
+  - 对外接口，用户直接加载使用
+  - 包含 `MiniMindModel`（核心）+ `lm_head`（输出层）
+  - 负责：接收输入 → 调用核心 → 投影到词汇表 → 返回预测
+
+- **MiniMindModel**（核心层）：
+  - Transformer 核心实现
+  - 包含：词嵌入 + 8个Block + 最终RMSNorm
+  - 负责：token ID → 嵌入 → 逐层处理 → 输出隐藏状态
+
+**类比**：
+- ForCausalLM = 餐厅前台（接待）
+- MiniMindModel = 后厨（核心工作）
+
+---
+
+**Q16: 为什么词嵌入不能直接用 token ID？**
+
+A: 因为 token ID 只是整数，没有语义信息：
+
+**问题**：
+- Token ID 245 ("我") 和 246 ("你") 在数值上相近
+- 但语义可能完全不同
+- 整数之间只有大小关系，没有"相似度"
+
+**解决**：
+- 映射到 768 维向量空间
+- 相似的词有相似的向量
+- 可以计算距离、角度等语义关系
+
+**例子**：
+```
+"我" → [0.12, 0.56, ..., 0.89]
+"你" → [0.15, 0.53, ..., 0.92]  # 向量接近
+"苹果" → [0.87, 0.23, ..., 0.14]  # 向量远离
+```
+
+向量空间中才有"东西"让模型学习！
+
+---
+
+**Q17: 权重共享（Weight Tying）是什么？为什么能省内存？** ⭐
+
+A: 让 `embed_tokens` 和 `lm_head` 使用**同一个权重矩阵**。
+
+**不共享**：
+```python
+embed_tokens.weight: [6400, 768]  # 4.9M 参数
+lm_head.weight:      [6400, 768]  # 4.9M 参数
+总计：9.8M 参数
+```
+
+**共享**：
+```python
+shared_weight: [6400, 768]  # 只有一个矩阵
+embed_tokens.weight = shared_weight
+lm_head.weight      = shared_weight  # 指向同一个对象
+总计：4.9M 参数（省一半！）
+```
+
+**为什么合理？**
+- 输入嵌入：token ID → 向量（编码）
+- 输出投影：向量 → token ID（解码）
+- 编码和解码用同一本"字典"很合理！
+
+**数学意义**：
+```python
+# 预测 "我" 的分数
+score = embed_weight[245] @ hidden
+# 就是计算 hidden 和 "我" 的嵌入向量的相似度
+# 相似度高 → 预测 "我"
+```
+
+---
+
+**Q18: 为什么需要最终的 RMSNorm？**
+
+A: 8 个 Transformer Block 累积后，数值可能偏离正常范围。
+
+**作用**：
+- 稳定最终输出
+- 确保投影到 `lm_head` 的数值在合理范围
+- 类比：做完 8 道工序，最后质检一次
+
+**位置**：
+```python
+Block 0 → Block 1 → ... → Block 7
+  ↓
+最终 RMSNorm  ← 在这里！
+  ↓
+lm_head
+```
+
+---
+
+**Q19: Pre-Norm 和 Post-Norm 有什么区别？**
+
+A: 归一化的**位置不同**：
+
+**Pre-Norm**（MiniMind 使用）：
+```python
+x = x + Attention(RMSNorm(x))  # 先归一化，再Attention
+x = x + FFN(RMSNorm(x))        # 先归一化，再FFN
+```
+
+**Post-Norm**（早期 Transformer）：
+```python
+x = RMSNorm(x + Attention(x))  # 先Attention，再归一化
+x = RMSNorm(x + FFN(x))        # 先FFN，再归一化
+```
+
+**Pre-Norm 的优势**：
+- ✅ 对深层网络（>12层）更稳定
+- ✅ 训练更容易（梯度流动更好）
+- ✅ 所有现代 LLM 都用（GPT-3、Llama、Claude）
+
+---
+
 ## 📊 重要公式汇总
 
 ### RMSNorm
@@ -1195,4 +1660,4 @@ scores = (Q @ K^T) / sqrt(head_dim)
 
 ---
 
-**最后更新**：2025-11-07
+**最后更新**：2026-01-18
