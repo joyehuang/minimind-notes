@@ -114,6 +114,7 @@ const features = computed(() => isEn.value ? FEATURES_DATA.en : FEATURES_DATA.zh
   font-size: 2.5em;
   font-weight: 700;
   margin: 0 0 1rem 0;
+  line-height: 1.25;
   color: var(--vp-c-text-1);
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--vp-c-text-1) 0%, var(--vp-c-text-2) 100%);
