@@ -1,10 +1,11 @@
 <template>
   <svg :class="className" aria-hidden="true">
-    <use :href="`${withBase('/icons-sprite.svg')}#icon-${name}`" />
+    <use :href="spriteHref" :xlink:href="spriteHref" />
   </svg>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { withBase } from 'vitepress'
 
 interface Props {
@@ -12,9 +13,11 @@ interface Props {
   className?: string
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   className: ''
 })
+
+const spriteHref = computed(() => `${withBase('/icons-sprite.svg')}#icon-${props.name}`)
 </script>
 
 <style scoped>

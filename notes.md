@@ -70,20 +70,36 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 
 - **2025-11-06**: [环境搭建 + 模型运行](./learning_log.md#2025-11-06环境搭建--首次运行模型--性能测试)
 - **2025-11-07**: [Transformer 核心组件学习](./learning_log.md#2025-11-07深度理解-transformer-核心组件)
+- **2025-11-10**: [Attention + FeedForward + Transformer Block](./learning_log.md#2025-11-10-深入理解-attention-注意力机制)
+- **2025-12-27**: [确认 Tier 1 完成](./learning_log.md#2025-12-27完成-tier-1-基础组件学习)
+- **2026-01-18**: [深入理解完整模型架构](./learning_log.md#2026-01-18深入理解完整模型架构)
 
 ---
 
 ## 🎯 当前学习进度
 
-**阶段**：第一阶段 - Transformer 核心组件学习中
+**阶段**：Tier 1 完成 + 完整架构理解
 
-**完成度**：2/4
+**Tier 1 - Foundation（基础组件）**：✅ 100%
 - ✅ RMSNorm（归一化）
 - ✅ RoPE（位置编码）
-- ⏳ Attention（注意力机制）
-- ⏳ FeedForward（前馈网络）
+- ✅ Attention（注意力机制）
+- ✅ FeedForward（前馈网络）
+- ✅ Transformer Block（组装）
 
-**下一步**：深入理解 Attention 机制
+**完整模型架构**：✅ 100%
+- ✅ MiniMindForCausalLM（接口层）
+- ✅ MiniMindModel（核心层）
+- ✅ 词嵌入层（embed_tokens）
+- ✅ 8 层 Transformer Block 堆叠
+- ✅ 输出层（lm_head）
+- ✅ 权重共享（Weight Tying）
+- ✅ 完整数据流
+
+**下一步**：
+- 自回归生成机制
+- KV Cache 推理优化
+- 训练流程（可选）
 
 ---
 
@@ -149,5 +165,5 @@ python learning_materials/rope_basics.py
 
 ---
 
-**最后更新**：2025-11-07
-**学习进度**：第一阶段 - Transformer 核心组件学习中（2/4 完成）
+**最后更新**：2026-01-18
+**学习进度**：Tier 1 完成 ✅ + 完整模型架构理解 ✅

@@ -1,5 +1,8 @@
 <template>
   <Layout>
+    <template #layout-top>
+      <SvgSprite />
+    </template>
     <template #doc-before>
       <Breadcrumbs />
     </template>
@@ -13,6 +16,7 @@
 import DefaultTheme from 'vitepress/theme'
 import GitHubFooter from './components/GitHubFooter.vue'
 import Breadcrumbs from './components/Breadcrumbs.vue'
+import SvgSprite from './components/SvgSprite.vue'
 
 const { Layout } = DefaultTheme
 
