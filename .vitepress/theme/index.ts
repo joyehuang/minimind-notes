@@ -14,6 +14,7 @@ const FeaturesCards = defineAsyncComponent(() => import('./components/FeaturesCa
 const LearningPathCards = defineAsyncComponent(() => import('./components/LearningPathCards.vue'))
 const ModulesGrid = defineAsyncComponent(() => import('./components/ModulesGrid.vue'))
 const TerminalCode = defineAsyncComponent(() => import('./components/TerminalCode.vue'))
+const HomeHeroVideo = defineAsyncComponent(() => import('./components/HomeHeroVideo.vue'))
 
 // 注入 Vercel Analytics 和 Speed Insights
 // 使用 requestIdleCallback 延迟加载，避免阻塞主线程
@@ -43,5 +44,6 @@ export default {
     app.component('LearningPathCards', LearningPathCards)
     app.component('ModulesGrid', ModulesGrid)
     app.component('TerminalCode', TerminalCode)
+    app.component('HomeHeroVideo', HomeHeroVideo)
   }
 }

@@ -20,6 +20,7 @@ hero:
       link: https://github.com/joyehuang/minimind-notes
 ---
 
+<HomeHeroVideo />
 <FeaturesCards />
 <LearningPathCards />
 <ModulesGrid />
