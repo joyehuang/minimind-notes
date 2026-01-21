@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run docs:build",
+  "buildCommand": "pnpm run docs:build",
   "outputDirectory": ".vitepress/dist",
-  "installCommand": "npm ci",
+  "installCommand": "pnpm install --frozen-lockfile",
   "framework": "vitepress",
   "cleanUrls": true
 }

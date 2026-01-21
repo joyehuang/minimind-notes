@@ -19,7 +19,7 @@
   ],
   "author": "joyehuang",
   "license": "MIT",
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@10.0.0",
   "devDependencies": {
     "@remotion/cli": "^4.0.407",
     "@remotion/google-fonts": "^4.0.407",
