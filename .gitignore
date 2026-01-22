@@ -42,8 +42,13 @@ node_modules/
 .vitepress/cache/
 .vitepress/.temp/
 
-# Claude AI
+# AI skiils
 .claude/
+.agents/
+.codex/
+.github/skills/
+.opencode/
+.cursor/
 
 # Other
 website/
