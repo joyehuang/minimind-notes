@@ -2,6 +2,7 @@
 
 # 一键运行所有实验
 # 用法: bash run_all.sh
+# 选项: bash run_all.sh --continue-on-error  (实验失败时继续运行后续实验)
 
 echo "======================================================================"
 echo "🚀 运行 Normalization 模块的所有实验"
@@ -18,6 +19,17 @@ fi
 # 创建结果目录
 mkdir -p results
 
+# 检查是否启用 continue-on-error 模式
+CONTINUE_ON_ERROR=false
+if [ "$1" == "--continue-on-error" ]; then
+    CONTINUE_ON_ERROR=true
+    echo "⚙️  已启用 continue-on-error 模式（实验失败时继续运行）"
+    echo ""
+fi
+
+# 失败计数器
+FAILED_COUNT=0
+
 # 实验 1
 echo "----------------------------------------------------------------------"
 echo "🔬 实验 1: 梯度消失可视化"
@@ -27,33 +39,85 @@ if [ $? -eq 0 ]; then
     echo "✅ 实验 1 完成"
 else
     echo "❌ 实验 1 失败"
-    exit 1
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+    if [ "$CONTINUE_ON_ERROR" = false ]; then
+        exit 1
+    fi
 fi
 echo ""
 
 # 实验 2
 echo "----------------------------------------------------------------------"
-echo "🔬 实验 2: LayerNorm vs RMSNorm 对比"
+echo "🔬 实验 2: 四种配置对比"
 echo "----------------------------------------------------------------------"
-python exp2_layernorm_vs_rmsnorm.py
+python exp2_norm_comparison.py --quick
 if [ $? -eq 0 ]; then
     echo "✅ 实验 2 完成"
 else
     echo "❌ 实验 2 失败"
-    exit 1
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+    if [ "$CONTINUE_ON_ERROR" = false ]; then
+        exit 1
+    fi
+fi
+echo ""
+
+# 实验 2-Extra（补充实验，文件名：exp2_layernorm_vs_rmsnorm.py）
+# 说明：本实验专注于 LayerNorm 和 RMSNorm 的直接对比，是对实验 2 的补充
+echo "----------------------------------------------------------------------"
+echo "🔬 实验 2-Extra: LayerNorm vs RMSNorm 对比（补充）"
+echo "----------------------------------------------------------------------"
+python exp2_layernorm_vs_rmsnorm.py
+if [ $? -eq 0 ]; then
+    echo "✅ 实验 2-Extra 完成"
+else
+    echo "❌ 实验 2-Extra 失败"
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+    if [ "$CONTINUE_ON_ERROR" = false ]; then
+        exit 1
+    fi
+fi
+echo ""
+
+# 实验 3
+echo "----------------------------------------------------------------------"
+echo "🔬 实验 3: Pre-LN vs Post-LN 深度对比"
+echo "----------------------------------------------------------------------"
+python exp3_prenorm_vs_postnorm.py --quick
+if [ $? -eq 0 ]; then
+    echo "✅ 实验 3 完成"
+else
+    echo "❌ 实验 3 失败"
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+    if [ "$CONTINUE_ON_ERROR" = false ]; then
+        exit 1
+    fi
 fi
 echo ""
 
 # 总结
 echo "======================================================================"
-echo "✅ 所有实验完成！"
+if [ $FAILED_COUNT -eq 0 ]; then
+    echo "✅ 所有实验完成！"
+else
+    echo "⚠️  完成，但有 $FAILED_COUNT 个实验失败"
+fi
 echo "======================================================================"
 echo ""
 echo "📊 查看结果:"
 echo "   ls results/"
+echo "   - gradient_vanishing.png           (实验 1)"
+echo "   - norm_comparison.png              (实验 2)"
+echo "   - layernorm_vs_rmsnorm.png         (实验 2-Extra)"
+echo "   - prenorm_vs_postnorm.png          (实验 3)"
 echo ""
 echo "📖 下一步:"
 echo "   1. 查看生成的图表"
 echo "   2. 阅读 ../teaching.md 理解理论"
 echo "   3. 完成 ../quiz.md 自测题"
 echo ""
+
+# 如果有失败的实验，返回非零退出码
+if [ $FAILED_COUNT -gt 0 ]; then
+    exit 1
+fi
