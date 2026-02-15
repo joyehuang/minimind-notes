@@ -33,13 +33,39 @@ echo ""
 
 # 实验 2
 echo "----------------------------------------------------------------------"
-echo "🔬 实验 2: LayerNorm vs RMSNorm 对比"
+echo "🔬 实验 2: 四种配置对比"
 echo "----------------------------------------------------------------------"
-python exp2_layernorm_vs_rmsnorm.py
+python exp2_norm_comparison.py --quick
 if [ $? -eq 0 ]; then
     echo "✅ 实验 2 完成"
 else
     echo "❌ 实验 2 失败"
+    exit 1
+fi
+echo ""
+
+# 实验 2-Extra
+echo "----------------------------------------------------------------------"
+echo "🔬 实验 2-Extra: LayerNorm vs RMSNorm 对比"
+echo "----------------------------------------------------------------------"
+python exp2_layernorm_vs_rmsnorm.py
+if [ $? -eq 0 ]; then
+    echo "✅ 实验 2-Extra 完成"
+else
+    echo "❌ 实验 2-Extra 失败"
+    exit 1
+fi
+echo ""
+
+# 实验 3
+echo "----------------------------------------------------------------------"
+echo "🔬 实验 3: Pre-LN vs Post-LN 深度对比"
+echo "----------------------------------------------------------------------"
+python exp3_prenorm_vs_postnorm.py --quick
+if [ $? -eq 0 ]; then
+    echo "✅ 实验 3 完成"
+else
+    echo "❌ 实验 3 失败"
     exit 1
 fi
 echo ""
@@ -51,6 +77,10 @@ echo "======================================================================"
 echo ""
 echo "📊 查看结果:"
 echo "   ls results/"
+echo "   - gradient_vanishing.png           (实验 1)"
+echo "   - norm_comparison.png              (实验 2)"
+echo "   - layernorm_vs_rmsnorm.png         (实验 2-Extra)"
+echo "   - prenorm_vs_postnorm.png          (实验 3)"
 echo ""
 echo "📖 下一步:"
 echo "   1. 查看生成的图表"
