@@ -142,10 +142,18 @@ class SimpleLM(nn.Module):
         elif block_type == 'preln':
             # Pre-LN 可根据 use_rms 参数选择 LayerNorm 或 RMSNorm
             self.blocks = nn.ModuleList([PreLNBlock(hidden_size, use_rms) for _ in range(num_layers)])
+        else:
+            raise ValueError(f"Unknown block_type: {block_type}. "
+                           f"Expected one of: 'nonorm', 'postln', 'preln'")
 
         self.lm_head = nn.Linear(hidden_size, vocab_size)
 
     def forward(self, x):
+        """前向传播
+
+        注意：本实验使用合成数据（无填充），因此 MultiheadAttention 不需要 key_padding_mask。
+             在实际任务中处理变长序列时，需要添加 padding mask 以避免 attention 到填充位置。
+        """
         x = self.embedding(x)
 
         for block in self.blocks:
@@ -175,6 +183,9 @@ def train_model(model, vocab_size, steps, lr, device):
     seq_len = 64
 
     for step in range(steps):
+        # 清零梯度（在循环开头，符合 PyTorch 惯例）
+        optimizer.zero_grad()
+
         # 生成随机数据（next-token prediction）
         # 注意：这是简化的合成数据。torch.roll 创建了循环依赖（最后一个 token 的目标是第一个 token），
         #      不代表真实的语言建模任务。但对于展示归一化对训练稳定性的影响，这个简化是足够的。
@@ -194,7 +205,6 @@ def train_model(model, vocab_size, steps, lr, device):
             break
 
         # Backward
-        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
@@ -316,9 +326,11 @@ def plot_results(results, steps):
     for (name, data), color in zip(results.items(), colors):
         if data['nan_step'] is not None:
             ax1.axvline(x=data['nan_step'], color=color, linestyle='--', alpha=0.3)
-            ax1.text(data['nan_step'], ax1.get_ylim()[1] * 0.9,
+            # 使用相对坐标系（transform=ax1.get_xaxis_transform()）在对数坐标下更稳健
+            ax1.text(data['nan_step'], 0.9,
                     f'NaN@{data["nan_step"]}',
-                    rotation=90, va='top', color=color, fontsize=9)
+                    rotation=90, va='top', color=color, fontsize=9,
+                    transform=ax1.get_xaxis_transform())
 
     # 右图：对比表格
     ax2 = plt.subplot(1, 2, 2)
@@ -351,8 +363,8 @@ def plot_results(results, steps):
         table[(0, i)].set_text_props(weight='bold', color='white')
 
     # 设置行颜色
-    colors = ['#ffcccc', '#ffe5cc', '#cce5ff', '#ccffcc']
-    for i, color in enumerate(colors):
+    row_colors = ['#ffcccc', '#ffe5cc', '#cce5ff', '#ccffcc']
+    for i, color in enumerate(row_colors):
         for j in range(len(headers)):
             table[(i+1, j)].set_facecolor(color)
 

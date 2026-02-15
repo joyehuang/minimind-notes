@@ -112,6 +112,11 @@ class SimpleLM(nn.Module):
         self.lm_head = nn.Linear(hidden_size, vocab_size)
 
     def forward(self, x):
+        """前向传播
+
+        注意：本实验使用合成数据（无填充），因此 MultiheadAttention 不需要 key_padding_mask。
+             在实际任务中处理变长序列时，需要添加 padding mask 以避免 attention 到填充位置。
+        """
         x = self.embedding(x)
 
         for block in self.blocks:
@@ -137,6 +142,9 @@ def train_model(model, vocab_size, steps, lr, device):
     seq_len = 64
 
     for step in range(steps):
+        # 清零梯度（在循环开头，符合 PyTorch 惯例）
+        optimizer.zero_grad()
+
         # 生成随机数据（next-token prediction）
         # 注意：这是简化的合成数据。torch.roll 创建了循环依赖（最后一个 token 的目标是第一个 token），
         #      不代表真实的语言建模任务。但对于展示不同架构的训练稳定性差异，这个简化是足够的。
@@ -155,7 +163,6 @@ def train_model(model, vocab_size, steps, lr, device):
             break
 
         # Backward
-        optimizer.zero_grad()
         loss.backward()
 
         # 梯度裁剪（避免梯度爆炸）
