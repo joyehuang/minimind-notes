@@ -44,9 +44,10 @@ else
 fi
 echo ""
 
-# 实验 2-Extra
+# 实验 2-Extra（补充实验，文件名：exp2_layernorm_vs_rmsnorm.py）
+# 说明：本实验专注于 LayerNorm 和 RMSNorm 的直接对比，是对实验 2 的补充
 echo "----------------------------------------------------------------------"
-echo "🔬 实验 2-Extra: LayerNorm vs RMSNorm 对比"
+echo "🔬 实验 2-Extra: LayerNorm vs RMSNorm 对比（补充）"
 echo "----------------------------------------------------------------------"
 python exp2_layernorm_vs_rmsnorm.py
 if [ $? -eq 0 ]; then

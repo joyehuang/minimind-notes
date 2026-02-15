@@ -7,6 +7,10 @@
 时间：~5 分钟（quick 模式：~1 分钟）
 输出：results/prenorm_vs_postnorm.png
 
+注意：为保持实验独立性，本文件包含与 exp2 重复的基础类（RMSNorm、Block 等），
+     便于学习者单独运行和理解每个实验。本实验使用梯度裁剪以关注架构本身的
+     稳定性差异，而非极端的梯度爆炸现象。
+
 运行：
     python exp3_prenorm_vs_postnorm.py
     # 快速模式：
@@ -43,7 +47,7 @@ class RMSNorm(nn.Module):
 # Transformer Block 实现
 # ============================================================
 class PostLNBlock(nn.Module):
-    """Post-LN: Compute → Norm → Residual"""
+    """Post-LN: Compute → Residual → Norm（归一化在残差之后）"""
     def __init__(self, hidden_size):
         super().__init__()
         self.attention = nn.MultiheadAttention(hidden_size, num_heads=4, batch_first=True)
@@ -68,7 +72,7 @@ class PostLNBlock(nn.Module):
 
 
 class PreLNBlock(nn.Module):
-    """Pre-LN: Norm → Compute → Residual"""
+    """Pre-LN: Norm → Compute → Residual（归一化在计算之前）"""
     def __init__(self, hidden_size):
         super().__init__()
         self.attention = nn.MultiheadAttention(hidden_size, num_heads=4, batch_first=True)
@@ -163,10 +167,11 @@ def train_model(model, vocab_size, steps, lr, device):
         if (step + 1) % 100 == 0 or step == 0:
             print(f"      Step {step+1:4d}: loss = {loss.item():.4f}")
 
-    # 计算稳定性指标
+    # 计算稳定性指标（取最后 N 步的标准差，N = min(100, 总步数)）
     valid_losses = [l for l in losses if not np.isnan(l)]
     if len(valid_losses) > 10:
-        stability = np.std(valid_losses[-100:])  # 最后100步的标准差
+        last_n = min(100, len(valid_losses))
+        stability = np.std(valid_losses[-last_n:])
     else:
         stability = float('inf')
 
@@ -256,19 +261,19 @@ def plot_results(results, steps):
 
     # 左上：4层对比
     ax1 = axes[0, 0]
-    plot_comparison(ax1, results, layer_filter=4, title="4-Layer: Pre-LN vs Post-LN")
+    plot_comparison(ax1, results, layer_filter=4, title="4层模型：Pre-LN vs Post-LN")
 
     # 右上：8层对比
     ax2 = axes[0, 1]
-    plot_comparison(ax2, results, layer_filter=8, title="8-Layer: Pre-LN vs Post-LN")
+    plot_comparison(ax2, results, layer_filter=8, title="8层模型：Pre-LN vs Post-LN")
 
     # 左下：Pre-LN 深度对比
     ax3 = axes[1, 0]
-    plot_depth_comparison(ax3, results, arch_filter=True, title="Pre-LN: 4-Layer vs 8-Layer")
+    plot_depth_comparison(ax3, results, arch_filter=True, title="Pre-LN：4层 vs 8层")
 
     # 右下：Post-LN 深度对比
     ax4 = axes[1, 1]
-    plot_depth_comparison(ax4, results, arch_filter=False, title="Post-LN: 4-Layer vs 8-Layer")
+    plot_depth_comparison(ax4, results, arch_filter=False, title="Post-LN：4层 vs 8层")
 
     plt.tight_layout()
 
@@ -306,8 +311,8 @@ def plot_comparison(ax, results, layer_filter, title):
                label=f"{arch_name} (LR={data['lr']})",
                linewidth=2, markersize=4, alpha=0.8)
 
-    ax.set_xlabel('Training Steps', fontsize=11)
-    ax.set_ylabel('Loss', fontsize=11)
+    ax.set_xlabel('训练步数', fontsize=11)
+    ax.set_ylabel('损失', fontsize=11)
     ax.set_title(title, fontsize=13, fontweight='bold')
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
@@ -334,11 +339,11 @@ def plot_depth_comparison(ax, results, arch_filter, title):
 
         ax.plot(valid_indices, valid_losses,
                color=color, marker=marker, markevery=max(1, len(valid_indices)//10),
-               label=f"{num_layers}-Layer",
+               label=f"{num_layers}层",
                linewidth=2, markersize=4, alpha=0.8)
 
-    ax.set_xlabel('Training Steps', fontsize=11)
-    ax.set_ylabel('Loss', fontsize=11)
+    ax.set_xlabel('训练步数', fontsize=11)
+    ax.set_ylabel('损失', fontsize=11)
     ax.set_title(title, fontsize=13, fontweight='bold')
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)

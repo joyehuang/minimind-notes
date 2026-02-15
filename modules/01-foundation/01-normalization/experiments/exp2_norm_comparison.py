@@ -7,6 +7,9 @@
 时间：~3 分钟（quick 模式：~30 秒）
 输出：results/norm_comparison.png
 
+注意：为保持实验独立性，本文件包含与 exp3 重复的基础类（RMSNorm、Block 等），
+     便于学习者单独运行和理解每个实验。
+
 运行：
     python exp2_norm_comparison.py
     # 快速模式：
@@ -64,7 +67,7 @@ class NoNormBlock(nn.Module):
 
 
 class PostLNBlock(nn.Module):
-    """Post-LN: Compute → Norm → Residual"""
+    """Post-LN: Compute → Residual → Norm（归一化在残差之后）"""
     def __init__(self, hidden_size, use_rms=False):
         super().__init__()
         self.attention = nn.MultiheadAttention(hidden_size, num_heads=4, batch_first=True)
@@ -94,7 +97,7 @@ class PostLNBlock(nn.Module):
 
 
 class PreLNBlock(nn.Module):
-    """Pre-LN: Norm → Compute → Residual"""
+    """Pre-LN: Norm → Compute → Residual（归一化在计算之前）"""
     def __init__(self, hidden_size, use_rms=False):
         super().__init__()
         self.attention = nn.MultiheadAttention(hidden_size, num_heads=4, batch_first=True)
@@ -155,7 +158,11 @@ class SimpleLM(nn.Module):
 # 训练函数
 # ============================================================
 def train_model(model, vocab_size, steps, lr, device):
-    """训练模型并返回损失曲线"""
+    """训练模型并返回损失曲线
+
+    注意：本实验未使用梯度裁剪，目的是充分展示不同架构的原始训练稳定性差异。
+         NoNorm 配置会因梯度爆炸而发散，这正是我们想要观察的现象。
+    """
     model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.CrossEntropyLoss()
@@ -224,9 +231,11 @@ def run_experiment(quick_mode=False):
     print(f"  - 设备: {device}")
     print(f"  - 模式: {'快速模式 (100 步)' if quick_mode else '标准模式 (1000 步)'}")
 
-    # 配置列表
+    # 配置列表：(名称, Block类型, 学习率, 是否使用RMSNorm)
+    # 注意：NoNorm 使用较小的学习率（1e-4），但仍会因数值不稳定而发散
+    #      这展示了即使谨慎调参，无归一化架构也难以稳定训练
     configs = [
-        ("NoNorm", 'nonorm', 1e-5, False),
+        ("NoNorm", 'nonorm', 1e-4, False),
         ("Post-LN + LayerNorm", 'postln', 1e-4, False),
         ("Pre-LN + LayerNorm", 'preln', 5e-4, False),
         ("Pre-LN + RMSNorm", 'preln', 5e-4, True),
@@ -292,19 +301,21 @@ def plot_results(results, steps):
                 color=color, marker=marker, markevery=max(1, len(valid_indices)//10),
                 label=name, linewidth=2, markersize=4, alpha=0.8)
 
-        # 标记 NaN 点
+    # 设置坐标轴和样式（在所有数据绘制完成后）
+    ax1.set_xlabel('训练步数', fontsize=12)
+    ax1.set_ylabel('损失', fontsize=12)
+    ax1.set_title('训练损失对比', fontsize=14, fontweight='bold')
+    ax1.legend(fontsize=10, loc='upper right')
+    ax1.grid(True, alpha=0.3)
+    ax1.set_yscale('log')
+
+    # 标记 NaN 点（在坐标轴设置完成后，此时 ylim 已确定）
+    for (name, data), color in zip(results.items(), colors):
         if data['nan_step'] is not None:
             ax1.axvline(x=data['nan_step'], color=color, linestyle='--', alpha=0.3)
             ax1.text(data['nan_step'], ax1.get_ylim()[1] * 0.9,
                     f'NaN@{data["nan_step"]}',
                     rotation=90, va='top', color=color, fontsize=9)
-
-    ax1.set_xlabel('Training Steps', fontsize=12)
-    ax1.set_ylabel('Loss', fontsize=12)
-    ax1.set_title('Training Loss Comparison', fontsize=14, fontweight='bold')
-    ax1.legend(fontsize=10, loc='upper right')
-    ax1.grid(True, alpha=0.3)
-    ax1.set_yscale('log')
 
     # 右图：对比表格
     ax2 = plt.subplot(1, 2, 2)
@@ -342,7 +353,7 @@ def plot_results(results, steps):
         for j in range(len(headers)):
             table[(i+1, j)].set_facecolor(color)
 
-    ax2.set_title('Performance Comparison', fontsize=14, fontweight='bold', pad=20)
+    ax2.set_title('性能对比', fontsize=14, fontweight='bold', pad=20)
 
     plt.tight_layout()
 
