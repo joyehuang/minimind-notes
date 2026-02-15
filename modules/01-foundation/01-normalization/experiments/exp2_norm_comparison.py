@@ -67,8 +67,12 @@ class NoNormBlock(nn.Module):
 
 
 class PostLNBlock(nn.Module):
-    """Post-LN: Compute → Residual → Norm（归一化在残差之后）"""
-    def __init__(self, hidden_size, use_rms=False):
+    """Post-LN: Compute → Residual → Norm（归一化在残差之后）
+
+    注意：本实验中 Post-LN 仅使用 LayerNorm，因为实验目的是对比架构差异，
+         而非归一化方法差异（RMSNorm 仅在 Pre-LN 中对比）。
+    """
+    def __init__(self, hidden_size):
         super().__init__()
         self.attention = nn.MultiheadAttention(hidden_size, num_heads=4, batch_first=True)
         self.ffn = nn.Sequential(
@@ -76,13 +80,8 @@ class PostLNBlock(nn.Module):
             nn.ReLU(),
             nn.Linear(hidden_size * 4, hidden_size)
         )
-
-        if use_rms:
-            self.norm1 = RMSNorm(hidden_size)
-            self.norm2 = RMSNorm(hidden_size)
-        else:
-            self.norm1 = nn.LayerNorm(hidden_size)
-            self.norm2 = nn.LayerNorm(hidden_size)
+        self.norm1 = nn.LayerNorm(hidden_size)
+        self.norm2 = nn.LayerNorm(hidden_size)
 
     def forward(self, x):
         # Attention → Residual → Norm
@@ -138,8 +137,10 @@ class SimpleLM(nn.Module):
         if block_type == 'nonorm':
             self.blocks = nn.ModuleList([NoNormBlock(hidden_size) for _ in range(num_layers)])
         elif block_type == 'postln':
-            self.blocks = nn.ModuleList([PostLNBlock(hidden_size, use_rms) for _ in range(num_layers)])
+            # Post-LN 固定使用 LayerNorm（不使用 use_rms 参数）
+            self.blocks = nn.ModuleList([PostLNBlock(hidden_size) for _ in range(num_layers)])
         elif block_type == 'preln':
+            # Pre-LN 可根据 use_rms 参数选择 LayerNorm 或 RMSNorm
             self.blocks = nn.ModuleList([PreLNBlock(hidden_size, use_rms) for _ in range(num_layers)])
 
         self.lm_head = nn.Linear(hidden_size, vocab_size)
@@ -175,6 +176,8 @@ def train_model(model, vocab_size, steps, lr, device):
 
     for step in range(steps):
         # 生成随机数据（next-token prediction）
+        # 注意：这是简化的合成数据。torch.roll 创建了循环依赖（最后一个 token 的目标是第一个 token），
+        #      不代表真实的语言建模任务。但对于展示归一化对训练稳定性的影响，这个简化是足够的。
         X = torch.randint(0, vocab_size, (batch_size, seq_len), device=device)
         Y = torch.roll(X, shifts=-1, dims=1)  # 目标是下一个 token
 

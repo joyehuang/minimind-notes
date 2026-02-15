@@ -137,7 +137,9 @@ def train_model(model, vocab_size, steps, lr, device):
     seq_len = 64
 
     for step in range(steps):
-        # 生成随机数据
+        # 生成随机数据（next-token prediction）
+        # 注意：这是简化的合成数据。torch.roll 创建了循环依赖（最后一个 token 的目标是第一个 token），
+        #      不代表真实的语言建模任务。但对于展示不同架构的训练稳定性差异，这个简化是足够的。
         X = torch.randint(0, vocab_size, (batch_size, seq_len), device=device)
         Y = torch.roll(X, shifts=-1, dims=1)
 
