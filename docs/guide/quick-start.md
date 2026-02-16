@@ -22,10 +22,15 @@ keywords: LLM快速入门, 大模型训练入门, Transformer快速学习, LLM�
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
-# 2. 激活虚拟环境
-source venv/bin/activate
+# 2. 创建并激活虚拟环境（需要 Python 3.9+）
+python3 -m venv venv
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 
-# 3. 下载实验数据（可选，部分实验不需要）
+# 3. 安装依赖
+pip install -r requirements.txt
+
+# 4. 下载实验数据（可选，部分实验不需要）
 cd modules/common
 python datasets.py --download-all
 cd ../..
