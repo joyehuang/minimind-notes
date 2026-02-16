@@ -77,10 +77,12 @@ def demonstrate_multi_frequency():
     print("    - 从维度0到维度3：频率递减，转动速度逐渐变慢")
     print("      例如：观察同一位置（表格同一行），从维度0到维度3，")
     print("            频率递减导致累计旋转圈数也递减")
-    print("      参考上面的频率表：维度0每6.3个token转一圈，")
-    print("                        维度3约每23个token转一圈（约4倍慢）")
+    print("      参考上面的频率表：")
+    print("        - 维度0每6.3个token转一圈")
+    print("        - 维度3约每23个token转一圈（约4倍慢）")
     print()
     print("  【结论】：不同维度组合 → 唯一标识每个位置！")
+    print()
 
 
 def demonstrate_absolute_vs_relative():
