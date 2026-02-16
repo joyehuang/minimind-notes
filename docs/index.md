@@ -123,7 +123,8 @@ features:
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
