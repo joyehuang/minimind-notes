@@ -107,21 +107,28 @@ MiniMind 旨在通过极其精简的代码和**对照实验**，帮助开发者�
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
-# 2. 激活虚拟环境（如果已有）
-source venv/bin/activate
+# 2. 创建并激活虚拟环境（需要 Python 3.9+，推荐 3.10/3.11）
+python3 -m venv venv          # Windows 用户请使用 python 替代 python3
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 
-# 3. 实验 1：为什么需要归一化？
+# 3. 安装依赖
+pip install -r requirements.txt
+
+# 4. 实验 1：为什么需要归一化？
 cd modules/01-foundation/01-normalization/experiments
 python exp1_gradient_vanishing.py
 
-# 4. 实验 2：为什么用 RoPE 位置编码？
+# 5. 实验 2：为什么用 RoPE 位置编码？
 cd ../../02-position-encoding/experiments
 python exp1_rope_basics.py
 
-# 5. 实验 3：Attention 如何工作？
+# 6. 实验 3：Attention 如何工作？
 cd ../../03-attention/experiments
 python exp1_attention_basics.py
 ```
+
+> **💡 提示**：学习阶段的实验只需 CPU，无需 GPU。完整模型训练需要 NVIDIA GPU（推荐 3090 及以上）。
 
 **你将看到**：
 - 梯度消失的可视化

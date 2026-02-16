@@ -107,21 +107,28 @@ Run three key experiments to understand the core design choices of LLMs:
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
-# 2. Activate virtual environment (if you have one)
-source venv/bin/activate
+# 2. Create and activate virtual environment (requires Python 3.9+, recommend 3.10/3.11)
+python3 -m venv venv          # Windows users: use "python" instead of "python3"
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 
-# 3. Experiment 1: Why do we need normalization?
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Experiment 1: Why do we need normalization?
 cd modules/01-foundation/01-normalization/experiments
 python exp1_gradient_vanishing.py
 
-# 4. Experiment 2: Why use RoPE positional encoding?
+# 5. Experiment 2: Why use RoPE positional encoding?
 cd ../../02-position-encoding/experiments
 python exp1_rope_basics.py
 
-# 5. Experiment 3: How does Attention work?
+# 6. Experiment 3: How does Attention work?
 cd ../../03-attention/experiments
 python exp1_attention_basics.py
 ```
+
+> **Tip**: Experiments in the learning modules only require CPU, no GPU needed. Full model training requires an NVIDIA GPU (3090 or above recommended).
 
 **What You'll See**:
 - Visualization of gradient vanishing

@@ -63,13 +63,20 @@ _（后续扩展）_
 ### 准备环境
 
 ```bash
-# 1. 激活虚拟环境
-source venv/bin/activate
+# 1. 创建并激活虚拟环境（需要 Python 3.9+）
+python3 -m venv venv          # Windows 用户请使用 python 替代 python3
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 
-# 2. 下载实验数据（约 60 MB）
+# 2. 安装依赖
+pip install -r requirements.txt
+
+# 3. 下载实验数据（约 60 MB）
 cd modules/common
 python datasets.py --download-all
 ```
+
+> 详细环境配置说明请参考 [README.md](../README.md#-快速开始)
 
 ### 30 分钟快速体验
 

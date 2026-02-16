@@ -119,10 +119,13 @@ features:
 
 ::: code-group
 
-```bash [1. 克隆仓库]
+```bash [1. 环境准备]
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
-source venv/bin/activate
+python3 -m venv venv          # Windows: python -m venv venv
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ```bash [2. 运行第一个实验]
