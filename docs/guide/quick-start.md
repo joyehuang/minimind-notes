@@ -23,7 +23,7 @@ git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
 # 2. 创建并激活虚拟环境（需要 Python 3.9+）
-python3 -m venv venv
+python3 -m venv venv          # Windows 用户请使用 python 替代 python3
 source venv/bin/activate      # Linux / macOS
 # Windows: venv\Scripts\activate
 

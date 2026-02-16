@@ -108,7 +108,7 @@ git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
 # 2. Create and activate virtual environment (requires Python 3.9+, recommend 3.10/3.11)
-python3 -m venv venv
+python3 -m venv venv          # Windows users: use "python" instead of "python3"
 source venv/bin/activate      # Linux / macOS
 # Windows: venv\Scripts\activate
 

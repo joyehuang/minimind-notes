@@ -122,7 +122,7 @@ features:
 ```bash [1. 环境准备]
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
-python3 -m venv venv
+python3 -m venv venv          # Windows: python -m venv venv
 source venv/bin/activate      # Linux / macOS
 # Windows: venv\Scripts\activate
 pip install -r requirements.txt
