@@ -64,10 +64,18 @@ def demonstrate_multi_frequency():
             print(f"{degree:>12.1f}°".ljust(15), end="")
         print()
 
-    print("\n💡 观察:")
-    print("  - 维度0（高频）：位置10就转了100度，变化快")
-    print("  - 维度3（低频）：位置1000才转了0.1度，变化慢")
-    print("  - 不同维度组合 → 唯一标识每个位置！")
+    print("\n💡 观察（理解这个表格的两个维度）:")
+    print("  【纵向看 - 沿 token 维度】：")
+    print("    - 维度0（高频）：随位置增加，角度变化快")
+    print("      例如：位置10就转了100度")
+    print("    - 维度3（低频）：随位置增加，角度变化慢")
+    print("      例如：位置1000才转了0.1度")
+    print()
+    print("  【横向看 - 沿嵌入维度】：")
+    print("    - 从维度0到维度3：频率递减，转动速度逐渐变慢")
+    print("      例如：在位置1000，维度0转了很多圈，维度3才转0.1度")
+    print()
+    print("  【结论】：不同维度组合 → 唯一标识每个位置！")
 
 
 def demonstrate_absolute_vs_relative():
