@@ -204,7 +204,34 @@ from modules.common.visualization import (
 )
 ```
 
-See docstrings in each file for details.
+See docstrings in each file or [`modules/common/README.md`](../modules/common/README.md) for details.
+
+#### ⚠️ Migration Notice
+
+**2025-02**: `datasets.py` has been renamed to `data_sources.py`
+
+If your code uses the old import:
+```python
+# Old code (will error)
+from modules.common.datasets import get_experiment_data
+```
+
+Please update to:
+```python
+# New code
+from modules.common.data_sources import get_experiment_data
+```
+
+Command-line usage also needs updating:
+```bash
+# Old command
+python datasets.py --download-all
+
+# New command
+python data_sources.py --download-all
+```
+
+**Reason for change**: Avoid naming conflict with HuggingFace `datasets` library. See [PR #20](https://github.com/joyehuang/minimind-notes/pull/20)
 
 ---
 

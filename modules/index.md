@@ -204,7 +204,34 @@ from modules.common.visualization import (
 )
 ```
 
-详细文档见各文件的 docstring。
+详细文档见各文件的 docstring 或 [`modules/common/README.md`](./common/README.md)。
+
+#### ⚠️ 迁移说明
+
+**2025-02**: `datasets.py` 已重命名为 `data_sources.py`
+
+如果你的代码使用了旧的导入方式：
+```python
+# 旧代码（会报错）
+from modules.common.datasets import get_experiment_data
+```
+
+请更新为：
+```python
+# 新代码
+from modules.common.data_sources import get_experiment_data
+```
+
+命令行使用也需要更新：
+```bash
+# 旧命令
+python datasets.py --download-all
+
+# 新命令
+python data_sources.py --download-all
+```
+
+**变更原因**: 避免与 HuggingFace `datasets` 库命名冲突，详见 [PR #20](https://github.com/joyehuang/minimind-notes/pull/20)
 
 ---
 
