@@ -5,10 +5,9 @@
 ## 📋 系统要求
 
 ### Python 版本
-- **推荐**: Python 3.10+
-- **最低**: Python 3.10
+- **要求**: Python 3.10+
 
-**注意**: 代码使用了 Python 3.10+ 的类型注解语法（如 `str | list`），低于 3.10 的版本将无法运行。
+**注意**: 代码使用了 Python 3.10+ 的类型联合语法（`str | list`），低于此版本将无法运行。
 
 ### 依赖库
 - `torch` - PyTorch 深度学习框架
@@ -85,13 +84,17 @@ exp.run()
 
 ### visualization.py - 可视化工具
 
-提供常用的可视化函数（如果存在）。
+提供常用的可视化函数。
+
+**注意**: 此文件目前尚未创建，计划在后续模块中添加。
 
 ## ⚠️ 重要变更说明
 
-### datasets.py 已重命名为 data_sources.py (2025-02)
+### datasets.py 已重命名为 data_sources.py (2026-02)
 
 **原因**: 避免与 HuggingFace `datasets` 库的命名冲突，该冲突会导致 TinyStories 数据集下载失败。
+
+**背景**: Python 模块搜索时优先查找当前目录，如果存在本地 `datasets.py`，会导致 `from datasets import load_dataset` 错误导入本地文件而非 HuggingFace 库。
 
 **迁移方法**:
 
@@ -101,13 +104,14 @@ exp.run()
 | `python datasets.py --download-all` | `python data_sources.py --download-all` |
 
 **注意**:
-- 为了帮助排查问题，我们保留了 `datasets.py` 文件，但它会抛出清晰的错误提示
+- `datasets.py` 文件已完全删除（不再存在于仓库中）
+- 使用旧导入方式会收到标准的 `ModuleNotFoundError`
 - 所有官方文档和实验代码已更新为新文件名
-- 如果你的代码使用了旧的导入方式，运行时会看到友好的错误提示
+- Git 历史中仍可通过 `git log -- modules/common/datasets.py` 追溯旧文件
 
-**相关链接**:
-- Issue: https://github.com/joyehuang/minimind-notes/issues/19
-- PR: https://github.com/joyehuang/minimind-notes/pull/20
+**相关信息**:
+- 问题追踪: GitHub Issue #19
+- 详细讨论: GitHub Pull Request #20
 
 ## 📝 贡献指南
 

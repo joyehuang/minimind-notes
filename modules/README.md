@@ -225,7 +225,7 @@ from modules.common.visualization import (
 
 #### ⚠️ 迁移说明
 
-**2025-02**: `datasets.py` 已重命名为 `data_sources.py`
+**2026-02**: `datasets.py` 已重命名为 `data_sources.py`
 
 如果你的代码使用了旧的导入方式：
 ```python
@@ -248,7 +248,7 @@ python datasets.py --download-all
 python data_sources.py --download-all
 ```
 
-**变更原因**: 避免与 HuggingFace `datasets` 库命名冲突，详见 [PR #20](https://github.com/joyehuang/minimind-notes/pull/20)
+**变更原因**: 避免与 HuggingFace `datasets` 库命名冲突，详见 [通用工具文档](./common/README.md#重要变更说明)
 
 ---
 

@@ -225,7 +225,7 @@ See docstrings in each file or [`modules/common/README.md`](../modules/common/RE
 
 #### ⚠️ Migration Notice
 
-**2025-02**: `datasets.py` has been renamed to `data_sources.py` to avoid naming conflict with HuggingFace datasets library.
+**2026-02**: `datasets.py` has been renamed to `data_sources.py` to avoid naming conflict with HuggingFace datasets library.
 
 For detailed migration guide, see [modules/common/README.md](../modules/common/README.md) or [PR #20](https://github.com/joyehuang/minimind-notes/pull/20).
 

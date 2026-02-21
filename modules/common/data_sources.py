@@ -42,7 +42,7 @@ DATA_DIR = Path(__file__).parent / 'data'
 
 def get_experiment_data(
     dataset: str = 'shakespeare',
-    size_mb: Optional[float] = None,
+    size_mb: Optional[int] = None,
     cache: bool = True
 ) -> str | List[str]:
     """
@@ -51,9 +51,9 @@ def get_experiment_data(
     Args:
         dataset: 数据集名称
             - 'shakespeare': TinyShakespeare (1MB)
-            - 'tinystories': TinyStories (可指定大小)
+            - 'tinystories': TinyStories (可指定大小，单位: MB，必须为整数)
             - 'synthetic': 合成随机数据
-        size_mb: 数据大小限制（仅对 tinystories 有效）
+        size_mb: 数据大小限制（仅对 tinystories 和 synthetic 有效，单位: MB）
         cache: 是否使用缓存
 
     Returns:
@@ -105,16 +105,19 @@ def _get_shakespeare(cache: bool = True) -> str:
         raise
 
 
-def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
+def _get_tinystories(size_mb: int, cache: bool = True) -> List[str]:
     """
     获取 TinyStories 子集
+
+    Args:
+        size_mb: 数据大小（MB），必须为整数
+        cache: 是否使用缓存
 
     注意：需要安装 datasets 库
         pip install datasets
     """
 
-    # 使用整数文件名避免浮点数路径问题
-    cache_file = DATA_DIR / f'tinystories_{int(size_mb)}mb.json'
+    cache_file = DATA_DIR / f'tinystories_{size_mb}mb.json'
 
     # 检查缓存
     if cache and cache_file.exists():
@@ -162,9 +165,12 @@ def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
         raise
 
 
-def _generate_synthetic(size_mb: float) -> str:
+def _generate_synthetic(size_mb: int) -> str:
     """
     生成合成数据（用于快速测试）
+
+    Args:
+        size_mb: 数据大小（MB），必须为整数
 
     生成简单的重复模式，用于验证模型是否能学习
     """

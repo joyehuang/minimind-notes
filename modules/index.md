@@ -225,7 +225,7 @@ from modules.common.visualization import (
 
 #### ⚠️ 迁移说明
 
-**2025-02**: `datasets.py` 已重命名为 `data_sources.py`，避免与 HuggingFace datasets 库命名冲突。
+**2026-02**: `datasets.py` 已重命名为 `data_sources.py`，避免与 HuggingFace datasets 库命名冲突。
 
 详细的迁移指南请参考 [modules/README.md](./README.md) 或 [modules/common/README.md](./common/README.md)。
 
