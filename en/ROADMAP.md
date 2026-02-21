@@ -39,7 +39,7 @@ source venv/bin/activate
 
 # 3. Download experiment data (optional, some experiments do not need it)
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 cd ../..
 ```
 

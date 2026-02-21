@@ -27,7 +27,7 @@ source venv/bin/activate
 
 # 3. 下载实验数据（可选，部分实验不需要）
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 cd ../..
 ```
 

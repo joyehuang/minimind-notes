@@ -68,7 +68,7 @@ source venv/bin/activate
 
 # 2. Download experiment data (~60 MB)
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 ```
 
 ### 30-minute quick experience
@@ -170,10 +170,10 @@ Each design choice answers:
 
 Shared tools live in `modules/common/`:
 
-### datasets.py - Dataset manager
+### data_sources.py - Dataset manager
 
 ```python
-from modules.common.datasets import get_experiment_data
+from modules.common.data_sources import get_experiment_data
 
 # TinyShakespeare
 text = get_experiment_data('shakespeare')

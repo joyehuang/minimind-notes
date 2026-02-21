@@ -68,7 +68,7 @@ source venv/bin/activate
 
 # 2. 下载实验数据（约 60 MB）
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 ```
 
 ### 30 分钟快速体验
@@ -170,10 +170,10 @@ python exp_xxx.py --help
 
 模块提供了以下通用工具（位于 `modules/common/`）：
 
-### datasets.py - 数据集管理
+### data_sources.py - 数据集管理
 
 ```python
-from modules.common.datasets import get_experiment_data
+from modules.common.data_sources import get_experiment_data
 
 # 获取 TinyShakespeare
 text = get_experiment_data('shakespeare')

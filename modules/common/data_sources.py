@@ -7,7 +7,7 @@
 - 合成数据（用于可视化实验）
 
 使用示例：
-    from modules.common.datasets import get_experiment_data
+    from modules.common.data_sources import get_experiment_data
 
     # 获取 TinyShakespeare
     text = get_experiment_data('shakespeare')
