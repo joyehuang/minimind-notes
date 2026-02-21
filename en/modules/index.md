@@ -58,6 +58,23 @@ _(Planned)_
 
 ---
 
+## 📋 System Requirements
+
+### Python Version
+- **Recommended**: Python 3.10+
+- **Minimum**: Python 3.10
+
+Some utility code uses Python 3.10+ union type syntax (e.g., `str | list`). Earlier versions will not work.
+
+### Dependencies
+```bash
+pip install torch requests datasets matplotlib numpy
+```
+
+See: [Environment Setup Guide](../docs/guide/environment-setup.md)
+
+---
+
 ## ⚡ Quick Start
 
 ### Environment setup
@@ -68,7 +85,7 @@ source venv/bin/activate
 
 # 2. Download experiment data (~60 MB)
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 ```
 
 ### 30-minute quick experience
@@ -170,10 +187,10 @@ Each design choice answers:
 
 Shared tools live in `modules/common/`:
 
-### datasets.py - Dataset manager
+### data_sources.py - Dataset manager
 
 ```python
-from modules.common.datasets import get_experiment_data
+from modules.common.data_sources import get_experiment_data
 
 # TinyShakespeare
 text = get_experiment_data('shakespeare')
@@ -204,7 +221,13 @@ from modules.common.visualization import (
 )
 ```
 
-See docstrings in each file for details.
+See docstrings in each file or [`modules/common/README.md`](../modules/common/README.md) for details.
+
+#### ⚠️ Migration Notice
+
+**2026-02**: `datasets.py` has been renamed to `data_sources.py` to avoid naming conflict with HuggingFace datasets library.
+
+For detailed migration guide, see [modules/common/README.md](../modules/common/README.md) or [PR #20](https://github.com/joyehuang/minimind-notes/pull/20).
 
 ---
 

@@ -125,7 +125,7 @@ keywords: Transformer基础组件, 归一化, 位置编码, 注意力机制, 前
 
 A: 检查以下几点：
 1. 是否激活了虚拟环境？ `source venv/bin/activate`
-2. 是否下载了数据？ `cd modules/common && python datasets.py --download-all`
+2. 是否下载了数据？ `cd modules/common && python data_sources.py --download-all`
 3. 是否在正确的目录？实验需要在 `experiments/` 目录下运行
 
 **Q: 实验太慢怎么办？**

@@ -58,6 +58,23 @@ _（后续扩展）_
 
 ---
 
+## 📋 系统要求
+
+### Python 版本
+- **推荐**: Python 3.10+
+- **最低**: Python 3.10
+
+部分工具代码使用了 Python 3.10+ 的类型注解语法（如 `str | list`），低于此版本将无法运行。
+
+### 依赖安装
+```bash
+pip install torch requests datasets matplotlib numpy
+```
+
+详见：[环境配置指南](../docs/guide/environment-setup.md)
+
+---
+
 ## ⚡ 快速开始
 
 ### 准备环境
@@ -68,7 +85,7 @@ source venv/bin/activate
 
 # 2. 下载实验数据（约 60 MB）
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 ```
 
 ### 30 分钟快速体验
@@ -170,10 +187,10 @@ python exp_xxx.py --help
 
 模块提供了以下通用工具（位于 `modules/common/`）：
 
-### datasets.py - 数据集管理
+### data_sources.py - 数据集管理
 
 ```python
-from modules.common.datasets import get_experiment_data
+from modules.common.data_sources import get_experiment_data
 
 # 获取 TinyShakespeare
 text = get_experiment_data('shakespeare')
@@ -204,7 +221,13 @@ from modules.common.visualization import (
 )
 ```
 
-详细文档见各文件的 docstring。
+详细文档见各文件的 docstring 或 [`modules/common/README.md`](./common/README.md)。
+
+#### ⚠️ 迁移说明
+
+**2026-02**: `datasets.py` 已重命名为 `data_sources.py`，避免与 HuggingFace datasets 库命名冲突。
+
+详细的迁移指南请参考 [modules/README.md](./README.md) 或 [modules/common/README.md](./common/README.md)。
 
 ---
 

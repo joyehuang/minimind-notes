@@ -125,7 +125,7 @@ For each module:
 
 A: Check the following:
 1. Did you activate the virtual environment? `source venv/bin/activate`
-2. Did you download data? `cd modules/common && python datasets.py --download-all`
+2. Did you download data? `cd modules/common && python data_sources.py --download-all`
 3. Are you in the correct folder? Experiments must run inside `experiments/`
 
 **Q: Experiments are too slow?**

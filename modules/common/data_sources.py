@@ -6,8 +6,22 @@
 - TinyStories（现代英文，支持取子集）
 - 合成数据（用于可视化实验）
 
+⚠️ 文件命名说明：
+    此文件名为 data_sources.py 而非 datasets.py，原因是：
+
+    Python 模块搜索时，当前目录优先级高于 site-packages。
+    如果命名为 datasets.py，则 `from datasets import load_dataset`
+    会优先导入本地文件而非 HuggingFace datasets 库，导致 ImportError。
+
+    重命名为 data_sources.py 避免了此冲突。
+    详见：https://github.com/joyehuang/minimind-notes/pull/20
+
+系统要求：
+    - Python 3.10+（使用了类型联合语法 str | list）
+    - 依赖：requests（TinyShakespeare）、datasets（TinyStories）
+
 使用示例：
-    from modules.common.datasets import get_experiment_data
+    from modules.common.data_sources import get_experiment_data
 
     # 获取 TinyShakespeare
     text = get_experiment_data('shakespeare')
@@ -22,14 +36,13 @@ from pathlib import Path
 from typing import List, Optional
 import json
 
-# 数据缓存目录
+# 数据缓存目录（按需创建，不在模块导入时创建）
 DATA_DIR = Path(__file__).parent / 'data'
-DATA_DIR.mkdir(exist_ok=True)
 
 
 def get_experiment_data(
     dataset: str = 'shakespeare',
-    size_mb: Optional[float] = None,
+    size_mb: Optional[int] = None,
     cache: bool = True
 ) -> str | List[str]:
     """
@@ -38,9 +51,9 @@ def get_experiment_data(
     Args:
         dataset: 数据集名称
             - 'shakespeare': TinyShakespeare (1MB)
-            - 'tinystories': TinyStories (可指定大小)
+            - 'tinystories': TinyStories (可指定大小，单位: MB，必须为整数)
             - 'synthetic': 合成随机数据
-        size_mb: 数据大小限制（仅对 tinystories 有效）
+        size_mb: 数据大小限制（仅对 tinystories 和 synthetic 有效，单位: MB）
         cache: 是否使用缓存
 
     Returns:
@@ -79,6 +92,7 @@ def _get_shakespeare(cache: bool = True) -> str:
 
         # 保存缓存
         if cache:
+            DATA_DIR.mkdir(exist_ok=True)  # 确保目录存在
             cache_file.write_text(text, encoding='utf-8')
             print(f"✅ 已缓存到: {cache_file}")
 
@@ -91,9 +105,13 @@ def _get_shakespeare(cache: bool = True) -> str:
         raise
 
 
-def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
+def _get_tinystories(size_mb: int, cache: bool = True) -> List[str]:
     """
     获取 TinyStories 子集
+
+    Args:
+        size_mb: 数据大小（MB），必须为整数
+        cache: 是否使用缓存
 
     注意：需要安装 datasets 库
         pip install datasets
@@ -131,6 +149,7 @@ def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
 
         # 保存缓存
         if cache:
+            DATA_DIR.mkdir(exist_ok=True)  # 确保目录存在
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(texts, f, ensure_ascii=False)
             print(f"✅ 已缓存到: {cache_file}")
@@ -146,9 +165,12 @@ def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
         raise
 
 
-def _generate_synthetic(size_mb: float) -> str:
+def _generate_synthetic(size_mb: int) -> str:
     """
     生成合成数据（用于快速测试）
+
+    Args:
+        size_mb: 数据大小（MB），必须为整数
 
     生成简单的重复模式，用于验证模型是否能学习
     """

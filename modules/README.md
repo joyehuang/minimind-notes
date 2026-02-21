@@ -58,6 +58,23 @@ _（后续扩展）_
 
 ---
 
+## 📋 系统要求
+
+### Python 版本
+- **推荐**: Python 3.10+
+- **最低**: Python 3.10
+
+部分工具代码使用了 Python 3.10+ 的类型注解语法（如 `str | list`），低于此版本将无法运行。
+
+### 依赖安装
+```bash
+pip install torch requests datasets matplotlib numpy
+```
+
+详见：[环境配置指南](../docs/guide/environment-setup.md)
+
+---
+
 ## ⚡ 快速开始
 
 ### 准备环境
@@ -73,7 +90,7 @@ pip install -r requirements.txt
 
 # 3. 下载实验数据（约 60 MB）
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 ```
 
 > 详细环境配置说明请参考 [README.md](../README.md#-快速开始)
@@ -177,10 +194,10 @@ python exp_xxx.py --help
 
 模块提供了以下通用工具（位于 `modules/common/`）：
 
-### datasets.py - 数据集管理
+### data_sources.py - 数据集管理
 
 ```python
-from modules.common.datasets import get_experiment_data
+from modules.common.data_sources import get_experiment_data
 
 # 获取 TinyShakespeare
 text = get_experiment_data('shakespeare')
@@ -211,7 +228,34 @@ from modules.common.visualization import (
 )
 ```
 
-详细文档见各文件的 docstring。
+详细文档见各文件的 docstring 或 [`modules/common/README.md`](./common/README.md)。
+
+#### ⚠️ 迁移说明
+
+**2026-02**: `datasets.py` 已重命名为 `data_sources.py`
+
+如果你的代码使用了旧的导入方式：
+```python
+# 旧代码（会报错）
+from modules.common.datasets import get_experiment_data
+```
+
+请更新为：
+```python
+# 新代码
+from modules.common.data_sources import get_experiment_data
+```
+
+命令行使用也需要更新：
+```bash
+# 旧命令
+python datasets.py --download-all
+
+# 新命令
+python data_sources.py --download-all
+```
+
+**变更原因**: 避免与 HuggingFace `datasets` 库命名冲突，详见 [通用工具文档](./common/README.md#重要变更说明)
 
 ---
 

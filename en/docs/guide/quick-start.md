@@ -20,7 +20,7 @@ source venv/bin/activate
 
 # 3. Download experiment datasets (optional)
 cd modules/common
-python datasets.py --download-all
+python data_sources.py --download-all
 cd ../..
 ```
 
