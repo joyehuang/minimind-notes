@@ -6,6 +6,15 @@
 - TinyStories（现代英文，支持取子集）
 - 合成数据（用于可视化实验）
 
+注意：
+    - 此文件原名为 datasets.py，已重命名为 data_sources.py
+    - 重命名原因：避免与 HuggingFace datasets 库产生命名冲突
+    - 详见：https://github.com/joyehuang/minimind-notes/pull/20
+
+系统要求：
+    - Python 3.10+（使用了类型联合语法 str | list）
+    - 依赖：requests（TinyShakespeare）、datasets（TinyStories）
+
 使用示例：
     from modules.common.data_sources import get_experiment_data
 

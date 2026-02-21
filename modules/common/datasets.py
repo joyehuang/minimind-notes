@@ -1,7 +1,12 @@
 """
 ⚠️ 此文件已废弃
 
-datasets.py 已重命名为 data_sources.py 以避免与 HuggingFace datasets 库的命名冲突。
+datasets.py 已重命名为 data_sources.py
+
+重命名原因：
+    避免与 HuggingFace datasets 库的命名冲突。
+    当本地文件与第三方库同名时，Python 会优先导入本地文件，
+    导致 'from datasets import load_dataset' 失败。
 
 迁移方法：
     旧代码:
@@ -9,6 +14,9 @@ datasets.py 已重命名为 data_sources.py 以避免与 HuggingFace datasets �
 
     新代码:
         from modules.common.data_sources import get_experiment_data
+
+Python 版本要求：
+    新文件需要 Python 3.10+（使用了类型联合语法 str | list）
 
 详见: https://github.com/joyehuang/minimind-notes/pull/20
 """

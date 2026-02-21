@@ -58,6 +58,23 @@ _(Planned)_
 
 ---
 
+## 📋 System Requirements
+
+### Python Version
+- **Recommended**: Python 3.10+
+- **Minimum**: Python 3.10
+
+Some utility code uses Python 3.10+ union type syntax (e.g., `str | list`). Earlier versions will not work.
+
+### Dependencies
+```bash
+pip install torch requests datasets matplotlib numpy
+```
+
+See: [Environment Setup Guide](../docs/guide/environment-setup.md)
+
+---
+
 ## ⚡ Quick Start
 
 ### Environment setup
