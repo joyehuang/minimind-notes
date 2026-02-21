@@ -8,7 +8,8 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
     "video:preview": "remotion studio",
-    "video:render": "remotion render HomeHeroVideo public/videos/home-hero.mp4"
+    "video:render": "remotion render HomeHeroVideo public/videos/home-hero.mp4",
+    "video:render:zh": "remotion render HomeHeroVideoZh public/videos/home-hero-zh.mp4"
   },
   "keywords": [
     "LLM",

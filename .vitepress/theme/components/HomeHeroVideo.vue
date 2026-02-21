@@ -1,7 +1,8 @@
 <template>
-  <section class="home-hero-video" aria-label="minimind homepage intro video">
+  <section class="home-hero-video" :aria-label="ariaLabel">
     <div class="video-frame">
       <video
+        :key="videoSrc"
         class="hero-video"
         autoplay
         muted
@@ -9,14 +10,43 @@
         playsinline
         preload="metadata"
       >
-        <source src="/videos/home-hero.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
+        <source :src="videoSrc" type="video/mp4" />
+        {{ fallbackText }}
       </video>
       <div class="video-glow" aria-hidden="true"></div>
     </div>
-    <p class="video-caption">A 30 second overview: modular lessons, experiments, and roadmap.</p>
+    <p class="video-caption">{{ caption }}</p>
   </section>
 </template>
+
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vitepress";
+
+const route = useRoute();
+
+const isEnglishRoute = computed(() => route.path === "/en/" || route.path.startsWith("/en/"));
+
+const videoSrc = computed(() =>
+  isEnglishRoute.value ? "/videos/home-hero.mp4" : "/videos/home-hero-zh.mp4"
+);
+
+const caption = computed(() =>
+  isEnglishRoute.value
+    ? "A 30 second overview: modular lessons, experiments, and roadmap."
+    : "30 秒概览：模块化课程、实验与学习路线图。"
+);
+
+const fallbackText = computed(() =>
+  isEnglishRoute.value
+    ? "Your browser does not support the video tag."
+    : "你的浏览器不支持视频播放。"
+);
+
+const ariaLabel = computed(() =>
+  isEnglishRoute.value ? "minimind homepage intro video" : "minimind 首页介绍视频"
+);
+</script>
 
 <style scoped>
 .home-hero-video {
