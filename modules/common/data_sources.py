@@ -6,10 +6,15 @@
 - TinyStories（现代英文，支持取子集）
 - 合成数据（用于可视化实验）
 
-注意：
-    - 此文件原名为 datasets.py，已重命名为 data_sources.py
-    - 重命名原因：避免与 HuggingFace datasets 库产生命名冲突
-    - 详见：https://github.com/joyehuang/minimind-notes/pull/20
+⚠️ 文件命名说明：
+    此文件名为 data_sources.py 而非 datasets.py，原因是：
+
+    Python 模块搜索时，当前目录优先级高于 site-packages。
+    如果命名为 datasets.py，则 `from datasets import load_dataset`
+    会优先导入本地文件而非 HuggingFace datasets 库，导致 ImportError。
+
+    重命名为 data_sources.py 避免了此冲突。
+    详见：https://github.com/joyehuang/minimind-notes/pull/20
 
 系统要求：
     - Python 3.10+（使用了类型联合语法 str | list）
@@ -31,9 +36,8 @@ from pathlib import Path
 from typing import List, Optional
 import json
 
-# 数据缓存目录
+# 数据缓存目录（按需创建，不在模块导入时创建）
 DATA_DIR = Path(__file__).parent / 'data'
-DATA_DIR.mkdir(exist_ok=True)
 
 
 def get_experiment_data(
@@ -88,6 +92,7 @@ def _get_shakespeare(cache: bool = True) -> str:
 
         # 保存缓存
         if cache:
+            DATA_DIR.mkdir(exist_ok=True)  # 确保目录存在
             cache_file.write_text(text, encoding='utf-8')
             print(f"✅ 已缓存到: {cache_file}")
 
@@ -108,7 +113,8 @@ def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
         pip install datasets
     """
 
-    cache_file = DATA_DIR / f'tinystories_{size_mb}mb.json'
+    # 使用整数文件名避免浮点数路径问题
+    cache_file = DATA_DIR / f'tinystories_{int(size_mb)}mb.json'
 
     # 检查缓存
     if cache and cache_file.exists():
@@ -140,6 +146,7 @@ def _get_tinystories(size_mb: float, cache: bool = True) -> List[str]:
 
         # 保存缓存
         if cache:
+            DATA_DIR.mkdir(exist_ok=True)  # 确保目录存在
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(texts, f, ensure_ascii=False)
             print(f"✅ 已缓存到: {cache_file}")
