@@ -10,9 +10,9 @@ git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
 # 2. 运行初始化脚本
-chmod +x init-for-learning.sh
-./init-for-learning.sh              # Linux/macOS
-# 或 init-for-learning.bat          # Windows
+chmod +x minimind-learning-skill/scripts/init-for-learning.sh
+./minimind-learning-skill/scripts/init-for-learning.sh    # Linux/macOS
+# 或 minimind-learning-skill\scripts\init-for-learning.bat  # Windows
 
 # 3. 启动 AI Coding Agent
 claude code                         # Claude Code CLI
