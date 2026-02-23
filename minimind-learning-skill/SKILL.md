@@ -1,641 +1,586 @@
-# MiniMind Learning Assistant
-
-A specialized Claude Code skill that automatically maintains learning notes for MiniMind LLM training framework learners. This skill silently records your learning journey through conversational dialogue.
-
 ---
 name: minimind-learning
-version: 1.0.0
-author: Joye Huang
-repository: https://github.com/joyehuang/minimind-notes
-license: MIT
+description: "MiniMind 学习助手。自动记录学习笔记，识别 RMSNorm, LayerNorm, RoPE, Attention, LoRA, DPO, PPO, GRPO, SFT, RLHF 等术语。触发词：学习、开始、MiniMind、归一化、位置编码、注意力、训练、微调。"
+metadata:
+  author: Joye Huang
+  version: "1.0.0"
+  license: MIT
+  tags: minimind, learning, llm, transformer, training
 ---
 
-## Overview
+# MiniMind Learning Assistant
 
-This skill transforms your Claude Code conversations about MiniMind into structured learning notes, automatically detecting important learning moments and maintaining a comprehensive knowledge base.
+自动化学习笔记系统，静默记录你的 MiniMind 学习历程。
 
-**Key Features**:
-- 🤖 **Silent Operation**: Updates notes automatically without interrupting your flow
-- 🧠 **Context-Aware**: Deep understanding of 50+ MiniMind-specific terms (RMSNorm, RoPE, DPO, LoRA, etc.)
-- 📚 **Three-Tier Note System**: learning_log.md (chronological), knowledge_base.md (topical), learning_materials/ (code examples)
-- 🔄 **Full Git Automation**: Commits and pushes with clean, concise Chinese messages
-- 🎯 **Smart Triggering**: Three-layer detection system (keywords, conversation depth, explicit requests)
+## When to use
 
-## How It Works
+**自动激活场景**：
 
-### Automatic Triggering System
+1. **学习开始时**：
+   - 用户说："开始今天的学习"、"开始学习"、"今天学什么"
+   - 用户说："继续学习"、"学习 MiniMind"
 
-**Tier 1: Immediate Triggers** (Update within 2 seconds)
-- MiniMind terminology detected: RMSNorm, LayerNorm, RoPE, YaRN, Attention, GQA, SwiGLU, Transformer, LoRA, DPO, PPO, GRPO, SPO, SFT, RLHF, RLAIF, MoE, distillation
-- Question words: 什么是, 如何, 为什么, 怎样, 解释, 原理, 作用
-- Problem indicators: 报错, 错误, 问题, 失败, Bug
+2. **讨论 MiniMind 内容时**：
+   - 提问包含：RMSNorm, LayerNorm, RoPE, YaRN, Attention, GQA, SwiGLU, Transformer, LoRA, DPO, PPO, GRPO, SFT, RLHF, RLAIF, MoE
+   - 问题词：什么是、如何、为什么、怎样、解释、原理
+   - 遇到问题：报错、错误、失败、Bug
 
-**Tier 2: Delayed Triggers** (Batch update after 5 seconds of inactivity)
-- Multi-turn conversations (3+ exchanges)
-- Contains code blocks (```python)
-- Contains mathematical formulas ($...$)
-- Long responses (>1000 characters)
-- References source files (model/*.py, trainer/*.py)
+3. **显式记录请求**：
+   - 用户说："记录一下"、"保存笔记"、"写入笔记"
 
-**Tier 3: Explicit Requests** (Always triggers)
-- User says: 记录, 记下, 保存, 写入笔记, 更新笔记
+## How to use
 
-### File Update Logic
+### 1. 初始化检查
 
-#### learning_log.md - Chronological Journal
-```markdown
-### 2026-02-23: 理解 RoPE 多频率机制
+首次激活时，确保笔记结构存在：
 
-#### ✅ 完成事项
-- [x] 理解为什么需要多频率
-- [x] 理解浮点数精度限制
-
-#### 🐛 遇到的问题
-**问题: 单一低频率不够？**
-- **错误现象**: ...
-- **根本原因**: ...
-- **解决方案**: ...
-
-#### 💭 个人思考
-- **收获**: ...
-- **疑问解答**: ...
-
-#### 📝 相关学习材料
-- 新增代码: `learning_materials/rope_multi_freq.py`
-```
-
-**Update Algorithm**:
-1. Check if today's date section exists (format: `### YYYY-MM-DD: Topic`)
-2. If exists → Append subsection under same date
-3. If not exists → Insert new section maintaining chronological order
-4. Extract: tasks (✅), problems (🐛), reflections (💭), materials (📝)
-
-#### knowledge_base.md - Topical Knowledge Base
-```markdown
-**Q20: 为什么 RoPE 需要多频率？** ⭐️
-
-A: 因为单一低频率受浮点数精度限制，无法区分相邻位置。
-
-**详细说明**:
-- 浮点数精度约为 10^-7
-- 单一低频率 θ=10000 时，相邻位置差异 < 10^-7
-- 使用多频率组合可以在不同尺度上编码位置信息
-
-**代码示例**:
-```python
-# 验证浮点数精度限制
-import torch
-theta = 10000
-pos_diff = 1 / theta  # 相邻位置差异
-print(f"Position difference: {pos_diff}")  # 0.0001
-```
-
-参考代码: `learning_materials/rope_multi_freq.py`
-
----
-```
-
-**Update Algorithm**:
-1. Scan existing Q numbers using regex `Q(\d+)`
-2. Find max number (e.g., Q19) → new number = Q20
-3. Infer topic category from content:
-   - Keywords "归一化", "Norm" → 归一化技术
-   - Keywords "位置", "RoPE", "编码" → 位置编码
-   - Keywords "注意力", "Attention" → 注意力机制
-   - Keywords "训练", "优化", "DPO", "PPO" → 训练技术
-4. Insert at end of relevant section or in "问答记录" area
-5. Mark important questions with ⭐️ (if contains: 原理, 为什么, 核心)
-
-#### learning_materials/README.md - Code Index
-```markdown
-## 位置编码 (Position Encoding)
-
-- **`rope_basics.py`** - RoPE 基础实现
-  - 演示旋转位置编码的核心机制
-  - 可视化二维旋转变换
-
-- **`rope_multi_freq.py`** ⭐️ - 多频率机制验证
-  - 验证浮点数精度限制
-  - 对比单频率 vs 多频率效果
-  - 演示频率分配策略
-```
-
-**Update Algorithm**:
-1. Detect new .py file creation in `learning_materials/`
-2. Extract description from file docstring or top comments
-3. Categorize by topic (归一化/位置编码/注意力/前馈网络/训练技术)
-4. Insert at end of category section
-5. Mark foundational files with ⭐️
-
-#### notes.md - Master Index
-Only update when:
-- New major section added to knowledge_base.md
-- New date added to learning_log.md (update "按日期查找")
-- File structure changes significantly
-
-### Git Automation
-
-**Commit Message Generation**:
-```python
-# Pattern: "学习 [主题] [子主题]" or "[动作] [对象]"
-
-Examples:
-- "学习 RMSNorm 归一化原理"
-- "理解 RoPE 多频率机制"
-- "添加 Attention 学习材料"
-- "解决 CUDA 内存溢出问题"
-- "完善位置编码知识点"
-
-Algorithm:
-1. Extract primary MiniMind term from content
-2. Identify action type (学习/理解/添加/解决/完善)
-3. Add sub-topic if present
-4. Limit to 30 characters
-5. Remove generic phrases like "Generated with Claude Code"
-```
-
-**Git Workflow**:
 ```bash
-# Automatic sequence
-cd {user_repo_root}
-git add docs/notes.md docs/learning_log.md docs/knowledge_base.md docs/learning_materials/
-git commit -m "{generated_message}"
-git push origin {current_branch}
+# 检测 Git 仓库根目录
+git rev-parse --show-toplevel
 
-# Error handling
-- Network timeout → Retry 3 times (exponential backoff: 1s, 2s, 4s)
-- Push rejected → Log warning, suggest git pull --rebase
-- Permission error → Log error, skip push
+# 验证是 MiniMind 仓库（存在以下文件）
+# - model/model_minimind.py
+# - trainer/train_pretrain.py
+# - README.md (包含 "MiniMind")
+
+# 创建笔记目录（如不存在）
+mkdir -p docs/learning_materials
+
+# 从模板初始化文件（如不存在）
+# - docs/notes.md
+# - docs/learning_log.md
+# - docs/knowledge_base.md
+# - docs/learning_materials/README.md
 ```
 
-## MiniMind Terminology Database
+**模板位置**：`~/.claude/skills/minimind-learning/templates/`
 
-### Architecture Components (20 terms)
-```
-RMSNorm, LayerNorm, BatchNorm, GroupNorm,
-RoPE, YaRN, ALiBi, SinusoidalPE,
-Attention, MultiHeadAttention, GQA, MQA, FlashAttention,
-FeedForward, SwiGLU, GELU, GLU,
-Transformer, TransformerBlock, CausalLM
-```
+### 2. 学习引导模式
 
-### Training Methods (20 terms)
-```
-pretrain, pretraining,
-SFT, supervised fine-tuning,
-LoRA, LoRA-r, LoRA-alpha,
-DPO, Direct Preference Optimization,
-PPO, Proximal Policy Optimization,
-GRPO, Group Relative Policy Optimization,
-SPO, Simple Policy Optimization,
-RLHF, RLAIF,
-distillation, knowledge distillation,
-teacher-student, white-box distillation
-```
+**当用户说"开始学习"时**，主动引导：
 
-### Model Variants (10 terms)
-```
-MiniMind-Dense, MiniMind-MoE,
-MiniMind-Reason, R1-style,
-Mixture of Experts, MoE, shared experts, routed experts,
-expert routing, load balancing loss
+```markdown
+👋 欢迎开始今天的 MiniMind 学习！
+
+你想学习哪个模块？
+
+**基础组件**：
+1. 归一化技术 - RMSNorm, LayerNorm
+2. 位置编码 - RoPE, YaRN
+3. 注意力机制 - Attention, GQA
+4. 前馈网络 - FeedForward, SwiGLU
+
+**训练技术**：
+5. 预训练 - Pretraining
+6. 监督微调 - SFT
+7. 参数高效微调 - LoRA
+8. 强化学习 - DPO, PPO, GRPO
+
+直接告诉我编号或主题名称，我会为你讲解！
+
+（学习过程中我会自动记录笔记到 `docs/` 目录）
 ```
 
-### Configuration (10 terms)
-```
-hidden_size, num_hidden_layers,
-num_attention_heads, num_key_value_heads,
-vocab_size, max_seq_len, max_position_embeddings,
-rope_theta, rope_scaling,
-flash_attn
-```
+### 3. 触发检测
 
-### Module Mapping
+**每次用户消息后**，检查是否满足以下任一条件：
 
-| Concept | Module Path |
-|---------|-------------|
-| RMSNorm, LayerNorm | modules/01-foundation/01-normalization/ |
-| RoPE, YaRN | modules/01-foundation/02-position-encoding/ |
-| Attention, GQA | modules/01-foundation/03-attention/ |
-| FeedForward, SwiGLU | modules/01-foundation/04-feedforward/ |
-| Transformer | modules/02-architecture/01-transformer-block/ |
-| Training Pipeline | modules/02-architecture/02-complete-model/ |
+#### Tier 1: 即时触发（立即更新笔记）
 
-## Usage
-
-### Installation
-
-1. Copy this skill to your Claude Code skills directory:
-```bash
-cp -r minimind-learning-skill ~/.claude/skills/
-```
-
-2. Ensure your MiniMind repository has the following structure:
-```
-your-minimind-fork/
-├── model/                   # MiniMind source code
-├── trainer/
-├── docs/                    # Will be created by skill
-│   ├── notes.md
-│   ├── learning_log.md
-│   ├── knowledge_base.md
-│   └── learning_materials/
-│       ├── README.md
-│       └── *.py
-└── ...
-```
-
-3. (Optional) Configure skill behavior by creating `.minimind-learning.json`:
-```json
-{
-  "auto_commit": true,
-  "auto_push": true,
-  "batch_delay": 5,
-  "git": {
-    "remote": "origin",
-    "branch": "master",
-    "retry_count": 3,
-    "timeout": 30
-  }
-}
-```
-
-### Quick Start
-
-Just start chatting about MiniMind! The skill will automatically:
-
-**Example 1: Learning New Concept**
-```
-You: 什么是 RMSNorm？
-Claude: [Explains RMSNorm...]
-
-# Behind the scenes:
-# ✅ learning_log.md updated with today's entry
-# ✅ knowledge_base.md gets new Q20
-# ✅ Git committed: "学习 RMSNorm 归一化原理"
-# ✅ Git pushed to origin
-```
-
-**Example 2: Solving Problem**
-```
-You: 运行训练时报错 CUDA out of memory，怎么办？
-Claude: [Provides solution...]
-
-# Behind the scenes:
-# ✅ learning_log.md gets "遇到的问题" section
-# ✅ Extracts: error phenomenon, root cause, solution
-# ✅ Git committed: "解决 CUDA 内存溢出问题"
-```
-
-**Example 3: Explicit Request**
-```
-You: 我刚理解了 RoPE 的多频率机制，记录一下
-Claude: [Updates notes...]
-
-# Behind the scenes:
-# ✅ All three files updated
-# ✅ Git committed: "理解 RoPE 多频率机制"
-```
-
-### Configuration Options
-
-Create `.minimind-learning.json` in your repository root:
-
-```json
-{
-  "auto_commit": true,        // Auto commit after updates
-  "auto_push": true,          // Auto push to remote
-  "batch_delay": 5,           // Seconds to wait before batch update (Tier 2)
-  "git": {
-    "remote": "origin",       // Git remote name
-    "branch": "master",       // Default branch
-    "retry_count": 3,         // Push retry attempts
-    "timeout": 30             // Git operation timeout (seconds)
-  },
-  "notes_dir": "docs",        // Notes directory (default: docs)
-  "mark_important": true      // Auto mark important Q&A with ⭐️
-}
-```
-
-## Skill Instructions
-
-When this skill is activated, follow these instructions:
-
-### Core Behavior
-
-1. **Passive Monitoring**: Always monitor conversations for MiniMind-related content without announcing yourself
-2. **Silent Updates**: Update notes in the background without asking for confirmation
-3. **Smart Batching**: Group related updates together (Tier 2 triggers)
-4. **Clean Git History**: Generate concise, meaningful commit messages
-
-### Content Extraction
-
-**From User Messages**:
 ```python
-# Extract questions
-patterns = [
-    r"^(.*[?？])$",  # Question mark ending
-    r"^(什么是|如何|为什么|怎样|解释|原理)(.*?)([?？。]|$)",
-    r"^(.*)(吗|呢)[?？。]*$"
+# MiniMind 术语（50+）
+TERMS = [
+    # 架构
+    "RMSNorm", "LayerNorm", "BatchNorm", "GroupNorm",
+    "RoPE", "YaRN", "ALiBi", "位置编码",
+    "Attention", "注意力", "GQA", "MQA", "FlashAttention",
+    "FeedForward", "前馈", "SwiGLU", "GELU", "GLU",
+    "Transformer", "TransformerBlock",
+
+    # 训练
+    "pretrain", "预训练", "pretraining",
+    "SFT", "监督微调", "fine-tuning", "微调",
+    "LoRA", "lora", "LoRA-r", "LoRA-alpha",
+    "DPO", "PPO", "GRPO", "SPO",
+    "RLHF", "RLAIF", "强化学习",
+    "distillation", "蒸馏", "知识蒸馏",
+
+    # 模型
+    "MiniMind", "MiniMind-Dense", "MiniMind-MoE",
+    "MoE", "混合专家", "expert routing",
+    "MiniMind-Reason", "R1",
 ]
 
-# Extract problems
-problem_markers = ["报错", "错误", "失败", "不工作", "问题", "Bug"]
+# 问题词
+QUESTION_WORDS = ["什么是", "如何", "为什么", "怎样", "解释", "原理", "作用"]
+
+# 问题指示
+PROBLEM_MARKERS = ["报错", "错误", "失败", "Bug", "不工作", "问题"]
+
+# 检查
+if any(term in user_message for term in TERMS):
+    trigger_tier_1()
+elif any(word in user_message for word in QUESTION_WORDS):
+    trigger_tier_1()
+elif any(marker in user_message for marker in PROBLEM_MARKERS):
+    trigger_tier_1()
 ```
 
-**From Claude Responses**:
+#### Tier 2: 延迟触发（5秒后批量更新）
+
 ```python
-# Extract concepts and definitions
-patterns = [
-    r"([A-Z\u4e00-\u9fa5]+)\s*(是|：)(.*?)([。\n]|$)",  # "RMSNorm 是..."
-    r"\*\*([^*]+)\*\*\s*[：:](.*?)([。\n]|$)",        # **概念**: 定义
-    r"###\s+([^\n]+)\n\n([^\n]+)"                    # ### 标题
-]
-
-# Extract code examples
-code_blocks = re.findall(r"```python\n(.*?)\n```", content, re.DOTALL)
+# 深度对话特征
+if (
+    conversation_turns >= 3 or  # 多轮对话
+    "```python" in assistant_response or  # 包含代码
+    "$" in assistant_response or  # 包含公式
+    len(assistant_response) > 1000 or  # 长回复
+    "model/" in assistant_response or  # 引用源码
+    "trainer/" in assistant_response
+):
+    trigger_tier_2()  # 延迟 5 秒
 ```
 
-### Update Decision Flow
+#### Tier 3: 显式触发（总是更新）
 
-```
-Conversation → Trigger Detection
-                ↓
-         ┌──────┴──────┐
-         │             │
-    Tier 1/3        Tier 2
-    (Immediate)   (Delayed 5s)
-         │             │
-         └──────┬──────┘
-                ↓
-        Content Extraction
-                ↓
-        ┌───────┼───────┐
-        ↓       ↓       ↓
-    log.md   kb.md   materials/
-        └───────┬───────┘
-                ↓
-          Git Commit
-                ↓
-           Git Push
+```python
+EXPLICIT_KEYWORDS = ["记录", "记下", "保存", "写入笔记", "更新笔记"]
+
+if any(kw in user_message for kw in EXPLICIT_KEYWORDS):
+    trigger_tier_3()
 ```
 
-### File Update Strategies
+### 4. 内容提取
 
-**learning_log.md**:
+**从对话中提取结构化信息**：
+
+```python
+# 提取问题
+def extract_question(user_message):
+    patterns = [
+        r"^(.*[?？])$",  # 问号结尾
+        r"^(什么是|如何|为什么)(.*?)([?？。]|$)",
+        r"(.*)(吗|呢)[?？。]*$"
+    ]
+    # 返回匹配的问题
+
+# 提取概念定义
+def extract_concepts(assistant_response):
+    patterns = [
+        r"([A-Z\u4e00-\u9fa5]{2,})\s*(是|：)(.*?)([。\n]|$)",
+        r"\*\*([^*]+)\*\*\s*[：:](.*?)([。\n]|$)",
+        r"###\s+([^\n]+)\n\n([^\n]+)"
+    ]
+    # 返回 [(概念, 定义), ...]
+
+# 提取问题解决方案
+def extract_problem_solution(conversation):
+    problem = {
+        "description": "",  # 错误现象
+        "root_cause": "",   # 根本原因
+        "solution": ""      # 解决方案
+    }
+    # 解析对话提取信息
+
+# 提取代码示例
+def extract_code_blocks(response):
+    return re.findall(r"```python\n(.*?)\n```", response, re.DOTALL)
+```
+
+### 5. 文件更新
+
+**更新 learning_log.md**：
+
 ```python
 def update_learning_log(date, topic, tasks, problems, reflections, materials):
-    # 1. Check if date section exists
-    date_pattern = f"### {date}:"
-    if date_pattern in content:
-        # Append subsection
-        insert_after(date_pattern, new_subsection)
+    """
+    格式:
+    ### 2026-02-23: 理解 RoPE 多频率机制
+
+    #### ✅ 完成事项
+    - [x] 理解为什么需要多频率
+
+    #### 🐛 遇到的问题
+    **问题: ...**
+    - **错误现象**: ...
+    - **根本原因**: ...
+    - **解决方案**: ...
+
+    #### 💭 个人思考
+    - **收获**: ...
+
+    #### 📝 相关学习材料
+    - 新增代码: `learning_materials/xxx.py`
+    """
+
+    # 检查今天日期章节是否存在
+    if f"### {date}:" in content:
+        # 追加子章节
+        insert_subsection_after_date(date, new_content)
     else:
-        # Find correct position (chronological order)
-        all_dates = extract_dates(content)
-        insert_position = find_insert_position(all_dates, date)
-        insert_section(insert_position, new_date_section)
+        # 插入新日期章节（按时间倒序）
+        insert_date_section_chronologically(date, new_content)
 ```
 
-**knowledge_base.md**:
+**更新 knowledge_base.md**：
+
 ```python
-def update_knowledge_base(question, answer, code_example, category):
-    # 1. Find next Q number
-    existing_qs = re.findall(r"Q(\d+)", content)
-    next_q = max(existing_qs) + 1 if existing_qs else 1
+def update_knowledge_base(question, answer, details, code_example):
+    """
+    格式:
+    **Q20: 为什么 RoPE 需要多频率？** [⭐️]
 
-    # 2. Determine category
-    category_mapping = {
-        "归一化": ["归一化", "Norm", "RMS", "Layer"],
-        "位置编码": ["位置", "RoPE", "YaRN", "编码"],
-        "注意力": ["注意力", "Attention", "GQA", "MQA"],
-        "前馈": ["FeedForward", "SwiGLU", "GLU"],
-        "训练": ["训练", "DPO", "PPO", "LoRA", "SFT"]
-    }
-    inferred_category = infer_category(question, category_mapping)
+    A: 因为单一低频率受浮点数精度限制。
 
-    # 3. Insert at category end or in Q&A section
-    insert_at_category_end(inferred_category, qa_entry)
+    **详细说明**:
+    - 详细解释1
+    - 详细解释2
 
-    # 4. Mark important
-    if any(keyword in question for keyword in ["原理", "为什么", "核心", "本质"]):
-        mark_as_important(qa_entry)
+    **代码示例**:
+    ```python
+    # 代码
+    ```
+
+    参考代码: `learning_materials/xxx.py`
+
+    ---
+    """
+
+    # 1. 找到最大 Q 编号
+    existing_q = re.findall(r"Q(\d+)", content)
+    next_q = max(existing_q) + 1 if existing_q else 1
+
+    # 2. 推断所属章节
+    category = infer_category(question)
+    # "归一化" / "位置编码" / "注意力" / "训练" 等
+
+    # 3. 在章节末尾插入
+    insert_at_category_end(category, qa_entry)
+
+    # 4. 标记重要问题
+    if any(kw in question for kw in ["原理", "为什么", "核心", "本质"]):
+        mark_with_star(qa_entry)
 ```
 
-**learning_materials/README.md**:
+**更新 learning_materials/README.md**：
+
 ```python
-def update_materials_readme(new_file_path):
-    # 1. Extract metadata from file
-    docstring = extract_docstring(new_file_path)
-    category = infer_category_from_filename(new_file_path)
+def update_materials_readme(new_file):
+    """
+    格式:
+    ## 位置编码
 
-    # 2. Generate entry
-    entry = f"- **`{filename}`** - {description}\n"
-    entry += format_bullet_points(docstring_lines)
+    - **`rope_multi_freq.py`** - 多频率机制验证
+      - 验证浮点数精度限制
+      - 对比单频率 vs 多频率
+    """
 
-    # 3. Insert at category end
+    # 从文件提取描述（docstring）
+    description = extract_file_description(new_file)
+
+    # 推断分类
+    category = infer_category_from_filename(new_file)
+
+    # 插入条目
     insert_at_category_end(category, entry)
-
-    # 4. Mark foundational files
-    if is_foundational(filename):  # e.g., "basics", "explained"
-        mark_with_star(entry)
 ```
 
-### Git Message Generation
+### 6. Git 自动化
+
+**生成 Commit Message**：
 
 ```python
 def generate_commit_message(changes):
-    # 1. Identify primary action
-    actions = {
-        "learning_log": "学习",
-        "problem_solving": "解决",
-        "code_creation": "添加",
-        "concept_clarification": "理解",
-        "refactoring": "完善"
-    }
+    """
+    模式: "[动作] [主题] [子主题]"
 
-    # 2. Extract primary MiniMind term
-    terms_found = []
-    for term in MINIMIND_TERMS:
-        if term.lower() in changes.content.lower():
-            terms_found.append(term)
-    primary_term = terms_found[0] if terms_found else "知识点"
+    动作词:
+    - 学习 (新概念)
+    - 理解 (深入理解)
+    - 添加 (代码/材料)
+    - 解决 (问题)
+    - 完善 (补充)
+    """
 
-    # 3. Extract sub-topic
-    sub_topic = extract_sub_topic(changes.content)  # e.g., "多频率机制"
+    # 提取主要 MiniMind 术语
+    primary_term = extract_primary_term(changes.content)
 
-    # 4. Construct message
-    action = actions[changes.type]
+    # 识别动作类型
+    action = identify_action(changes)
+
+    # 提取子主题
+    sub_topic = extract_sub_topic(changes.content)
+
+    # 构造 message
     message = f"{action} {primary_term}"
     if sub_topic:
         message += f" {sub_topic}"
 
-    # 5. Limit length
-    return message[:30]
+    return message[:30]  # 限制长度
 
-# Examples:
+# 示例输出:
 # "学习 RMSNorm 归一化原理"
+# "理解 RoPE 多频率机制"
+# "添加 Attention 学习材料"
 # "解决 CUDA 内存溢出问题"
-# "添加 RoPE 学习材料"
-# "理解 Attention 计算流程"
 ```
 
-### Error Handling
+**执行 Git 操作**：
 
-**File Not Found**:
-```python
-def ensure_notes_structure():
-    notes_dir = "docs"
-    files = {
-        "notes.md": NOTES_TEMPLATE,
-        "learning_log.md": LOG_TEMPLATE,
-        "knowledge_base.md": KB_TEMPLATE,
-        "learning_materials/README.md": MATERIALS_TEMPLATE
-    }
-
-    for file, template in files.items():
-        filepath = os.path.join(notes_dir, file)
-        if not os.path.exists(filepath):
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
-            with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(template)
+```bash
+# 自动执行（静默）
+cd {repo_root}
+git add docs/notes.md docs/learning_log.md docs/knowledge_base.md docs/learning_materials/
+git commit -m "{generated_message}"
+git push origin {current_branch}
 ```
 
-**Git Push Failures**:
+**错误处理**：
+
 ```python
 def safe_git_push(max_retries=3):
     for attempt in range(max_retries):
         try:
-            result = subprocess.run(
-                ["git", "push", "origin", branch],
-                timeout=30,
-                capture_output=True
-            )
-            if result.returncode == 0:
+            result = run_git_push(timeout=30)
+            if result.success:
                 return True
-        except subprocess.TimeoutExpired:
-            wait_time = 2 ** attempt  # Exponential backoff
-            time.sleep(wait_time)
+        except TimeoutError:
+            wait = 2 ** attempt  # 指数退避: 1s, 2s, 4s
+            sleep(wait)
 
-    # Log failure but don't block
-    log_warning("Git push failed after 3 attempts. Changes committed locally.")
+    # 失败后不阻塞，记录日志
+    log_warning("Git push 失败，更改已提交到本地")
     return False
 ```
 
-**Concurrent Updates**:
-```python
-from filelock import FileLock
+### 7. 分类推断
 
-def update_file_safely(filepath, update_func):
-    lock_path = f"{filepath}.lock"
-    with FileLock(lock_path, timeout=10):
-        content = read_file(filepath)
-        new_content = update_func(content)
-        write_file(filepath, new_content)
-```
-
-### Working Directory Detection
+**自动推断知识点所属主题**：
 
 ```python
-def detect_user_repo():
-    # Find git repository root
-    result = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        capture_output=True,
-        text=True
-    )
-    repo_root = result.stdout.strip()
+CATEGORY_KEYWORDS = {
+    "归一化技术": ["归一化", "Norm", "RMS", "Layer", "Batch", "Group"],
+    "位置编码": ["位置", "RoPE", "YaRN", "编码", "位置编码", "ALiBi"],
+    "注意力机制": ["注意力", "Attention", "GQA", "MQA", "FlashAttention"],
+    "前馈网络": ["前馈", "FeedForward", "SwiGLU", "GLU", "GELU"],
+    "预训练": ["预训练", "pretrain", "pretraining", "语言模型"],
+    "监督微调": ["SFT", "微调", "fine-tuning", "监督"],
+    "参数高效微调": ["LoRA", "lora", "PEFT", "参数高效"],
+    "人类反馈强化学习": ["DPO", "PPO", "GRPO", "RLHF", "RLAIF", "强化学习"],
+    "Transformer 架构": ["Transformer", "架构", "模型结构"],
+    "混合专家模型": ["MoE", "混合专家", "expert", "routing"],
+}
 
-    # Verify it's a MiniMind repo
-    indicators = [
-        "model/model_minimind.py",
-        "trainer/train_pretrain.py",
-        "README.md"  # Contains "MiniMind"
-    ]
-
-    if all(os.path.exists(os.path.join(repo_root, ind)) for ind in indicators):
-        return repo_root
-    else:
-        raise ValueError("Not a valid MiniMind repository")
-
-# Create docs/ in user's repo
-docs_dir = os.path.join(detect_user_repo(), "docs")
-os.makedirs(docs_dir, exist_ok=True)
+def infer_category(text):
+    for category, keywords in CATEGORY_KEYWORDS.items():
+        if any(kw in text for kw in keywords):
+            return category
+    return "其他"  # 默认分类
 ```
 
-## Templates
+### 8. 静默运行原则
 
-Templates are stored in `templates/` directory and used to initialize missing files.
+**不打扰用户**：
 
-### Validation
+```python
+# ❌ 不要这样
+print("正在更新笔记...")
+print("已保存到 learning_log.md")
+print("Git 提交成功")
 
-Run validation script to check note consistency:
+# ✅ 应该这样
+# 完全静默，只在出错时提示
+if git_push_failed:
+    # 仅在失败时简短提示
+    print("💡 提示：更改已保存到本地，推送失败（网络问题）")
+```
+
+**专注学习对话**：
+
+```python
+# ✅ 继续正常对话
+user: "什么是 RMSNorm？"
+assistant: "RMSNorm (Root Mean Square Normalization) 是..."
+# [背后静默更新笔记]
+
+user: "它和 LayerNorm 有什么区别？"
+assistant: "主要区别有三点..."
+# [背后再次更新]
+
+# 用户完全不知道笔记在更新
+```
+
+### 9. 模板文件
+
+**初始化时使用的模板**：
+
 ```bash
-cd minimind-learning-skill
-python scripts/validate_notes.py
+~/.claude/skills/minimind-learning/templates/
+├── notes.md.template
+├── learning_log.md.template
+├── knowledge_base.md.template
+└── learning_materials_readme.md.template
 ```
 
-Checks:
-- Q numbers are sequential (Q1, Q2, Q3, ...)
-- Date format is consistent (YYYY-MM-DD)
-- No orphaned references (all mentioned files exist)
-- Git commit messages follow convention
+**模板变量替换**：
 
-## Troubleshooting
+```python
+def load_template(template_name):
+    template_path = Path.home() / ".claude/skills/minimind-learning/templates" / template_name
+    content = template_path.read_text(encoding="utf-8")
 
-**Problem**: Notes not updating
-- **Check**: Is this a MiniMind-related conversation?
-- **Check**: Are trigger keywords present? (See Tier 1 list)
-- **Solution**: Use explicit request: "记录这个知识点"
+    # 替换占位符
+    today = datetime.now().strftime("%Y-%m-%d")
+    content = content.replace("{TODAY}", today)
 
-**Problem**: Git push fails
-- **Check**: Network connection
-- **Check**: Git credentials configured
-- **Solution**: Changes are committed locally, manually push later
+    return content
+```
 
-**Problem**: Q numbers skip (Q1, Q2, Q5...)
-- **Check**: Manual edits to knowledge_base.md?
-- **Solution**: Run validation script to fix numbering
+### 10. 配置读取（可选）
 
-**Problem**: Duplicate entries
-- **Check**: Same concept discussed multiple times
-- **Solution**: Merge duplicate Q&A manually, skill will avoid duplicates in future
+**如果存在 `.minimind-learning.json`**：
 
-## Contributing
+```python
+config_path = repo_root / ".minimind-learning.json"
+if config_path.exists():
+    config = json.loads(config_path.read_text())
 
-This skill is designed for the MiniMind learning community. Contributions welcome!
+    auto_commit = config.get("auto_commit", True)
+    auto_push = config.get("auto_push", True)
+    batch_delay = config.get("batch_delay", 5)
+    notes_dir = config.get("notes_dir", "docs")
+    mark_important = config.get("mark_important", True)
+```
 
-**How to contribute**:
-1. Fork the repository
-2. Create feature branch
-3. Test with real learning scenarios
-4. Submit pull request
+## Best Practices
 
-**Areas for improvement**:
-- Add support for other languages (English, Japanese)
-- Integrate with Anki/Obsidian for spaced repetition
-- Support voice input for notes
-- Generate visual diagrams from concepts
+### 引导式学习
 
-## License
+当用户说"开始学习"时，主动提供学习路径：
 
-MIT License - Free to use and modify for educational purposes.
+```markdown
+📚 MiniMind 推荐学习路径:
 
-## Credits
+**Week 1: 基础组件**
+→ Day 1-2: 归一化技术 (RMSNorm)
+→ Day 3-4: 位置编码 (RoPE)
+→ Day 5-7: 注意力机制 (Attention, GQA)
 
-- **Author**: Joye Huang (joyehuang)
-- **Inspired by**: MiniMind project by jingyaogong
-- **Community**: MiniMind learning group members
+**Week 2: 完整架构**
+→ Day 8-10: Transformer Block
+→ Day 11-14: 完整模型实现
+
+**Week 3-4: 训练技术**
+→ 预训练 → SFT → LoRA → RLHF
+
+你想从哪里开始？
+```
+
+### 鼓励实践
+
+检测到代码讨论时，建议创建可执行示例：
+
+```markdown
+💡 要不要创建一个可运行的代码示例？
+
+我可以帮你创建 `learning_materials/rope_basics.py`，
+包含完整的 RoPE 实现和可视化。
+
+这样你可以直接运行看效果！
+```
+
+### 定期总结
+
+检测到学习了多个知识点后，主动总结：
+
+```markdown
+📊 今天学习总结:
+
+✅ 完成事项:
+- 理解了 RMSNorm 的原理
+- 对比了 RMSNorm vs LayerNorm
+- 运行了验证代码
+
+🎯 建议:
+明天可以学习 RoPE 位置编码，它和 RMSNorm
+一起构成了现代 Transformer 的基础。
+
+（笔记已自动保存到 `docs/learning_log.md`）
+```
+
+## Error Handling
+
+### 仓库检测失败
+
+```python
+if not is_minimind_repo():
+    print("❌ 当前目录不是 MiniMind 仓库")
+    print("请确保在 MiniMind 目录中使用此 skill")
+    print("或检查以下文件是否存在:")
+    print("  - model/model_minimind.py")
+    print("  - trainer/train_pretrain.py")
+    return
+```
+
+### Git 操作失败
+
+```python
+if git_commit_failed:
+    print("⚠️  Git 提交失败，但笔记已更新")
+    print("请手动提交:")
+    print("  cd docs/")
+    print("  git add .")
+    print("  git commit -m '学习笔记更新'")
+```
+
+### 文件冲突
+
+```python
+if file_conflict_detected:
+    print("⚠️  检测到文件冲突")
+    print("建议:")
+    print("1. 手动解决冲突")
+    print("2. 或运行验证脚本:")
+    print("   python ~/.claude/skills/minimind-learning/scripts/validate_notes.py --fix-numbering")
+```
+
+## Validation
+
+**定期提醒用户验证笔记**（每 10 个 Q&A 后）：
+
+```markdown
+💡 笔记提示:
+
+你已经积累了 10 个问答！建议运行验证脚本:
+
+```bash
+python ~/.claude/skills/minimind-learning/scripts/validate_notes.py
+```
+
+这会检查:
+- Q 编号连续性
+- 日期格式
+- 文件引用完整性
+```
+
+## Summary
+
+**这个 skill 的核心行为**：
+
+1. ✅ **静默监听**：每次对话后检查触发条件
+2. ✅ **智能提取**：从对话中提取问题、概念、代码
+3. ✅ **自动更新**：更新三套笔记文件
+4. ✅ **Git 自动化**：生成简洁 commit 并推送
+5. ✅ **主动引导**：提供学习路径和建议
+
+**用户体验**：
+- 说"开始学习" → 立即得到学习指引
+- 自然提问 → 背后自动记录笔记
+- 完全静默 → 专注学习，无打扰
+- 定期总结 → 巩固学习成果
 
 ---
 
-**Version History**:
-- v1.0.0 (2026-02-23): Initial release
-  - Three-tier triggering system
-  - Full Git automation
-  - 50+ MiniMind term recognition
-  - Three-file note system
-
----
-
-*This skill is part of the MiniMind educational ecosystem. For more information, visit [MiniMind GitHub](https://github.com/jingyaogong/minimind).*
+**版本**: 1.0.0
+**作者**: Joye Huang
+**许可**: MIT
