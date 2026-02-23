@@ -1,0 +1,269 @@
+# 学习材料 (Learning Materials)
+
+> 🔬 可执行的代码示例和验证实验
+
+## 使用说明
+
+本目录包含**可运行的 Python 代码**，用于：
+- 验证理论概念
+- 动手实践
+- 可视化结果
+- 调试学习
+
+**推荐学习方式**：
+1. 先阅读 `knowledge_base.md` 理解概念
+2. 再运行对应代码示例
+3. 修改参数观察结果
+4. 在 `learning_log.md` 记录收获
+
+---
+
+## 📚 代码索引
+
+### 归一化技术
+
+<!-- 归一化相关代码将自动添加在此处 -->
+
+**示例**：
+- **`why_normalization.py`** - 为什么需要归一化
+  - 对比有无归一化的训练曲线
+  - 可视化激活值分布
+
+### 位置编码
+
+<!-- 位置编码相关代码将自动添加在此处 -->
+
+**示例**：
+- **`rope_basics.py`** - RoPE 基础实现
+  - 演示旋转位置编码机制
+  - 可视化二维旋转
+
+### 注意力机制
+
+<!-- 注意力机制相关代码将自动添加在此处 -->
+
+**示例**：
+- **`attention_from_scratch.py`** - 从零实现 Attention
+  - 手动实现 Q、K、V 计算
+  - 可视化注意力权重
+
+### 前馈网络
+
+<!-- 前馈网络相关代码将自动添加在此处 -->
+
+**示例**：
+- **`swiglu_vs_relu.py`** - 对比 SwiGLU 和 ReLU
+  - 对比不同激活函数效果
+  - 可视化激活曲线
+
+### 训练技术
+
+<!-- 训练技术相关代码将自动添加在此处 -->
+
+**示例**：
+- **`lora_visualization.py`** - LoRA 参数可视化
+  - 展示低秩矩阵分解
+  - 计算参数量对比
+
+### 其他工具
+
+<!-- 其他工具代码将自动添加在此处 -->
+
+---
+
+## 🎯 推荐学习顺序
+
+### 阶段 1：基础组件（Week 1）
+1. ⭐️ `why_normalization.py` - 理解归一化的必要性
+2. ⭐️ `rmsnorm_explained.py` - 掌握 RMSNorm 原理
+3. ⭐️ `rope_basics.py` - 理解 RoPE 位置编码
+4. `rope_multi_freq.py` - 理解多频率机制
+5. ⭐️ `attention_from_scratch.py` - 手动实现注意力
+6. `gqa_explained.py` - 理解 GQA 优化
+
+### 阶段 2：完整模型（Week 2）
+7. `transformer_block.py` - 组装 Transformer 块
+8. `causal_lm.py` - 实现因果语言模型
+9. `tokenization_demo.py` - 理解 tokenization
+
+### 阶段 3：训练技术（Week 3-4）
+10. `sft_mini_demo.py` - 监督微调示例
+11. ⭐️ `lora_visualization.py` - LoRA 原理可视化
+12. `dpo_explained.py` - DPO 算法实现
+13. `ppo_mini.py` - PPO 最小实现
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+
+```bash
+# 安装依赖
+pip install torch numpy matplotlib
+
+# 推荐（可选）
+pip install transformers
+pip install einops
+```
+
+### 运行示例
+
+```bash
+cd learning_materials/
+
+# 1. 验证归一化效果
+python why_normalization.py
+
+# 2. 理解 RoPE 原理
+python rope_basics.py
+
+# 3. 可视化注意力
+python attention_from_scratch.py
+```
+
+### 代码风格
+
+所有代码遵循以下规范：
+- ✅ 详细注释（中文）
+- ✅ 可独立运行（无外部依赖 MiniMind 代码）
+- ✅ 输出可视化结果
+- ✅ 包含测试用例
+
+**代码模板**：
+```python
+"""
+文件名.py - 简短描述
+
+演示内容:
+1. 功能1
+2. 功能2
+3. 功能3
+
+运行方式:
+    python 文件名.py
+
+输出:
+    - 控制台输出：...
+    - 图表：...
+"""
+
+import torch
+import matplotlib.pyplot as plt
+
+def main():
+    """主函数"""
+    # 实现代码
+    pass
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 📖 代码说明标准
+
+每个文件应包含：
+
+1. **文件头 Docstring**
+   ```python
+   """
+   文件名 - 一句话描述
+
+   演示内容:
+   1. ...
+   2. ...
+
+   运行方式:
+       python xxx.py
+
+   输出:
+       - ...
+   """
+   ```
+
+2. **函数注释**
+   ```python
+   def function_name(arg1, arg2):
+       """
+       函数功能描述
+
+       Args:
+           arg1: 参数1说明
+           arg2: 参数2说明
+
+       Returns:
+           返回值说明
+       """
+   ```
+
+3. **关键代码注释**
+   ```python
+   # 计算注意力得分
+   scores = torch.matmul(q, k.transpose(-2, -1))  # (B, H, L, L)
+
+   # 缩放防止梯度消失
+   scores = scores / math.sqrt(d_k)
+   ```
+
+---
+
+## 🔧 调试技巧
+
+### 打印张量形状
+```python
+def debug_shape(tensor, name="tensor"):
+    print(f"{name}.shape = {tensor.shape}")
+    print(f"{name}.dtype = {tensor.dtype}")
+    print(f"{name}.device = {tensor.device}")
+```
+
+### 可视化注意力权重
+```python
+def plot_attention(attn_weights, title="Attention"):
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(10, 8))
+    plt.imshow(attn_weights, cmap='viridis')
+    plt.colorbar()
+    plt.title(title)
+    plt.xlabel("Key")
+    plt.ylabel("Query")
+    plt.show()
+```
+
+### 验证梯度
+```python
+def check_gradients(model):
+    for name, param in model.named_parameters():
+        if param.grad is not None:
+            grad_norm = param.grad.norm().item()
+            print(f"{name}: grad_norm = {grad_norm:.4f}")
+```
+
+---
+
+## 📊 统计信息
+
+- **代码文件数**: 0
+- **归一化**: 0 个
+- **位置编码**: 0 个
+- **注意力**: 0 个
+- **训练**: 0 个
+
+---
+
+## 🤝 贡献代码
+
+如果你创建了有用的学习代码，欢迎贡献！
+
+**贡献步骤**：
+1. 遵循代码风格规范
+2. 添加详细注释
+3. 测试代码可运行
+4. 更新本 README
+
+---
+
+**最后更新**: {TODAY}
+**维护者**: MiniMind Learning Assistant v1.0.0

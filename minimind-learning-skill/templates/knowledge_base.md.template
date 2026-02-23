@@ -1,0 +1,380 @@
+# 知识库 (Knowledge Base)
+
+> 🧠 按主题组织的系统化知识
+
+## 使用说明
+
+本文档按 **技术主题** 组织知识点，便于查找和复习。
+
+每个知识点格式：
+```markdown
+**Q编号: 问题？** [⭐️ 表示重要]
+
+A: 简短回答
+
+**详细说明**:
+- 详细解释1
+- 详细解释2
+
+**代码示例**:
+```python
+# 示例代码
+```
+
+参考代码: `learning_materials/xxx.py`
+
+---
+```
+
+**Q编号规则**：
+- 按添加顺序从 Q1 开始递增
+- 即使删除旧问题，新问题也不重用编号
+- 重要问题用 ⭐️ 标记
+
+---
+
+## 目录
+
+### 基础组件
+1. [归一化技术](#1-归一化技术) - RMSNorm, LayerNorm
+2. [位置编码](#2-位置编码) - RoPE, YaRN
+3. [注意力机制](#3-注意力机制) - Attention, GQA, MQA
+4. [前馈网络](#4-前馈网络) - FeedForward, SwiGLU
+
+### 训练技术
+5. [预训练](#5-预训练) - Pretraining
+6. [监督微调](#6-监督微调) - SFT
+7. [参数高效微调](#7-参数高效微调) - LoRA
+8. [人类反馈强化学习](#8-人类反馈强化学习) - DPO, PPO, GRPO
+
+### 模型架构
+9. [Transformer 架构](#9-transformer-架构)
+10. [混合专家模型](#10-混合专家模型) - MoE
+
+---
+
+## 1. 归一化技术
+
+> 归一化是神经网络训练稳定性的关键
+
+### 核心概念
+
+**归一化的作用**：
+- 稳定训练过程
+- 加速收敛
+- 减少内部协变量偏移
+
+### 常见归一化方法
+
+| 方法 | 归一化维度 | 是否使用均值 | 计算复杂度 |
+|------|-----------|-------------|-----------|
+| BatchNorm | Batch 维度 | ✅ | 高 |
+| LayerNorm | Feature 维度 | ✅ | 中 |
+| RMSNorm | Feature 维度 | ❌ | 低 |
+| GroupNorm | Group 维度 | ✅ | 中 |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 2. 位置编码
+
+> 为 Transformer 注入位置信息
+
+### 核心概念
+
+**为什么需要位置编码**：
+- Transformer 的 Attention 机制是位置无关的
+- 需要显式编码 token 的位置信息
+- 位置编码可以是绝对或相对的
+
+### 常见位置编码方法
+
+| 方法 | 类型 | 外推性 | 使用模型 |
+|------|------|-------|---------|
+| Sinusoidal | 绝对 | ❌ | 原始 Transformer |
+| Learned | 绝对 | ❌ | BERT, GPT-2 |
+| RoPE | 相对 | ✅ | LLaMA, GPT-NeoX |
+| ALiBi | 相对 | ✅✅ | BLOOM |
+| YaRN | 相对（改进） | ✅✅✅ | LongLLaMA |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 3. 注意力机制
+
+> Transformer 的核心计算单元
+
+### 核心概念
+
+**注意力机制的作用**：
+- 建模序列中 token 之间的依赖关系
+- 动态分配权重（而非固定权重）
+- 并行化计算（相比 RNN）
+
+**基本公式**：
+```
+Attention(Q, K, V) = softmax(QK^T / √d_k) V
+```
+
+### 注意力变体
+
+| 变体 | 头数配置 | 计算量 | KV Cache | 使用模型 |
+|------|---------|-------|----------|---------|
+| MHA | n 个完整头 | 高 | 大 | GPT-2, BERT |
+| MQA | 1 个 KV, n 个 Q | 低 | 小 | PaLM |
+| GQA | g 个 KV, n 个 Q | 中 | 中 | LLaMA2, Mistral |
+| FlashAttention | - | 低 (IO优化) | - | 通用优化 |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 4. 前馈网络
+
+> Transformer 中的非线性变换
+
+### 核心概念
+
+**FFN 的作用**：
+- 增加模型表达能力
+- 引入非线性变换
+- 通常占据模型大部分参数
+
+**标准结构**：
+```python
+FFN(x) = W2 * ReLU(W1 * x + b1) + b2
+```
+
+### 激活函数变体
+
+| 激活函数 | 公式 | 参数量 | 使用模型 |
+|---------|------|-------|---------|
+| ReLU | max(0, x) | 1x | 早期 Transformer |
+| GELU | x * Φ(x) | 1x | BERT, GPT-2 |
+| GLU | (W1*x) ⊙ σ(W2*x) | 2x | GLU paper |
+| SwiGLU | (W1*x) ⊙ Swish(W2*x) | 2x | LLaMA, PaLM |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 5. 预训练
+
+> 在大规模无标注数据上训练基础模型
+
+### 核心概念
+
+**预训练的目标**：
+- 学习语言的统计规律
+- 积累世界知识
+- 为下游任务提供良好的初始化
+
+**训练任务**：
+- 因果语言模型（CLM）：预测下一个 token
+- 掩码语言模型（MLM）：预测被遮盖的 token
+
+### MiniMind 预训练流程
+
+```bash
+cd trainer
+python train_pretrain.py \
+  --data_path ../dataset/pretrain_hq.jsonl \
+  --epochs 1 \
+  --batch_size 32 \
+  --learning_rate 5e-4
+```
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 6. 监督微调
+
+> Supervised Fine-Tuning (SFT)
+
+### 核心概念
+
+**SFT 的目标**：
+- 将预训练模型对齐到特定任务
+- 学习指令遵循能力
+- 提高对话质量
+
+**数据格式**（MiniMind）：
+```json
+{
+  "conversations": [
+    {"role": "user", "content": "你好"},
+    {"role": "assistant", "content": "你好！有什么可以帮助你的吗？"},
+    {"role": "user", "content": "介绍一下你自己"},
+    {"role": "assistant", "content": "我是一个 AI 助手..."}
+  ]
+}
+```
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 7. 参数高效微调
+
+> Parameter-Efficient Fine-Tuning (PEFT)
+
+### 核心概念
+
+**为什么需要 PEFT**：
+- 全量微调成本高（需要存储多份模型）
+- 容易发生灾难性遗忘
+- PEFT 只训练少量参数（1-10%）
+
+**LoRA 原理**：
+```
+W_new = W_frozen + ΔW
+ΔW = BA (B: d×r, A: r×k, r << min(d,k))
+```
+
+### LoRA 配置
+
+| 参数 | 说明 | 推荐值 |
+|------|------|-------|
+| r | 秩（rank） | 8-16 |
+| alpha | 缩放因子 | 16-32 |
+| target_modules | 目标模块 | q_proj, v_proj |
+| dropout | Dropout 比例 | 0.05-0.1 |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 8. 人类反馈强化学习
+
+> Reinforcement Learning from Human Feedback (RLHF)
+
+### 核心概念
+
+**RLHF 的目标**：
+- 将模型输出对齐到人类偏好
+- 减少有害输出
+- 提高回复质量
+
+**RLHF 流程**：
+1. SFT：监督微调基础模型
+2. RM：训练奖励模型
+3. RL：强化学习优化策略
+
+### 算法对比
+
+| 算法 | 类型 | 是否需要 RM | 训练难度 | 使用模型 |
+|------|------|-----------|---------|---------|
+| DPO | RLHF | ❌ | 低 | Zephyr, Mistral |
+| PPO | RLAIF | ✅ | 高 | InstructGPT, ChatGPT |
+| GRPO | RLAIF | ✅ | 中 | DeepSeek |
+| SPO | RLAIF | ❌ | 低 | - |
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 9. Transformer 架构
+
+> 现代 LLM 的基础架构
+
+### 核心概念
+
+**Transformer Block 结构**：
+```
+Input
+  ↓
+RMSNorm → MultiHeadAttention → Residual
+  ↓
+RMSNorm → FeedForward → Residual
+  ↓
+Output
+```
+
+**MiniMind 配置**：
+```python
+MiniMindConfig(
+    hidden_size=512,           # 隐藏层维度
+    num_hidden_layers=8,       # Transformer 层数
+    num_attention_heads=8,     # 注意力头数
+    num_key_value_heads=2,     # GQA KV 头数
+    intermediate_size=1536,    # FFN 中间维度
+)
+```
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 10. 混合专家模型
+
+> Mixture of Experts (MoE)
+
+### 核心概念
+
+**MoE 的优势**：
+- 参数量 ↑，计算量 →（稀疏激活）
+- 不同专家学习不同模式
+- 适合多任务学习
+
+**MiniMind-MoE 架构**：
+```python
+MoE-FFN:
+  Input
+    ↓
+  Router (选择 top-k 专家)
+    ↓
+  ┌─────┬─────┬─────┐
+  E1    E2    E3    E4  (routed experts)
+  └─────┴─────┴─────┘
+    ↓
+  Shared Expert
+    ↓
+  Output
+```
+
+### 问答记录
+
+<!-- Q&A 将自动添加在此处 -->
+
+---
+
+## 常见问题汇总
+
+### 关于归一化
+<!-- 归一化相关 Q&A 的引用 -->
+
+### 关于位置编码
+<!-- 位置编码相关 Q&A 的引用 -->
+
+### 关于注意力
+<!-- 注意力相关 Q&A 的引用 -->
+
+### 关于训练
+<!-- 训练相关 Q&A 的引用 -->
+
+---
+
+**最后更新**: {TODAY}
+**问答总数**: 0
+**重要问答**: 0

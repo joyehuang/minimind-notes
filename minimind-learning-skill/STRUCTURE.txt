@@ -1,0 +1,17 @@
+.
+.gitignore
+.minimind-learning.json.example
+CONTRIBUTING.md
+LICENSE
+PROJECT_SUMMARY.md
+QUICKSTART.md
+README.md
+scripts
+scripts/validate_notes.py
+SKILL.md
+STRUCTURE.txt
+templates
+templates/knowledge_base.md.template
+templates/learning_log.md.template
+templates/learning_materials_readme.md.template
+templates/notes.md.template

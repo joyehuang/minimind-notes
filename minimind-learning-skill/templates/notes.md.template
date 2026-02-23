@@ -1,0 +1,161 @@
+# MiniMind 学习笔记
+
+> 📚 系统化学习 MiniMind LLM 训练框架
+
+## 📖 关于本笔记系统
+
+本笔记使用 **三层结构** 组织学习内容：
+
+1. **learning_log.md** - 学习日志（按时间顺序）
+   - 记录每天学了什么
+   - 遇到的问题和解决方案
+   - 个人思考和收获
+
+2. **knowledge_base.md** - 知识库（按主题组织）
+   - 系统化的技术概念
+   - Q&A 问答记录
+   - 代码示例和公式
+
+3. **learning_materials/** - 学习材料（可执行代码）
+   - Python 示例代码
+   - 验证实验
+   - 可视化脚本
+
+## 🗂️ 快速导航
+
+### 按内容查找
+
+- [学习日志](learning_log.md) - 按时间顺序查看学习历程
+- [知识库](knowledge_base.md) - 按主题查看技术概念
+- [学习材料](learning_materials/README.md) - 查看所有代码示例
+
+### 按日期查找
+
+- [2026-02-23](learning_log.md#2026-02-23) - 开始学习 MiniMind
+
+### 按主题查找
+
+#### 基础组件
+- [归一化技术](knowledge_base.md#归一化技术) - RMSNorm, LayerNorm
+- [位置编码](knowledge_base.md#位置编码) - RoPE, YaRN
+- [注意力机制](knowledge_base.md#注意力机制) - Attention, GQA
+- [前馈网络](knowledge_base.md#前馈网络) - FeedForward, SwiGLU
+
+#### 训练技术
+- [预训练](knowledge_base.md#预训练) - Pretraining
+- [监督微调](knowledge_base.md#监督微调) - SFT
+- [参数高效微调](knowledge_base.md#参数高效微调) - LoRA
+- [人类反馈强化学习](knowledge_base.md#人类反馈强化学习) - RLHF, DPO, PPO
+
+## 📊 学习进度
+
+### 完成的模块
+
+- [ ] 01-foundation: 基础组件
+  - [ ] 01-normalization: 归一化
+  - [ ] 02-position-encoding: 位置编码
+  - [ ] 03-attention: 注意力机制
+  - [ ] 04-feedforward: 前馈网络
+
+- [ ] 02-architecture: 架构组装
+  - [ ] 01-transformer-block: Transformer 块
+  - [ ] 02-complete-model: 完整模型
+
+- [ ] 03-training: 训练流程
+  - [ ] 01-pretrain: 预训练
+  - [ ] 02-sft: 监督微调
+  - [ ] 03-lora: LoRA 微调
+  - [ ] 04-rlhf: 强化学习
+
+### 统计信息
+
+- **学习天数**: 1 天
+- **问答数量**: 0 个
+- **代码示例**: 0 个
+- **解决问题**: 0 个
+
+## 🎯 学习目标
+
+- [ ] 理解 Transformer 核心组件
+- [ ] 掌握 LLM 训练流程
+- [ ] 能够训练小型语言模型
+- [ ] 理解高级训练技术（LoRA, DPO, PPO）
+
+## 📚 参考资源
+
+### 官方资源
+- [MiniMind GitHub](https://github.com/jingyaogong/minimind)
+- [MiniMind 文档](https://github.com/jingyaogong/minimind/blob/master/README.md)
+- [MiniMind 数据集](https://huggingface.co/datasets/jingyaogong/minimind_dataset)
+
+### 相关论文
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer 原论文
+- [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864) - RoPE
+- [Root Mean Square Layer Normalization](https://arxiv.org/abs/1910.07467) - RMSNorm
+- [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685) - LoRA
+- [Direct Preference Optimization](https://arxiv.org/abs/2305.18290) - DPO
+
+## 🔧 工具和环境
+
+### 开发环境
+- Python 3.10+
+- PyTorch 2.0+
+- CUDA 11.8+ (GPU 训练)
+
+### 常用命令
+```bash
+# 查看学习日志
+cat docs/learning_log.md
+
+# 查看知识库
+cat docs/knowledge_base.md
+
+# 运行学习材料
+cd docs/learning_materials/
+python rope_basics.py
+
+# 提交学习笔记
+cd docs/
+git add .
+git commit -m "学习 XXX"
+git push
+```
+
+## 💡 使用提示
+
+### 记笔记的最佳实践
+
+1. **保持对话自然**：直接向 Claude 提问，无需特意"记录笔记"
+2. **利用显式请求**：遇到重要知识点时说"记录一下"
+3. **定期回顾**：每周回顾 learning_log.md 巩固知识
+4. **手动补充**：Skill 提供结构，你可以添加个人批注
+
+### 笔记系统工作流
+
+```
+你提问 → Claude 回答
+    ↓
+MiniMind Learning Skill 自动检测
+    ↓
+更新三套笔记系统
+    ↓
+自动 Git 提交和推送
+```
+
+## 🤖 关于自动化
+
+本笔记系统由 **MiniMind Learning Assistant Skill** 维护，它会：
+
+- ✅ 自动检测 MiniMind 相关对话
+- ✅ 提取问题、概念、代码示例
+- ✅ 更新三套笔记文件
+- ✅ 生成简洁的 Git commit message
+- ✅ 推送到远程仓库
+
+详见 [Skill 文档](../minimind-learning-skill/README.md)
+
+---
+
+**最后更新**: {TODAY}
+**笔记版本**: 1.0.0
+**自动维护**: MiniMind Learning Assistant v1.0.0

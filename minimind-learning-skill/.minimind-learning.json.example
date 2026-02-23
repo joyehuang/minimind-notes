@@ -1,0 +1,19 @@
+{
+  "auto_commit": true,
+  "auto_push": true,
+  "batch_delay": 5,
+  "git": {
+    "remote": "origin",
+    "branch": "master",
+    "retry_count": 3,
+    "timeout": 30
+  },
+  "notes_dir": "docs",
+  "mark_important": true,
+  "trigger_settings": {
+    "tier1_enabled": true,
+    "tier2_enabled": true,
+    "tier3_enabled": true,
+    "custom_keywords": []
+  }
+}
