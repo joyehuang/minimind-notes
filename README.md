@@ -123,3 +123,7 @@ ls learning_materials/        # 代码示例
 ---
 
 **License**: MIT | **Author**: [@joyehuang](https://github.com/joyehuang) | **Based on**: [MiniMind](https://github.com/jingyaogong/minimind)
+
+## MiniMind专属学习交流群
+
+![MiniMind专属学习交流群二维码](public/qrcode_1772467293155.jpg)
