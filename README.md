@@ -1,129 +1,343 @@
-﻿# MiniMind Learning Skill
+<div align="center">
 
-## MiniMind???????
+# 🧠 MiniMind | 大模型训练原理教程
 
-![MiniMind??????????](public/qrcode_1772467293155.jpg)
+<p>
+  <strong>从 0 到 1 深度理解大模型：不是"抄代码手册"，而是原理优先的实验室</strong>
+</p>
 
-> 自动化学习笔记系统 - 静默记录你的 MiniMind 学习历程
+<p>
+  <a href="https://minimind.wiki">
+    <img src="https://img.shields.io/badge/在线文档-Wiki-blue?style=for-the-badge&logo=read-the-docs" alt="Website">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+  </a>
+  <a href="https://pytorch.org/">
+    <img src="https://img.shields.io/badge/PyTorch-2.0+-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch">
+  </a>
+</p>
 
-## 快速开始
+<h3>
+  🎉 完整交互式文档已上线
+  <br>
+  <a href="https://minimind.wiki">👉 https://minimind.wiki 👈</a>
+</h3>
+
+<p>
+  <a href="#-快速开始">⚡ 快速开始</a> •
+  <a href="#-学习路径">🗺️ 学习路径</a> •
+  <a href="#-模块导航">📦 模块导航</a> •
+  <a href="README_en.md">🇬🇧 English README</a>
+</p>
+
+</div>
+
+---
+
+## 📖 项目介绍
+
+MiniMind 旨在通过实践帮助开发者深度理解大语言模型（LLM）的训练机制，使用极其简洁的代码和**对比实验**。它不仅告诉你"怎么做"，更通过实验数据向你展示"为什么这样做"。
+
+> **为什么做这个项目？** 通过对比实验理解 LLM 训练中的每一个设计选择。
+
+---
+
+## 🎯 这是什么？
+
+这是一个**模块化的 LLM 训练教程**，帮助你理解现代大语言模型（如 Llama、GPT）的训练原理。
+
+**核心特点**：
+- ✅ **原理优先**：理解"为什么这样设计"，而不只是"怎么运行"
+- ✅ **对比实验**：每个设计选择都通过实验回答"如果不这样做会怎样"
+- ✅ **模块化**：6 个独立模块，从基础组件到完整架构
+- ✅ **低门槛**：学习阶段实验可在 CPU 上运行（数分钟），完整训练需要 GPU
+
+**基于项目**：[MiniMind](https://github.com/jingyaogong/minimind) - 从零训练超小语言模型的完整教程
+
+---
+
+## 👥 适合谁？
+
+### 🎯 **特别适合求职 LLM 岗位的同学！**
+
+本项目特别为想进入 LLM 领域的同学设计。通过系统学习 LLM 训练原理，你将：
+- ✅ **面试必备**：深度理解 Transformer、Attention、RoPE 等核心机制，技术面试游刃有余
+- ✅ **简历加分**：完成对比实验，展示你对 LLM 原理的深度理解，让简历更有竞争力
+- ✅ **快速上手**：从零理解现代 LLM（Llama、GPT）训练流程，而不只是"框架使用者"
+- ✅ **职业发展**：掌握 LLM 训练原理，为未来从事 LLM 相关工作打下坚实基础
+
+---
+
+### 🎓 学生和研究者
+- **🎯 求职 LLM 岗位的同学**：系统学习 LLM 训练原理，提升技术面试成功率
+- **📚 机器学习/深度学习学生**：深度理解 Transformer 和 LLM 的内部机制，不止于理论
+- **🔬 研究生/博士生**：理解 LLM 训练原理，为研究和论文写作提供坚实基础
+- **💡 研究人员**：理解现代 LLM 架构中的设计选择及其背后的原理，启发研究方向
+
+### 💻 开发者
+- **🤖 AI/ML 工程师**：从"会用框架"到"懂原理"，自信解决实际问题
+- **🌐 全栈开发者**：对 LLM 感兴趣，想系统学习训练机制，拓展技术栈
+- **⚙️ 算法工程师**：需要优化或改进 LLM 训练流程，理解原理是做出正确决策的关键
+
+### 🚀 学习者
+- **📖 有 PyTorch 基础**：熟悉基本深度学习概念，想深入 LLM
+- **🛠️ 动手学习者**：喜欢通过实验和代码理解，而不只是理论
+- **🔍 追求深度理解**：不满足于"跑通代码"，想知道"为什么这样设计"
+
+### ❌ 不适合
+- 完全零基础（建议先学习 PyTorch 基础）
+- 只想快速部署模型，不想理解原理的用户
+- 需要生产级代码和最佳实践的用户（本项目专注教学）
+
+**💪 如果你正在准备 LLM 岗位面试，或想深度理解 LLM 训练原理，本项目为你而生！** 🚀
+
+---
+
+## ⚡ 快速开始
+
+### 30 分钟体验核心设计
+
+运行三个关键实验，理解 LLM 的核心设计选择：
 
 ```bash
-# 1. Clone 仓库
+# 1. 克隆仓库
 git clone https://github.com/joyehuang/minimind-notes.git
 cd minimind-notes
 
-# 2. 运行初始化脚本
-chmod +x minimind-learning-skill/scripts/init-for-learning.sh
-./minimind-learning-skill/scripts/init-for-learning.sh    # Linux/macOS
-# 或 minimind-learning-skill\scripts\init-for-learning.bat  # Windows
+# 2. 创建并激活虚拟环境（需要 Python 3.9+，推荐 3.10/3.11）
+python3 -m venv venv          # Windows 用户：使用 "python" 而不是 "python3"
+source venv/bin/activate      # Linux / macOS
+# Windows: venv\Scripts\activate
 
-# 3. 启动 AI Coding Agent
-claude code                         # Claude Code CLI
-# 或在 VS Code / Cursor / Windsurf 中启动 Claude
+# 3. 安装依赖
+pip install -r requirements.txt
 
-# 4. 开始学习
-# 对 AI 说："开始学习" 或 "开始今天的学习"
+# 4. 实验 1：为什么需要归一化？
+cd modules/01-foundation/01-normalization/experiments
+python exp1_gradient_vanishing.py
+
+# 5. 实验 2：为什么使用 RoPE 位置编码？
+cd ../../02-position-encoding/experiments
+python exp1_rope_basics.py
+
+# 6. 实验 3：Attention 如何工作？
+cd ../../03-attention/experiments
+python exp1_attention_basics.py
 ```
 
-就这么简单！
+> **提示**：学习模块中的实验只需要 CPU，无需 GPU。完整模型训练需要 NVIDIA GPU（推荐 3090 及以上）。
 
-## 它会做什么？
+**你将看到**：
+- 梯度消失的可视化
+- RoPE 旋转编码的原理
+- Attention 权重的计算过程
 
-- ✅ **自动检测**：识别 MiniMind 术语（RMSNorm, RoPE, Attention, LoRA, DPO...）
-- ✅ **自动记录**：在 `docs/` 维护三套笔记（学习日志、知识库、代码示例）
-- ✅ **自动提交**：生成简洁的中文 commit message 并推送到 Git
-- ✅ **完全静默**：专注学习对话，零打扰
+**下一步**：阅读 [ROADMAP.md](./ROADMAP.md) 选择你的学习路径
 
-## 示例
+---
+
+## 📚 学习路径
+
+根据时间和目标选择合适的路径：
+
+| 路径 | 时长 | 目标 | 链接 |
+|------|----------|------|------|
+| ⚡ **快速体验** | 30 分钟 | 理解核心设计选择 | [开始](./ROADMAP.md#-quick-experience-30-minutes) |
+| 📚 **系统学习** | 6 小时 | 掌握基础组件 | [开始](./ROADMAP.md#-systematic-learning-6-hours) |
+| 🎓 **深度精通** | 30+ 小时 | 从零训练模型 | [开始](./ROADMAP.md#-deep-mastery-30-hours) |
+
+详细路线图：[ROADMAP.md](./ROADMAP.md)
+
+---
+
+## 🧱 模块导航
+
+### 第一层：基础（基础组件）
+
+| 模块 | 核心问题 | 实验数 | 状态 |
+|--------|---------------|-------------|--------|
+| [01-normalization](modules/01-foundation/01-normalization) | 为什么归一化？Pre-LN vs Post-LN？ | 2 | ✅ 完成 |
+| [02-position-encoding](modules/01-foundation/02-position-encoding) | 为什么选择 RoPE？如何外推长度？ | 4 | 🟡 实验完成 |
+| [03-attention](modules/01-foundation/03-attention) | QKV 的直觉是什么？为什么多头？ | 3 | 🟡 实验完成 |
+| [04-feedforward](modules/01-foundation/04-feedforward) | FFN 存储什么知识？为什么扩张？ | 1 | 🟡 实验完成 |
+
+### 第二层：架构（架构组装）
+
+| 模块 | 核心问题 | 状态 |
+|--------|---------------|--------|
+| [01-residual-connection](modules/02-architecture/01-residual-connection) | 为什么残差连接？如何稳定梯度？ | 🔜 待开发 |
+| [02-transformer-block](modules/02-architecture/02-transformer-block) | 如何组装组件？为什么这个顺序？ | 🔜 待开发 |
+
+**图例**：
+- ✅ 完成：包含教学文档 + 实验代码 + 测验
+- 🟡 实验完成：有实验代码，文档待补充
+- 🔜 待开发：仅目录结构
+
+详细导航：[modules/README.md](modules/README.md)
+
+---
+
+## 🔬 实验特性
+
+### 1. 对比实验设计
+
+每个模块通过实验回答核心问题：
+
+**示例**：归一化模块
+
+| 配置 | 收敛？ | NaN 出现在步数 | 最终 Loss |
+|---------------|------------|-------------------|------------|
+| ❌ NoNorm | 否 | ~500 | NaN |
+| ⚠️ Post-LN | 是 | - | 3.5 |
+| ✅ Pre-LN + RMSNorm | 是 | - | 2.7 |
+
+**结论**：Pre-LN + RMSNorm 最稳定 → 现代 LLM 的标准选择
+
+---
+
+### 2. 渐进式学习
 
 ```
-你: 什么是 RMSNorm？
-
-AI: RMSNorm 是一种归一化方法...
-    [详细讲解]
-
-# 背后自动发生：
-✅ docs/learning_log.md 添加今日条目
-✅ docs/knowledge_base.md 添加 Q1
-✅ git commit -m "学习 RMSNorm 归一化原理"
-✅ git push
+实验 → 直觉 → 理论 → 代码
+  ↓         ↓         ↓        ↓
+10 分钟   20 分钟   30 分钟  10 分钟
 ```
 
-## 文件结构
+先运行实验建立直觉，再学习理论理解原理，最后阅读源码掌握实现。
+
+---
+
+### 3. 笔记本电脑可运行
+
+所有实验基于 **TinyShakespeare**（1MB）或合成数据：
+- ✅ 无需 GPU（CPU/MPS 均可）
+- ✅ 每个实验 < 10 分钟
+- ✅ 总数据 < 100 MB
+
+---
+
+## 📖 文档结构
+
+每个模块包含：
+
+```
+01-normalization/
+├── README.md           # 模块导航
+├── teaching.md         # 教学文档（Why/What/How 结构）
+├── code_guide.md       # 源码指南（链接到 MiniMind）
+├── quiz.md            # 自我评估问题
+└── experiments/        # 对比实验
+    ├── exp1_*.py
+    ├── exp2_*.py
+    └── results/        # 预期输出
+```
+
+**文档模板**（teaching.md）：
+1. **Why**：问题场景 + 直观理解
+2. **What**：数学定义 + 对比表格
+3. **How**：实验设计 + 预期结果
+
+---
+
+## 🛠️ 技术栈
+
+- **框架**：PyTorch 2.0+
+- **数据**：TinyShakespeare、TinyStories
+- **可视化**：Matplotlib、Seaborn
+- **原始项目**：[MiniMind](https://github.com/jingyaogong/minimind)
+
+---
+
+## 🤝 贡献
+
+欢迎贡献：
+- ✨ 新的对比实验
+- 📊 更好的可视化
+- 🌍 英文翻译
+- 🐛 Bug 修复
+
+**提交前请确保**：
+- [ ] 实验可以独立运行
+- [ ] 代码有足够的注释
+- [ ] 结果可复现（固定随机种子）
+- [ ] 遵循现有文件结构
+
+---
+
+## 📂 仓库结构
 
 ```
 minimind-notes/
-├── minimind-learning-skill/    # Skill 本身
-│   ├── SKILL.md               # 核心定义
-│   ├── templates/             # 笔记模板
-│   └── scripts/               # 验证工具
-├── init-for-learning.sh       # 初始化脚本
-├── init-for-learning.bat      # Windows 版本
-└── example-notes/             # 示例笔记（参考）
-
-# 使用后会创建：
-└── docs/                      # 你的学习笔记
-    ├── learning_log.md        # 按日期
-    ├── knowledge_base.md      # 按主题 (Q&A)
-    └── learning_materials/    # 代码示例
-```
-
-## 支持的 AI Agent
-
-- Claude Code (CLI)
-- VS Code + Claude 扩展
-- Cursor
-- Windsurf
-- 任何支持 Claude Skills 的环境
-
-## 配置（可选）
-
-创建 `.minimind-learning.json`：
-
-```json
-{
-  "auto_commit": true,
-  "auto_push": true,
-  "batch_delay": 5,
-  "notes_dir": "docs"
-}
-```
-
-## 问题排查
-
-**Skill 没激活？**
-```bash
-ls ~/.claude/skills/minimind-learning    # 检查是否安装
-# 对 AI 说："记录一下"                  # 显式触发
-```
-
-**Git 推送失败？**
-```bash
-git config user.name "Your Name"
-git config user.email "your@email.com"
-git push origin master                   # 手动推送
-```
-
-## 验证笔记
-
-```bash
-# 检查 Q 编号连续性
-python ~/.claude/skills/minimind-learning/scripts/validate_notes.py
-
-# 自动修复编号
-python ~/.claude/skills/minimind-learning/scripts/validate_notes.py --fix-numbering
-```
-
-## 查看示例
-
-```bash
-cd example-notes
-cat learning_log.md          # 作者的学习日志
-cat knowledge_base.md         # 知识库 (Q1-Q19)
-ls learning_materials/        # 代码示例
+├── modules/                    # 模块化教学（新架构）
+│   ├── common/                # 公共工具
+│   ├── 01-foundation/         # 基础组件
+│   └── 02-architecture/       # 架构组装
+│
+├── docs/                       # 个人学习记录
+│   ├── learning_log.md        # 学习日志
+│   ├── knowledge_base.md      # 知识库
+│   └── notes.md              # 索引
+│
+├── model/                      # MiniMind 原始代码
+├── trainer/                    # 训练脚本
+├── dataset/                    # 数据集
+│
+├── README.md                   # 本文件
+├── ROADMAP.md                  # 学习路线图
+└── CLAUDE.md                   # AI 助手指南
 ```
 
 ---
 
-**License**: MIT | **Author**: [@joyehuang](https://github.com/joyehuang) | **Based on**: [MiniMind](https://github.com/jingyaogong/minimind)
+## 📜 致谢
+
+本仓库基于以下项目：
+- [MiniMind](https://github.com/jingyaogong/minimind) - 核心代码和训练流程
+- 所有模块链接到 MiniMind 的真实实现
+
+特别感谢 [@jingyaogong](https://github.com/jingyaogong) 开源 MiniMind 项目！
+
+---
+
+## 🔗 相关资源
+
+### 在线网站
+- **[minimind.wiki](https://minimind.wiki)** - 在线访问完整文档和交互式内容
+
+### 论文
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - Transformer 原始论文
+- [RoFormer: RoPE](https://arxiv.org/abs/2104.09864) - 旋转位置嵌入
+- [RMSNorm](https://arxiv.org/abs/1910.07467) - 均方根层归一化
+
+### 博客
+- [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [The Annotated Transformer](http://nlp.seas.harvard.edu/annotated-transformer/)
+
+### 视频
+- [Andrej Karpathy - Let's build GPT](https://www.youtube.com/watch?v=kCc8FmEb1nY)
+
+---
+
+## 📞 联系方式
+
+- Issue 反馈：[GitHub Issues](https://github.com/joyehuang/minimind-notes/issues)
+- 原始项目：[MiniMind](https://github.com/jingyaogong/minimind)
+
+---
+
+## 📄 许可证
+
+MIT License - 详见 [LICENSE](LICENSE)
+
+---
+
+<div align="center">
+
+**⭐ 如果这个项目对你有帮助，请给一个 Star！**
+
+**🌐 访问在线网站：** [https://minimind.wiki](https://minimind.wiki)
+
+**准备好开始了吗？** [开始你的学习之旅](./ROADMAP.md) 🚀
+
+</div>
