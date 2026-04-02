@@ -171,7 +171,7 @@ export const createTier2Modules = (localePath: string, isEn: boolean): ModuleDat
           title: '残差连接',
           question: '深层网络训练的救星？还是另有玄机？',
           status: 'planned',
-          link: withLocale('/modules/02-architecture/01-residual-connection/')
+          link: withLocale('/modules/02-architecture/')
         },
         {
           id: '02-transformer-block',
@@ -179,7 +179,7 @@ export const createTier2Modules = (localePath: string, isEn: boolean): ModuleDat
           title: 'Transformer Block',
           question: '组件组装的黄金顺序 — 为什么是这一个？',
           status: 'planned',
-          link: withLocale('/modules/02-architecture/02-transformer-block/')
+          link: withLocale('/modules/02-architecture/')
         }
       ]
 }

@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Start with a module
-      link: /modules/01-foundation/01-normalization/teaching
+      link: /en/modules/01-foundation/01-normalization/teaching
     - theme: alt
       text: Quick Start (30 min)
       link: /en/docs/guide/quick-start
@@ -28,35 +28,35 @@ hero:
 
 <div class="module-cards">
 
-#### [01 Normalization](/modules/01-foundation/01-normalization/teaching)
+#### [01 Normalization](/en/modules/01-foundation/01-normalization/teaching)
 **Focus**: Pre-LN vs Post-LN, why normalization matters
 **Time**: 1 hour | **Status**: Complete
 
-[Start learning →](/modules/01-foundation/01-normalization/teaching)
+[Start learning →](/en/modules/01-foundation/01-normalization/teaching)
 
 ---
 
-#### [02 Position Encoding](/modules/01-foundation/02-position-encoding/teaching)
+#### [02 Position Encoding](/en/modules/01-foundation/02-position-encoding/teaching)
 **Focus**: RoPE and position encoding choices
 **Time**: 1.5 hours | **Status**: Complete
 
-[Start learning →](/modules/01-foundation/02-position-encoding/teaching)
+[Start learning →](/en/modules/01-foundation/02-position-encoding/teaching)
 
 ---
 
-#### [03 Attention](/modules/01-foundation/03-attention/teaching)
+#### [03 Attention](/en/modules/01-foundation/03-attention/teaching)
 **Focus**: Q/K/V, multi-head attention
 **Time**: 2 hours | **Status**: Complete
 
-[Start learning →](/modules/01-foundation/03-attention/teaching)
+[Start learning →](/en/modules/01-foundation/03-attention/teaching)
 
 ---
 
-#### [04 FeedForward](/modules/01-foundation/04-feedforward/teaching)
+#### [04 FeedForward](/en/modules/01-foundation/04-feedforward/teaching)
 **Focus**: FFN design and SwiGLU
 **Time**: 1 hour | **Status**: Complete
 
-[Start learning →](/modules/01-foundation/04-feedforward/teaching)
+[Start learning →](/en/modules/01-foundation/04-feedforward/teaching)
 
 </div>
 
@@ -64,11 +64,11 @@ hero:
 
 <div class="module-cards">
 
-#### [Transformer Block Assembly](/modules/02-architecture/)
+#### [Transformer Block Assembly](/en/modules/02-architecture/)
 **Focus**: assemble components into a Transformer block
 **Time**: 2.5 hours | **Status**: In progress
 
-[Open architecture overview →](/modules/02-architecture/)
+[Open architecture overview →](/en/modules/02-architecture/)
 
 </div>
 

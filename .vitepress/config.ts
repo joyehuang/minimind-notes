@@ -183,13 +183,13 @@ export default defineConfig({
       head: zhHead,
       themeConfig: {
         nav: [
-          { text: '文档', link: '/docs/' },
+          { text: '文档', link: '/en/docs/' },
           {
             text: '学习路线',
             items: [
-              { text: '快速体验 (30分钟)', link: '/docs/guide/quick-start' },
-              { text: '系统学习 (6小时)', link: '/docs/guide/systematic' },
-              { text: '深度掌握 (30+小时)', link: '/docs/guide/mastery' },
+              { text: '快速体验 (30分钟)', link: '/en/docs/guide/quick-start' },
+              { text: '系统学习 (6小时)', link: '/en/docs/guide/systematic' },
+              { text: '深度掌握 (30+小时)', link: '/en/docs/guide/mastery' },
               { text: 'Roadmap', link: '/ROADMAP' }
             ]
           },
@@ -211,17 +211,6 @@ export default defineConfig({
           }
         ],
         sidebar: {
-          '/docs/guide/': [
-            {
-              text: '学习路线',
-              items: [
-                { text: '快速体验', link: '/docs/guide/quick-start' },
-                { text: '系统学习', link: '/docs/guide/systematic' },
-                { text: '深度掌握', link: '/docs/guide/mastery' },
-                { text: 'Roadmap', link: '/ROADMAP' }
-              ]
-            }
-          ],
           '/modules/': [
             {
               text: '模块总览',
@@ -250,8 +239,8 @@ export default defineConfig({
             {
               text: '开始',
               items: [
-                { text: '文档', link: '/docs/' },
-                { text: '快速体验', link: '/docs/guide/quick-start' }
+                { text: '文档', link: '/en/docs/' },
+                { text: '快速体验', link: '/en/docs/guide/quick-start' }
               ]
             },
             {
