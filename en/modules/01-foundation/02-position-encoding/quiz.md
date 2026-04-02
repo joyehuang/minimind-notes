@@ -248,4 +248,4 @@ Want to go deeper? Try:
 
 ---
 
-**Next**: go to [03. Attention](../../03-attention) to learn attention mechanisms.
+**Next**: go to [03. Attention](../03-attention/) to learn attention mechanisms.

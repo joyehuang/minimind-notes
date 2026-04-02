@@ -251,4 +251,4 @@ const quizData = [
 
 ---
 
-**下一步**：前往 [02. Position Encoding](../../02-position-encoding) 学习位置编码！
+**下一步**：前往 [02. Position Encoding](../02-position-encoding/) 学习位置编码！

@@ -213,4 +213,4 @@ If you are not fully confident, review [teaching.md](./teaching.md) and rerun th
 
 ## 🎓 Next step
 
-Continue to [02. Position Encoding](../../02-position-encoding).
+Continue to [02. Position Encoding](../02-position-encoding/).

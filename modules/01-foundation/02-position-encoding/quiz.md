@@ -248,4 +248,4 @@ $$= q \cdot R((n-m)\theta) \cdot k$$
 
 ---
 
-**下一步**：前往 [03. Attention](../../03-attention) 学习注意力机制！
+**下一步**：前往 [03. Attention](../03-attention/) 学习注意力机制！

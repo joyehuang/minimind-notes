@@ -36,8 +36,8 @@ keywords: LLM训练教程, Transformer教程, 模块化教学, 大模型训练, 
 
 | 模块 | 核心问题 | 预计时长 | 状态 |
 |------|---------|---------|------|
-| [01-residual-connection](./02-architecture/01-residual-connection) | 为什么需要残差连接？如何稳定梯度流？ | 1 小时 | 📋 |
-| [02-transformer-block](./02-architecture/02-transformer-block) | 如何编排组件顺序？为什么是这个顺序？ | 1.5 小时 | 📋 |
+| [01-residual-connection](./02-architecture/) | 为什么需要残差连接？如何稳定梯度流？ | 1 小时 | 📋 |
+| [02-transformer-block](./02-architecture/) | 如何编排组件顺序？为什么是这个顺序？ | 1.5 小时 | 📋 |
 
 **完成标准**：
 - ✅ 理解残差连接的作用
@@ -71,7 +71,7 @@ _（后续扩展）_
 pip install torch requests datasets matplotlib numpy
 ```
 
-详见：[环境配置指南](../docs/guide/environment-setup.md)
+详见：[快速开始指南](/en/docs/guide/quick-start)
 
 ---
 
@@ -257,7 +257,7 @@ from modules.common.visualization import (
 
 ## 📞 相关文档
 
-- 📝 [个人学习日志](../docs/learning_log.md)
-- 📚 [知识库](../docs/knowledge_base.md)
+- 📝 [个人学习日志](../learning_log.md)
+- 📚 [知识库](../knowledge_base.md)
 - 🗺️ [学习路线图](../ROADMAP.md)
 - 🏠 [项目主页](../README.md)

@@ -168,8 +168,8 @@ Detailed roadmap: [ROADMAP.md](./ROADMAP.md)
 
 | Module | Core Question | Status |
 |--------|---------------|--------|
-| [01-residual-connection](modules/02-architecture/01-residual-connection) | Why residual connections? How to stabilize gradients? | 🔜 To Be Developed |
-| [02-transformer-block](modules/02-architecture/02-transformer-block) | How to assemble components? Why this order? | 🔜 To Be Developed |
+| [01-residual-connection](modules/02-architecture/) | Why residual connections? How to stabilize gradients? | 🔜 To Be Developed |
+| [02-transformer-block](modules/02-architecture/) | How to assemble components? Why this order? | 🔜 To Be Developed |
 
 **Legend**:
 - ✅ Complete: Includes teaching docs + experiment code + quizzes

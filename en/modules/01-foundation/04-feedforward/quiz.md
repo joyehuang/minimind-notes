@@ -408,4 +408,4 @@ Want to go deeper? Try:
 
 ---
 
-**Next**: go to [05. Residual Connection](../../02-architecture/05-residual-connection) to learn residual connections.
+**Next**: go to [05. Residual Connection](../../02-architecture/01-residual-connection/) to learn residual connections.

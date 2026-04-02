@@ -212,7 +212,7 @@ What to do:
 #### Stage 2: Architecture - 0.5 hours
 
 **What to do**:
-- 📖 Read [02-architecture/README.md](modules/02-architecture/README.md) (30 min)
+- 📖 Read [02-architecture](modules/02-architecture/) (30 min)
 - Understand how components assemble into a Transformer block
 
 **Completion criteria**:

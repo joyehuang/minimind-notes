@@ -71,7 +71,7 @@ Some utility code uses Python 3.10+ union type syntax (e.g., `str | list`). Earl
 pip install torch requests datasets matplotlib numpy
 ```
 
-See: [Environment Setup Guide](../docs/guide/environment-setup.md)
+See: [Quick Start Guide](/en/docs/guide/quick-start)
 
 ---
 
@@ -221,13 +221,13 @@ from modules.common.visualization import (
 )
 ```
 
-See docstrings in each file or [`modules/common/README.md`](../modules/common/README.md) for details.
+See docstrings in each file or [`modules/common/README.md`](/modules/common/) for details.
 
 #### ⚠️ Migration Notice
 
 **2026-02**: `datasets.py` has been renamed to `data_sources.py` to avoid naming conflict with HuggingFace datasets library.
 
-For detailed migration guide, see [modules/common/README.md](../modules/common/README.md) or [PR #20](https://github.com/joyehuang/minimind-notes/pull/20).
+For detailed migration guide, see [modules/common/README.md](/modules/common/) or [PR #20](https://github.com/joyehuang/minimind-notes/pull/20).
 
 ---
 
@@ -257,7 +257,7 @@ All experiments link to real implementations in the upstream repository to help 
 
 ## 📞 Related documents
 
-- 📝 [Personal learning log](../docs/learning_log.md)
-- 📚 [Knowledge base](../docs/knowledge_base.md)
-- 🗺️ [Learning roadmap](../ROADMAP.md)
-- 🏠 [Project home](../README.md)
+- 📝 [Personal learning log](/learning_log)
+- 📚 [Knowledge base](/knowledge_base)
+- 🗺️ [Learning roadmap](/en/ROADMAP)
+- 🏠 [Project home](/)

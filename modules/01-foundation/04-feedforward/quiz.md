@@ -408,4 +408,4 @@ def forward(self, x):
 
 ---
 
-**下一步**：前往 [05. Residual Connection](../../02-architecture/05-residual-connection) 学习残差连接！
+**下一步**：前往 [05. Residual Connection](../../02-architecture/) 学习残差连接！

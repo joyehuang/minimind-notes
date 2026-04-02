@@ -166,8 +166,8 @@ python exp1_attention_basics.py
 
 | 模块 | 核心问题 | 状态 |
 |--------|---------------|--------|
-| [01-residual-connection](modules/02-architecture/01-residual-connection) | 为什么残差连接？如何稳定梯度？ | 🔜 待开发 |
-| [02-transformer-block](modules/02-architecture/02-transformer-block) | 如何组装组件？为什么这个顺序？ | 🔜 待开发 |
+| [01-residual-connection](modules/02-architecture/) | 为什么残差连接？如何稳定梯度？ | 🔜 待开发 |
+| [02-transformer-block](modules/02-architecture/) | 如何组装组件？为什么这个顺序？ | 🔜 待开发 |
 
 **图例**：
 - ✅ 完成：包含教学文档 + 实验代码 + 测验

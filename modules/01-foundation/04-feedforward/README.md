@@ -155,4 +155,4 @@ x → RMSNorm → Attention → + → RMSNorm → FeedForward → +
 ## 🎓 下一步
 
 完成本模块后，前往：
-👉 [05. Residual Connection（残差连接）](../../02-architecture/05-residual-connection)
+👉 [05. Residual Connection（残差连接）](../../02-architecture/)
