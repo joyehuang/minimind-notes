@@ -71,7 +71,7 @@ _（后续扩展）_
 pip install torch requests datasets matplotlib numpy
 ```
 
-详见：[快速开始指南](/en/docs/guide/quick-start)
+详见：[快速开始指南](/docs/guide/quick-start)
 
 ---
 
