@@ -152,7 +152,7 @@ const steps = computed(() =>
           description: '实验验证深层网络训练的梯度流问题，见证残差连接的威力',
           duration: '5 分钟',
           module: '残差连接模块',
-          link: withLocale('/modules/02-architecture/01-residual-connection/'),
+          link: withLocale('/modules/02-architecture/'),
           completed: false
         }
       ]
