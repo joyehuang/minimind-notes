@@ -215,7 +215,7 @@ cd ../04-feedforward
 #### 阶段 2：Architecture（架构组装）- 0.5 小时
 
 **学习内容**：
-- 📖 阅读 [02-architecture/README.md](modules/02-architecture/README.md)（30 分钟）
+- 📖 阅读 [架构组装模块](modules/02-architecture/)（30 分钟）
 - 理解如何将组件组装成 Transformer Block
 
 **完成标准**：

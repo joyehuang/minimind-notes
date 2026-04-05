@@ -177,6 +177,7 @@ export default defineConfig({
   locales: {
     root: {
       label: '简体中文',
+      link: '/',
       lang: 'zh-CN',
       title: 'minimind从零理解llm训练',
       description: '深入理解 LLM 训练的每个设计选择',
@@ -327,6 +328,7 @@ export default defineConfig({
           label: '本页目录'
         },
         returnToTopLabel: '返回顶部',
+        langMenuLabel: '切换语言',
         sidebarMenuLabel: '菜单',
         darkModeSwitchLabel: '主题',
         lightModeSwitchTitle: '切换到浅色模式',
@@ -335,6 +337,7 @@ export default defineConfig({
     },
     en: {
       label: 'English',
+      link: '/en/',
       lang: 'en-US',
       title: 'MiniMind LLM Training',
       description: 'Principle-first experimental lab for understanding LLM training',
@@ -455,6 +458,7 @@ export default defineConfig({
           label: 'On this page'
         },
         returnToTopLabel: 'Back to top',
+        langMenuLabel: 'Language',
         sidebarMenuLabel: 'Menu',
         darkModeSwitchLabel: 'Theme',
         lightModeSwitchTitle: 'Switch to light theme',
