@@ -37,7 +37,7 @@ from typing import List, Optional
 import json
 
 # 数据缓存目录（按需创建，不在模块导入时创建）
-DATA_DIR = Path(__file__).parent / 'data'
+DATA_DIR = Path(__file__).parent.parent.parent / 'data' # 将 data 放在项目根目录下
 
 
 def get_experiment_data(
@@ -246,6 +246,7 @@ if __name__ == '__main__':
 
     if args.download_all:
         download_all_datasets()
+        import sys; sys.exit(0)
     else:
         data = get_experiment_data(args.dataset)
         if isinstance(data, str):

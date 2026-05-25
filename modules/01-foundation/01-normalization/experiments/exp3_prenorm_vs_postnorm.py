@@ -22,6 +22,9 @@ sys.path.append('../../..')
 
 import torch
 import torch.nn as nn
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = ['Heiti SC', 'STHeiti', 'Arial Unicode MS']
+matplotlib.rcParams['axes.unicode_minus'] = False
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
@@ -382,7 +385,7 @@ def print_summary(results):
         else:
             print(f"  ✅ 训练稳定")
             print(f"  最终损失: {data['final_loss']:.4f}")
-            print(f"  稳定性 (std): {data['stability']:.4f}")
+            print(f"  损失波动 (最后100步 std): {data['stability']:.4f}")
 
     print("\n" + "="*70)
     print("🎯 关键发现")
@@ -401,9 +404,11 @@ def print_summary(results):
    - Pre-LN: 可以使用较大的学习率（1e-3），训练更快
    - Post-LN: 需要较小的学习率（1e-4），训练较慢
 
-4. 稳定性对比:
-   - Pre-LN: 损失曲线更平滑，标准差更小
-   - Post-LN: 损失曲线波动较大，尤其是深层网络
+4. 损失波动对比:
+   注：std 受学习率影响（LR 越高，损失波动越大），不直接代表架构稳定性
+   - 真正的稳定性指标：是否 NaN、能否用更大学习率训练
+   - Pre-LN 用 1e-3 学习率正常训练 → 架构稳定（std 稍高反而是训练活跃的标志）
+   - Post-LN 需要降到 1e-4 才能训练 → 架构对学习率敏感
 
 💡 结论：
    - Pre-LN 在深层网络中具有明显优势

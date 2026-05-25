@@ -63,7 +63,7 @@ python exp2_norm_comparison.py --quick
 
 **关键文件**：
 - `model/model_minimind.py:95-105` - RMSNorm 实现
-- `model/model_minimind.py:359-380` - TransformerBlock 中的使用
+- `model/model_minimind.py:178-194` - MiniMindBlock 中的使用
 
 ---
 

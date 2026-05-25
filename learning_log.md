@@ -219,7 +219,7 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 - 主要实现：`model/model_minimind.py`（471 行）
 - 学习材料：`learning_materials/`（7 个示例程序）
 - RMSNorm 实现：`model/model_minimind.py:95-105`
-- RoPE 实现：`model/model_minimind.py:108-137`
+- RoPE 实现：`model/model_minimind.py:62-93`（precompute_freqs_cis + apply_rotary_pos_emb）
 
 ### 学习辅助材料
 
@@ -363,7 +363,7 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
   - MiniMind 使用 Pre-Norm（归一化在子层之前）
   - Pre-Norm 更稳定，适合深层网络（>12层）
   - 残差路径更"干净"（不被 Norm 打断）
-- **代码位置**：model/model_minimind.py:359-380
+- **代码位置**：model/model_minimind.py:178-194
 
 **2025-11-10：学习路径的思考**
 - **关键问题**：原仓库能学到这些知识吗？
@@ -486,8 +486,72 @@ safetensors_rust.SafetensorError: Error while deserializing header: header too l
 
 ---
 
-**最后更新**：2026-01-18
-**学习进度**：Tier 1 完成 ✅ + 完整架构理解 ✅
+### 2026-05-25: 理解残差连接 + 创建 Tier 2 教学模块
+
+#### ✅ 完成事项
+- [x] 深入理解残差连接的核心公式 $y = F(x) + x$
+- [x] 理解梯度公式中 +1 如何解决梯度消失
+- [x] 理解"残差"的含义：学习变化量而非绝对值
+- [x] 理解 Pre-Norm vs Post-Norm 的区别
+- [x] 理解 Transformer 中双残差结构的设计原理
+- [x] 创建 Tire 2 残差连接教学模块（modules/02-architecture/01-residual-connection/）
+- [x] 编写三个实验：训练对比 / 梯度流可视化 / 深度影响
+- [x] 运行验证全部实验通过
+- [x] 创建四份文档：teaching.md / code_guide.md / quiz.md / README.md
+- [x] 更新知识库和学习日志
+
+#### 💭 个人思考
+- **收获**:
+  - 残差连接的数学本质非常简单（$y = F(x) + x$），但效果极其强大
+  - 梯度公式中的 $+1$ 项是最关键的理解 — 它保证了梯度高速路畅通无阻
+  - "残差"这个名字很精确 — 网络学的是"需要改多少"，不是"全重新做"
+  - 实验 3 最震撼：20 层无残差直接 NaN 崩溃，20 层有残差稳定训练，差距巨大
+
+- **认知升级**:
+  - 以前只知道残差连接"有用"，现在理解为什么有用
+  - LLM 动辄几十上百层，没有残差连接根本不可能训练
+  - MiniMind 8 层 Block，每个 Block 2 个残差 = 16 条梯度高速路
+
+- **模块设计心得**:
+  - 实验是核心 — 可视化结果比文字解释更直观
+  - 梯度流实验（exp2）最重要 — 让学习者亲眼看到数值差距
+  - 三个实验从"对比"→"可视化"→"scaling"递进，逻辑清晰
+
+#### 下一步
+- 继续创建 02-architecture 的 Transformer Block 模块
+- 学习完整的 Block 组装和顺序设计原理
+
+---
+
+### 2026-05-25 续：深度解析 MiniMindBlock 源码实现
+
+#### ✅ 完成事项
+- [x] 逐行分析 ~/minimind/model_minimind.py 中 MiniMindBlock 源码
+- [x] 深入理解 Block 的内部调用链: Norm → Attention → 残差 → Norm → FFN → 残差
+- [x] 发现新版 MiniMind 的 QK-Norm 特性（旧版没有）
+- [x] 理解 intermediate_size = ceil(hidden × π / 64) × 64 的设计
+- [x] 更新知识库（新 Q&A 条目 Q23-Q25）
+
+#### 💭 个人思考
+- **收获**:
+  - Block 的核心设计模式是"调度器"——只管编排，不干计算的活
+  - 新版 QK-Norm 是关键优化，防止 attention logits 过大导致 softmax 饱和
+  - `intermediate_size` 的 π 倍设计比 8/3 更激进，反映了现代 LLM 的趋势
+  - position_embeddings 所有 Block 共用一份，节省内存
+
+- **与旧版的差异**:
+  - 旧版注重教育清晰度，新版更贴近工业实践
+  - QK-Norm 是 DeepSeek-V2/V3 引入的技术
+  - MoE 从 shared+routed 专家架构简化为纯 routed
+
+#### 下一步
+- 继续创建 02-architecture 的 Transformer Block 模块
+- 学习完整的 Block 组装和顺序设计原理
+
+---
+
+**最后更新**：2026-05-25
+**学习进度**：Tier 1 完成 ✅ + 完整架构理解 ✅ + Tier 2 开始 🚧
 
 **历史总结**：
 - 2025-11-06：环境搭建 + 首次运行

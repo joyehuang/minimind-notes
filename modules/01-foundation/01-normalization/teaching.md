@@ -329,7 +329,7 @@ def forward(self, x):
 
 ### 代码实现
 - MiniMind: `model/model_minimind.py:95-105` - RMSNorm 实现
-- MiniMind: `model/model_minimind.py:359-380` - TransformerBlock 中的使用
+- MiniMind: `model/model_minimind.py:178-194` - MiniMindBlock 中的使用
 
 ### 自测题
 - 📝 [quiz.md](./quiz.md) - 完成 5 道选择题巩固理解

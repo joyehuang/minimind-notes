@@ -63,7 +63,7 @@ Read real code:
 
 **Key files**:
 - `model/model_minimind.py:95-105` - RMSNorm implementation
-- `model/model_minimind.py:359-380` - usage inside TransformerBlock
+- `model/model_minimind.py:178-194` - usage inside MiniMindBlock
 
 ---
 

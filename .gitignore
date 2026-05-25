@@ -17,11 +17,15 @@ env/
 # Datasets (too large for git)
 dataset/*.jsonl
 dataset/*.txt
+data/
 
 # Model directories
 MiniMind2/
 out/
 checkpoints/
+
+# Experiment outputs
+modules/**/experiments/results/
 
 # IDE
 .vscode/

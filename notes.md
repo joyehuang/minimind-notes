@@ -73,12 +73,13 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 - **2025-11-10**: [Attention + FeedForward + Transformer Block](./learning_log.md#2025-11-10-深入理解-attention-注意力机制)
 - **2025-12-27**: [确认 Tier 1 完成](./learning_log.md#2025-12-27完成-tier-1-基础组件学习)
 - **2026-01-18**: [深入理解完整模型架构](./learning_log.md#2026-01-18深入理解完整模型架构)
+- **2026-05-25**: [理解残差连接 + Tier 2 教学模块](./learning_log.md#2026-05-25-理解残差连接--创建-tier-2-教学模块)
 
 ---
 
 ## 🎯 当前学习进度
 
-**阶段**：Tier 1 完成 + 完整架构理解
+**阶段**：Tier 1 完成 + Tier 2 进行中
 
 **Tier 1 - Foundation（基础组件）**：✅ 100%
 - ✅ RMSNorm（归一化）
@@ -86,6 +87,10 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 - ✅ Attention（注意力机制）
 - ✅ FeedForward（前馈网络）
 - ✅ Transformer Block（组装）
+
+**Tier 2 - Architecture（架构组装）**：🚧 进行中
+- ✅ 01. Residual Connection（残差连接）
+- 📋 02. Transformer Block（待创建）
 
 **完整模型架构**：✅ 100%
 - ✅ MiniMindForCausalLM（接口层）
@@ -97,9 +102,10 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 - ✅ 完整数据流
 
 **下一步**：
+- 创建 02. Transformer Block 教学模块
+- 理解 Pre-Norm Block 组件编排顺序
 - 自回归生成机制
 - KV Cache 推理优化
-- 训练流程（可选）
 
 ---
 
@@ -165,5 +171,5 @@ python learning_materials/rope_basics.py
 
 ---
 
-**最后更新**：2026-01-18
-**学习进度**：Tier 1 完成 ✅ + 完整模型架构理解 ✅
+**最后更新**：2026-05-25
+**学习进度**：Tier 1 完成 ✅ + Tier 2 开始 🚧

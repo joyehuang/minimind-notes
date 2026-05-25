@@ -51,8 +51,14 @@ class SimplifiedAttention(nn.Module):
         """
         batch_size, seq_len, _ = x.shape
 
-        # 步骤 1: 投影到 Q, K, V
-        # TODO(human)
+        # 步骤 1: 投影到 Q, K, V，并 reshape 为多头格式
+        xq = self.q_proj(x).view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
+        xk = self.k_proj(x).view(batch_size, seq_len, self.num_kv_heads, self.head_dim).transpose(1, 2)
+        xv = self.v_proj(x).view(batch_size, seq_len, self.num_kv_heads, self.head_dim).transpose(1, 2)
+        # GQA: 复制 K/V 头以匹配 Q 头数
+        if self.n_rep > 1:
+            xk = xk[:, :, None, :, :].expand(-1, -1, self.n_rep, -1, -1).reshape(batch_size, self.num_heads, seq_len, self.head_dim)
+            xv = xv[:, :, None, :, :].expand(-1, -1, self.n_rep, -1, -1).reshape(batch_size, self.num_heads, seq_len, self.head_dim)
 
         print(f"\n" + "="*60)
         print("📊 Attention 计算流程")

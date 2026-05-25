@@ -28,6 +28,9 @@
 import torch
 import random
 import numpy as np
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = ['Heiti SC', 'STHeiti', 'Arial Unicode MS', 'DejaVu Sans']
+matplotlib.rcParams['axes.unicode_minus'] = False
 import matplotlib.pyplot as plt
 import json
 from pathlib import Path

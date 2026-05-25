@@ -254,7 +254,7 @@ Order: **Norm → Compute → Residual**.
 
 ### Code references
 - MiniMind: `model/model_minimind.py:95-105` (RMSNorm)
-- MiniMind: `model/model_minimind.py:359-380` (TransformerBlock)
+- MiniMind: `model/model_minimind.py:178-194` (MiniMindBlock)
 
 ### Quiz
 - [quiz.md](./quiz.md) - 5 self-check questions

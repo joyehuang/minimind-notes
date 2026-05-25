@@ -29,10 +29,10 @@ After this module, you will be able to:
 cd experiments
 
 # Exp 1: prove Attention is permutation-invariant
-python exp1_why_position.py
+python exp1_rope_basics.py
 
-# Exp 2: RoPE basics
-python exp2_rope_basics.py --quick
+# Exp 2: multi-frequency mechanism
+python exp2_multi_frequency.py
 ```
 
 ---
@@ -41,9 +41,9 @@ python exp2_rope_basics.py --quick
 
 | Experiment | Purpose | Time | Data |
 |------|------|------|------|
-| exp1_why_position.py | Show why position encoding is needed | 30 sec | synthetic |
-| exp2_rope_basics.py | RoPE core idea | 2 min | synthetic |
-| exp3_multi_frequency.py | Multi-frequency mechanism | 2 min | synthetic |
+| exp1_rope_basics.py | Show why position encoding is needed | 30 sec | synthetic |
+| exp2_multi_frequency.py | Multi-frequency mechanism | 2 min | synthetic |
+| exp3_why_multi_frequency.py | Why multi-frequency | 2 min | synthetic |
 | exp4_rope_explained.py | Full implementation (optional) | 5 min | synthetic |
 
 ---

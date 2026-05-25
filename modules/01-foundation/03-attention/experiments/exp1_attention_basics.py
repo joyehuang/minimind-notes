@@ -166,7 +166,13 @@ Attention 如何解决这个问题？
     for name, vec in zip(word_names, words):
         print(f"  {name:6s}: {vec.numpy()}")
 
-    # TODO(human)
+    # 计算注意力
+    Q = words  # Query
+    K = words  # Key
+    V = words  # Value
+
+    scores = Q @ K.T  # [3, 3]
+    attention_weights = F.softmax(scores, dim=-1)
 
     print("\n" + "="*70)
     print("观察:")

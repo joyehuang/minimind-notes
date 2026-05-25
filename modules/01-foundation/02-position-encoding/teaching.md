@@ -189,7 +189,7 @@ $$\mathbf{q}_m \cdot \mathbf{k}_n = f(\mathbf{q}, \mathbf{k}, m-n)$$
 
 **运行**：
 ```bash
-python experiments/exp1_why_position.py
+python experiments/exp1_rope_basics.py
 ```
 
 **预期结果**：

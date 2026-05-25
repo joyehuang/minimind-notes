@@ -188,7 +188,7 @@ It depends only on the **relative distance** $m-n$, not absolute positions $m$ o
 
 **Run**:
 ```bash
-python experiments/exp1_why_position.py
+python experiments/exp1_rope_basics.py
 ```
 
 **Expected**:

@@ -284,7 +284,9 @@ def summary():
 5️⃣  在 MiniMind 中：
     - 每个 Attention 计算前都会应用 RoPE
     - 旋转频率预先计算好（freqs_cos, freqs_sin）
-    - 代码位置: model/model_minimind.py:108-137
+    - precompute_freqs_cis: model/model_minimind.py:62-78
+    - apply_rotary_pos_emb: model/model_minimind.py:80-93
+    - MiniMindBlock 中调用: model/model_minimind.py:119, 204-207
     """)
 
     print("="*70)

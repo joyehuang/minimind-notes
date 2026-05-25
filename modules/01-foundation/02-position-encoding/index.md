@@ -29,10 +29,10 @@ keywords: 位置编码, Position Encoding, RoPE, 旋转位置编码, Transformer
 cd experiments
 
 # 实验 1：证明 Attention 的排列不变性
-python exp1_why_position.py
+python exp1_rope_basics.py
 
-# 实验 2：RoPE 基础原理
-python exp2_rope_basics.py --quick
+# 实验 2：多频率机制
+python exp2_multi_frequency.py
 ```
 
 ---
@@ -41,9 +41,9 @@ python exp2_rope_basics.py --quick
 
 | 实验 | 目的 | 时间 | 数据 |
 |------|------|------|------|
-| exp1_why_position.py | 证明位置编码的必要性 | 30秒 | 合成 |
-| exp2_rope_basics.py | RoPE 核心原理 | 2分钟 | 合成 |
-| exp3_multi_frequency.py | 多频率机制 | 2分钟 | 合成 |
+| exp1_rope_basics.py | 证明位置编码的必要性 | 30秒 | 合成 |
+| exp2_multi_frequency.py | 多频率机制 | 2分钟 | 合成 |
+| exp3_why_multi_frequency.py | 为什么需要多频率 | 2分钟 | 合成 |
 | exp4_rope_explained.py | 完整实现（可选） | 5分钟 | 合成 |
 
 ---

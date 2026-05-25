@@ -16,6 +16,9 @@ sys.path.append('../../..')  # 添加项目根目录到路径
 
 import torch
 import torch.nn as nn
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = ['Heiti SC', 'STHeiti', 'Arial Unicode MS']
+matplotlib.rcParams['axes.unicode_minus'] = False
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
@@ -49,7 +52,7 @@ def run_experiment():
 
     # 设置参数
     hidden_dim = 512
-    num_layers = 10
+    num_layers = 20
     torch.manual_seed(42)  # 可复现
 
     # 初始输入

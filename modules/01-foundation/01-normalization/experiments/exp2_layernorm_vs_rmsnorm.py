@@ -17,6 +17,9 @@ sys.path.append('../../..')
 import torch
 import torch.nn as nn
 import time
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = ['Heiti SC', 'STHeiti', 'Arial Unicode MS']
+matplotlib.rcParams['axes.unicode_minus'] = False
 import matplotlib.pyplot as plt
 from pathlib import Path
 

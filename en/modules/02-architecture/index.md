@@ -178,7 +178,7 @@ You will learn how to train these models:
 - [On Layer Normalization in the Transformer Architecture](https://arxiv.org/abs/2002.04745) - Pre-LN vs Post-LN
 
 ### Code references
-- MiniMind: `model/model_minimind.py:359-380` (TransformerBlock)
+- MiniMind: `model/model_minimind.py:178-194` (MiniMindBlock)
 - MiniMind: `model/model_minimind.py:430-520` (full model)
 
 ### Visualization
