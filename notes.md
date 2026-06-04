@@ -73,6 +73,7 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 - **2025-11-10**: [Attention + FeedForward + Transformer Block](./learning_log.md#2025-11-10-深入理解-attention-注意力机制)
 - **2025-12-27**: [确认 Tier 1 完成](./learning_log.md#2025-12-27完成-tier-1-基础组件学习)
 - **2026-01-18**: [深入理解完整模型架构](./learning_log.md#2026-01-18深入理解完整模型架构)
+- **2026-06-04**: [补齐网站 Architecture 模块](./learning_log.md#2026-06-04补齐网站-architecture-模块)
 
 ---
 
@@ -95,6 +96,11 @@ keywords: LLM学习笔记, 学习笔记索引, MiniMind笔记, Transformer学习
 - ✅ 输出层（lm_head）
 - ✅ 权重共享（Weight Tying）
 - ✅ 完整数据流
+
+**网站模块化教学**：
+- ✅ Tier 1 基础组件
+- ✅ 02-architecture / 01-residual-connection
+- ✅ 02-architecture / 02-transformer-block
 
 **下一步**：
 - 自回归生成机制
@@ -165,5 +171,5 @@ python learning_materials/rope_basics.py
 
 ---
 
-**最后更新**：2026-01-18
-**学习进度**：Tier 1 完成 ✅ + 完整模型架构理解 ✅
+**最后更新**：2026-06-04
+**学习进度**：Tier 1 完成 ✅ + 完整模型架构理解 ✅ + 网站 Architecture 模块完成 ✅

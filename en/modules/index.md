@@ -36,8 +36,8 @@ Core question: **How do we assemble components into a full Transformer?**
 
 | Module | Core question | Time | Status |
 |------|---------|---------|------|
-| [01-residual-connection](/en/modules/02-architecture/01-residual-connection) | Why residuals? How do they stabilize gradients? | 1 hour | 📋 |
-| [02-transformer-block](/en/modules/02-architecture/02-transformer-block) | Why this assembly order? | 1.5 hours | 📋 |
+| [01-residual-connection](/en/modules/02-architecture/01-residual-connection) | Why residuals? How do they stabilize gradients? | 1 hour | ✅ |
+| [02-transformer-block](/en/modules/02-architecture/02-transformer-block) | Why this assembly order? | 1.5 hours | ✅ |
 
 **Completion criteria**:
 - ✅ Understand residual connections
@@ -99,7 +99,7 @@ python exp1_gradient_vanishing.py
 
 # Experiment 2: Why RoPE? (10 min)
 cd ../../02-position-encoding/experiments
-python exp2_rope_vs_absolute.py --quick
+python exp1_rope_basics.py
 
 # Experiment 3: Why residual connections? (5 min)
 cd ../../../02-architecture/01-residual-connection/experiments

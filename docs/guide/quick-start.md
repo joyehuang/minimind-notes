@@ -65,6 +65,6 @@ python exp1_attention_basics.py
 
 ## 接下来
 
-- [系统学习（6 小时）](/docs/guide/systematic) — 完整掌握 Transformer 基础组件
+- [系统学习（8 小时）](/docs/guide/systematic) — 完整掌握 Transformer 基础组件与架构组装
 - [深度掌握（30+ 小时）](/docs/guide/mastery) — 从零训练完整 LLM
 - [学习路线图](/ROADMAP) — 查看完整路线

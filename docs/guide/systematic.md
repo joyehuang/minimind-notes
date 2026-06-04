@@ -1,16 +1,16 @@
 ---
-title: 系统学习 (6小时) | minimind从零理解llm训练
+title: 系统学习 (8小时) | minimind从零理解llm训练
 description: 系统掌握 Transformer 所有核心组件。学习归一化、位置编码、注意力机制和前馈网络，深入理解 LLM 训练原理。
 keywords: LLM系统学习, Transformer教程, LLM基础, 大模型训练教程
 ---
 
-# 📚 系统学习（6 小时）
+# 📚 系统学习（8 小时）
 
 > 完整掌握 Transformer 所有核心组件
 
 ## 🎯 学习目标
 
-完成 6 小时学习后，你将能够：
+完成 8 小时学习后，你将能够：
 - ✅ 理解 Transformer 所有核心组件
 - ✅ 通过对照实验解释每个设计选择
 - ✅ 从零实现一个简单的 Transformer
@@ -83,11 +83,12 @@ keywords: LLM系统学习, Transformer教程, LLM基础, 大模型训练教程
 
 ---
 
-### 第二阶段：架构组装（0.5 小时）
+### 第二阶段：架构组装（2.5 小时）
 
 **学习内容**：
-- 📖 阅读[架构总览](/modules/02-architecture/)（30 分钟）
-- 理解基础组件如何组装成 Transformer Block
+- 📖 完成[残差连接模块](/modules/02-architecture/01-residual-connection/)（30 分钟）
+- 📖 完成[Transformer Block 模块](/modules/02-architecture/02-transformer-block/)（1.5 小时）
+- 📖 复习[架构总览](/modules/02-architecture/)并完成自测（30 分钟）
 
 **完成标准**：
 - [ ] 能画出 Pre-LN Transformer Block 的数据流

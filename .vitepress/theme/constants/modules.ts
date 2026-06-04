@@ -152,7 +152,8 @@ export const createTier2Modules = (localePath: string, isEn: boolean): ModuleDat
           icon: 'link',
           title: 'Residual Connection',
           question: 'The savior for deep nets — or something else?',
-          status: 'planned',
+          experiments: 3,
+          status: 'complete',
           link: withLocale('/modules/02-architecture/01-residual-connection/')
         },
         {
@@ -160,7 +161,8 @@ export const createTier2Modules = (localePath: string, isEn: boolean): ModuleDat
           icon: 'box',
           title: 'Transformer Block',
           question: 'The golden assembly order — why this one?',
-          status: 'planned',
+          experiments: 3,
+          status: 'complete',
           link: withLocale('/modules/02-architecture/02-transformer-block/')
         }
       ]
@@ -170,16 +172,18 @@ export const createTier2Modules = (localePath: string, isEn: boolean): ModuleDat
           icon: 'link',
           title: '残差连接',
           question: '深层网络训练的救星？还是另有玄机？',
-          status: 'planned',
-          link: withLocale('/modules/02-architecture/')
+          experiments: 3,
+          status: 'complete',
+          link: withLocale('/modules/02-architecture/01-residual-connection/')
         },
         {
           id: '02-transformer-block',
           icon: 'box',
           title: 'Transformer Block',
           question: '组件组装的黄金顺序 — 为什么是这一个？',
-          status: 'planned',
-          link: withLocale('/modules/02-architecture/')
+          experiments: 3,
+          status: 'complete',
+          link: withLocale('/modules/02-architecture/02-transformer-block/')
         }
       ]
 }

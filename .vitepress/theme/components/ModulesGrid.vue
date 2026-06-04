@@ -88,6 +88,13 @@
 
               <h4>{{ module.title }}</h4>
               <p class="module-question">{{ module.question }}</p>
+
+              <div v-if="module.experiments" class="module-meta">
+                <div class="meta-item">
+                  <Icon name="tool" class-name="meta-icon" />
+                  <span>{{ module.experiments }} {{ module.experiments === 1 ? copy.experimentLabel : copy.experimentsLabel }}</span>
+                </div>
+              </div>
             </div>
 
             <div class="module-arrow">

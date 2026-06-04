@@ -1,6 +1,6 @@
 ﻿---
 title: Learning Roadmap | MiniMind LLM Training
-description: Three learning paths - Quick Start (30 min) / Systematic Study (6 hours) / Deep Mastery (30+ hours). Learn LLM training from scratch and prepare for interviews.
+description: Three learning paths - Quick Start (30 min) / Systematic Study (8 hours) / Deep Mastery (30+ hours). Learn LLM training from scratch and prepare for interviews.
 keywords: LLM learning roadmap, transformer tutorial, LLM interview prep
 ---
 
@@ -17,7 +17,7 @@ Pick the path that fits your time and goals:
 | Path | Time | Goal | Best for |
 |------|------|------|---------|
 | [⚡ Quick Start](#quick-start-30-min) | 30 min | Understand core design choices | Quick intro to LLM training | 
-| [📚 Systematic Study](#systematic-study-6-hours) | 6 hours | Master core components | Deeper understanding of Transformer | 
+| [📚 Systematic Study](#systematic-study-8-hours) | 8 hours | Master components and architecture assembly | Deeper understanding of Transformer |
 | [🎓 Deep Mastery](#deep-mastery-30-hours) | 30+ hours | Train a model from scratch | Full training pipeline mastery |
 
 ---
@@ -106,15 +106,15 @@ python exp1_attention_basics.py
 - ✅ The math and intuition of attention
 
 **Next steps**:
-- Want to go deeper? Continue to [📚 Systematic Study](#systematic-study-6-hours)
+- Want to go deeper? Continue to [📚 Systematic Study](#systematic-study-8-hours)
 - Want theory? Read [teaching.md](modules/01-foundation/01-normalization/teaching.md)
 
 ---
 
-<a id="systematic-study-6-hours"></a>
-## 📚 Systematic Study (6 hours)
+<a id="systematic-study-8-hours"></a>
+## 📚 Systematic Study (8 hours)
 
-**Goal**: Master all core Transformer components.
+**Goal**: Master the core Transformer components and how they assemble into blocks.
 
 ### Learning path
 
@@ -209,20 +209,25 @@ What to do:
 
 ---
 
-#### Stage 2: Architecture - 0.5 hours
+#### Stage 2: Architecture - 2.5 hours
 
 **What to do**:
-- 📖 Read [02-architecture](modules/02-architecture/) (30 min)
-- Understand how components assemble into a Transformer block
+- 📖 Study [Residual Connection](modules/02-architecture/01-residual-connection/) (1 hour)
+  - Read the teaching and code guides
+  - Run the three residual-connection experiments
+- 📖 Study [Transformer Block](modules/02-architecture/02-transformer-block/) (1.5 hours)
+  - Understand the Pre-LN block data flow and component order
+  - Run the three ablation, ordering, and causality experiments
 
 **Completion criteria**:
 - [ ] Draw the data flow of a Pre-LN Transformer block
 - [ ] Understand residual connections
 - [ ] Implement a Transformer block from scratch
+- [ ] Verify shape, gradients, and causality across stacked blocks
 
 ---
 
-### 📊 After 6 hours, you will be able to
+### 📊 After 8 hours, you will be able to
 
 - ✅ Understand all core Transformer components
 - ✅ Explain design choices via experiments
@@ -241,8 +246,8 @@ What to do:
 
 ### Learning path
 
-#### Week 1: Fundamentals (6 hours)
-- ✅ Complete [📚 Systematic Study](#systematic-study-6-hours)
+#### Week 1: Fundamentals (8 hours)
+- ✅ Complete [📚 Systematic Study](#systematic-study-8-hours)
 
 ---
 

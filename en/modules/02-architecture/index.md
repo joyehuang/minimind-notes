@@ -39,6 +39,8 @@ After finishing this tier, you will be able to:
 **Prerequisites**:
 - Tier 1: Foundation (all modules)
 
+**Status**: ✅ Complete (teaching notes + 3 experiments + code walkthrough + quiz)
+
 ---
 
 ### [02. Transformer Block](/en/modules/02-architecture/02-transformer-block)
@@ -57,6 +59,8 @@ After finishing this tier, you will be able to:
 
 **Prerequisites**:
 - 01. Residual Connection
+
+**Status**: ✅ Complete (teaching notes + 3 experiments + code walkthrough + quiz)
 
 ---
 

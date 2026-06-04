@@ -36,8 +36,8 @@ keywords: LLM训练教程, Transformer教程, 模块化教学, 大模型训练, 
 
 | 模块 | 核心问题 | 预计时长 | 状态 |
 |------|---------|---------|------|
-| [01-residual-connection](./02-architecture/) | 为什么需要残差连接？如何稳定梯度流？ | 1 小时 | 📋 |
-| [02-transformer-block](./02-architecture/) | 如何编排组件顺序？为什么是这个顺序？ | 1.5 小时 | 📋 |
+| [01-residual-connection](./02-architecture/01-residual-connection/) | 为什么需要残差连接？如何稳定梯度流？ | 1 小时 | ✅ |
+| [02-transformer-block](./02-architecture/02-transformer-block/) | 如何编排组件顺序？为什么是这个顺序？ | 1.5 小时 | ✅ |
 
 **完成标准**：
 - ✅ 理解残差连接的作用
@@ -106,7 +106,7 @@ python exp1_gradient_vanishing.py
 
 # 实验 2：为什么用 RoPE？（10 分钟）
 cd ../../02-position-encoding/experiments
-python exp2_rope_vs_absolute.py --quick
+python exp1_rope_basics.py
 
 # 实验 3：为什么需要残差连接？（5 分钟）
 cd ../../../02-architecture/01-residual-connection/experiments

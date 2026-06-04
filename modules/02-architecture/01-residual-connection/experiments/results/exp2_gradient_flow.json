@@ -1,0 +1,22 @@
+{
+  "seed": 42,
+  "depth": 48,
+  "plain": {
+    "input_gradient_norm": 0.0,
+    "middle_gradient_norm": 0.0,
+    "output_gradient_norm": 2.3211572078876653e-16,
+    "flow_ratio": 0.0,
+    "minimum_gradient_norm": 0.0,
+    "maximum_gradient_norm": 2.3211572078876653e-16
+  },
+  "residual": {
+    "input_gradient_norm": 0.07108626514673233,
+    "middle_gradient_norm": 0.06830142438411713,
+    "output_gradient_norm": 0.06532812118530273,
+    "flow_ratio": 1.0881418883163143,
+    "minimum_gradient_norm": 0.06532812118530273,
+    "maximum_gradient_norm": 0.07108626514673233
+  },
+  "plain_gradient_underflowed": true,
+  "flow_ratio_improvement_lower_bound": 1.0881418883163142e+30
+}

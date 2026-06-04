@@ -1635,6 +1635,53 @@ x = RMSNorm(x + FFN(x))        # 先FFN，再归一化
 
 ---
 
+### 关于网站内容建设与测试
+
+**Q22: MiniMind 网站后续内容应该如何一步一步补齐，并确保完整测试？** ⭐
+
+A: 以一个模块为最小交付单元，每次同时完成内容、实验、导航和验证，不把“页面存在”误当成“模块完成”。
+
+**模块完成标准**：
+- 中文：`index.md`、`README.md`、`teaching.md`、`code_guide.md`、`quiz.md`
+- 英文：`index.md`、`teaching.md`、`code_guide.md`、`quiz.md`
+- 实验：固定随机种子、可独立运行、包含确定性断言、保存预期 JSON 结果
+- 网站：更新首页状态、模块卡片、侧边栏、架构总览和学习路径
+
+**分层测试标准**：
+1. 实验测试：`bash experiments/run_all.sh`
+2. 内容结构与内部链接：`pnpm run test:content`
+3. 全站静态构建：`pnpm run test:site`
+4. 浏览器验收：检查中英文页面、导航跳转、交互式测验和运行时错误
+
+**完成结果**：
+- Residual Connection 与 Transformer Block 均已按上述标准完成
+- 48 层普通网络的输入端梯度下溢为 0，残差网络梯度流保持稳定
+- 完整 Transformer Block 在组合任务上优于移除 Mixer、FFN 或残差连接的版本
+- 2、8、16 层 Decoder Block 均保持形状、因果性和有限非零梯度
+
+---
+
+**Q23: Transformer Block 中 Mixer、FFN、Norm 和残差连接的顺序可以随意交换吗？** ⭐
+
+A: 不可以把顺序视为无关细节。每个子层读取的是前一步产生的表示，交换顺序会改变整个 Block 表示的函数。
+
+经典 Pre-LN Decoder Block 的数据流是：
+
+```
+x = x + Mixer(Norm(x))
+x = x + FFN(Norm(x))
+```
+
+其中：
+- Mixer 先让 token 交换上下文信息
+- FFN 再逐 token 变换混合后的表示
+- Pre-LN 为每个子层提供稳定输入
+- 残差连接保留恒等路径，改善深层梯度流
+
+对照实验中，保持参数完全相同，仅交换 Mixer 与 FFN 顺序，输出平均绝对差异仍为 `0.1295`。这说明顺序确实改变计算结果。现代模型可以采用不同设计，但必须把它作为新的架构选择进行训练和验证，而不是无代价替换。
+
+---
+
 ## 📊 重要公式汇总
 
 ### RMSNorm
@@ -1660,4 +1707,4 @@ scores = (Q @ K^T) / sqrt(head_dim)
 
 ---
 
-**最后更新**：2026-01-18
+**最后更新**：2026-06-04

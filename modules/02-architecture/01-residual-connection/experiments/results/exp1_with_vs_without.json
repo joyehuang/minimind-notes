@@ -1,0 +1,10 @@
+{
+  "seed": 42,
+  "depth": 16,
+  "steps": 300,
+  "plain_initial_loss": 0.5882507562637329,
+  "plain_final_loss": 0.13002315163612366,
+  "residual_initial_loss": 0.036665406078100204,
+  "residual_final_loss": 4.542526585282758e-05,
+  "improvement_ratio": 2862.3531243027414
+}

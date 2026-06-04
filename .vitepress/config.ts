@@ -190,7 +190,7 @@ export default defineConfig({
             text: '学习路线',
             items: [
               { text: '快速体验 (30分钟)', link: '/docs/guide/quick-start' },
-              { text: '系统学习 (6小时)', link: '/docs/guide/systematic' },
+              { text: '系统学习 (8小时)', link: '/docs/guide/systematic' },
               { text: '深度掌握 (30+小时)', link: '/docs/guide/mastery' },
               { text: 'Roadmap', link: '/ROADMAP' }
             ]
@@ -244,7 +244,9 @@ export default defineConfig({
             {
               text: '架构组装 (Architecture)',
               items: [
-                { text: '架构总览', link: '/modules/02-architecture/' }
+                { text: '架构总览', link: '/modules/02-architecture/' },
+                { text: '01 残差连接 (Residual Connection)', link: '/modules/02-architecture/01-residual-connection/' },
+                { text: '02 Transformer Block', link: '/modules/02-architecture/02-transformer-block/' }
               ]
             }
           ],
@@ -350,7 +352,7 @@ export default defineConfig({
             text: 'Learning Paths',
             items: [
               { text: 'Quick Start (30 min)', link: '/en/docs/guide/quick-start' },
-              { text: 'Systematic Study (6 hours)', link: '/en/docs/guide/systematic' },
+              { text: 'Systematic Study (8 hours)', link: '/en/docs/guide/systematic' },
               { text: 'Deep Mastery (30+ hours)', link: '/en/docs/guide/mastery' },
               { text: 'Roadmap', link: '/en/ROADMAP' }
             ]
@@ -396,7 +398,9 @@ export default defineConfig({
             {
               text: 'Architecture',
               items: [
-                { text: 'Architecture Overview', link: '/en/modules/02-architecture/' }
+                { text: 'Architecture Overview', link: '/en/modules/02-architecture/' },
+                { text: '01 Residual Connection', link: '/en/modules/02-architecture/01-residual-connection/' },
+                { text: '02 Transformer Block', link: '/en/modules/02-architecture/02-transformer-block/' }
               ]
             }
           ],

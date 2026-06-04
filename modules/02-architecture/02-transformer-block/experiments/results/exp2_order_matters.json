@@ -1,0 +1,16 @@
+{
+  "seed": 42,
+  "input_shape": [
+    32,
+    7,
+    12
+  ],
+  "output_shape": [
+    32,
+    7,
+    12
+  ],
+  "mean_absolute_difference": 0.12946754693984985,
+  "maximum_absolute_difference": 0.9926817417144775,
+  "cosine_similarity": 0.9889976382255554
+}

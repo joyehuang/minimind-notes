@@ -18,7 +18,7 @@ After 30 hours you will be able to:
 
 ## 📋 Learning path
 
-### Week 1: Fundamentals (6 hours)
+### Week 1: Fundamentals and architecture (8 hours)
 
 ✅ Complete [📚 Systematic Study](/en/docs/guide/systematic)
 
@@ -167,7 +167,7 @@ Record your progress in [Learning Log](/learning_log)
 ## 🎯 Checklist
 
 ### Fundamentals
-- [ ] Complete Systematic Study (6 hours)
+- [ ] Complete Systematic Study (8 hours)
 
 ### Data preparation
 - [ ] Train a custom tokenizer

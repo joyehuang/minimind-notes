@@ -144,7 +144,7 @@ python exp1_attention_basics.py
 | 路径 | 时长 | 目标 | 链接 |
 |------|----------|------|------|
 | ⚡ **快速体验** | 30 分钟 | 理解核心设计选择 | [开始](./ROADMAP.md#-quick-experience-30-minutes) |
-| 📚 **系统学习** | 6 小时 | 掌握基础组件 | [开始](./ROADMAP.md#-systematic-learning-6-hours) |
+| 📚 **系统学习** | 8 小时 | 掌握基础组件与架构组装 | [开始](./ROADMAP.md#-系统学习-8-小时) |
 | 🎓 **深度精通** | 30+ 小时 | 从零训练模型 | [开始](./ROADMAP.md#-deep-mastery-30-hours) |
 
 详细路线图：[ROADMAP.md](./ROADMAP.md)
@@ -166,8 +166,8 @@ python exp1_attention_basics.py
 
 | 模块 | 核心问题 | 状态 |
 |--------|---------------|--------|
-| [01-residual-connection](modules/02-architecture/) | 为什么残差连接？如何稳定梯度？ | 🔜 待开发 |
-| [02-transformer-block](modules/02-architecture/) | 如何组装组件？为什么这个顺序？ | 🔜 待开发 |
+| [01-residual-connection](modules/02-architecture/01-residual-connection/) | 为什么残差连接？如何稳定梯度？ | ✅ 完成 |
+| [02-transformer-block](modules/02-architecture/02-transformer-block/) | 如何组装组件？为什么这个顺序？ | ✅ 完成 |
 
 **图例**：
 - ✅ 完成：包含教学文档 + 实验代码 + 测验

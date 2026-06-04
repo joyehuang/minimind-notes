@@ -1,16 +1,16 @@
 ﻿---
-title: Systematic Study (6 hours) | MiniMind LLM Training
+title: Systematic Study (8 hours) | MiniMind LLM Training
 description: Master all core Transformer components. Study normalization, position encoding, attention, and feedforward to understand LLM training principles.
 keywords: LLM systematic study, Transformer tutorial, LLM fundamentals
 ---
 
-# 📚 Systematic Study (6 hours)
+# 📚 Systematic Study (8 hours)
 
 > Master all core Transformer components
 
 ## 🎯 Learning goals
 
-After 6 hours you will be able to:
+After 8 hours you will be able to:
 - ✅ Understand all core Transformer components
 - ✅ Explain design choices via controlled experiments
 - ✅ Implement a simple Transformer from scratch
@@ -83,11 +83,12 @@ Study the four core modules in order:
 
 ---
 
-### Stage 2: Architecture (0.5 hours)
+### Stage 2: Architecture (2.5 hours)
 
 **What to do**:
-- 📖 Read [Architecture README](/modules/02-architecture/) (30 min)
-- Understand how components assemble into a Transformer block
+- 📖 Complete the [Residual Connection module](/en/modules/02-architecture/01-residual-connection/) (30 min)
+- 📖 Complete the [Transformer Block module](/en/modules/02-architecture/02-transformer-block/) (1.5 hours)
+- 📖 Review the [Architecture overview](/en/modules/02-architecture/) and finish self-checks (30 min)
 
 **Completion criteria**:
 - [ ] Draw the data flow of a Pre-LN Transformer block

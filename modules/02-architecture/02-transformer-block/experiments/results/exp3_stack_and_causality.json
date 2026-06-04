@@ -1,0 +1,53 @@
+{
+  "seed": 42,
+  "measurements": [
+    {
+      "depth": 2,
+      "input_shape": [
+        2,
+        8,
+        16
+      ],
+      "output_shape": [
+        2,
+        8,
+        16
+      ],
+      "past_output_max_difference_after_future_change": 0.0,
+      "input_gradient_norm": 4.1370835788256954e-06,
+      "parameter_count": 6224
+    },
+    {
+      "depth": 8,
+      "input_shape": [
+        2,
+        8,
+        16
+      ],
+      "output_shape": [
+        2,
+        8,
+        16
+      ],
+      "past_output_max_difference_after_future_change": 0.0,
+      "input_gradient_norm": 3.775867980948533e-06,
+      "parameter_count": 24848
+    },
+    {
+      "depth": 16,
+      "input_shape": [
+        2,
+        8,
+        16
+      ],
+      "output_shape": [
+        2,
+        8,
+        16
+      ],
+      "past_output_max_difference_after_future_change": 0.0,
+      "input_gradient_norm": 1.1877851875397027e-06,
+      "parameter_count": 49680
+    }
+  ]
+}

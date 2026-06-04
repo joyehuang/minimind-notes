@@ -1,0 +1,15 @@
+{
+  "seed": 42,
+  "steps": 600,
+  "final_losses": {
+    "full_block": 0.014783983118832111,
+    "without_mixer": 0.031624555587768555,
+    "without_ffn": 0.024081384763121605,
+    "without_residual": 1.0024768114089966
+  },
+  "improvement_ratios": {
+    "without_mixer": 2.139109286961009,
+    "without_ffn": 1.6288834050714176,
+    "without_residual": 67.80830330711235
+  }
+}

@@ -18,7 +18,7 @@ keywords: LLM深度掌握, 完整训练流程, Tokenizer, 预训练, SFT, LoRA, 
 
 ## 📋 学习路径
 
-### 第一周：基础（6 小时）
+### 第一周：基础与架构（8 小时）
 
 ✅ 完成[📚 系统学习](/docs/guide/systematic)
 
@@ -167,7 +167,7 @@ python train_lora.py \
 ## 🎯 总检查清单
 
 ### 基础
-- [ ] 完成系统学习（6 小时）
+- [ ] 完成系统学习（8 小时）
 
 ### 数据准备
 - [ ] 训练自定义 Tokenizer

@@ -64,11 +64,19 @@ hero:
 
 <div class="module-cards">
 
-#### [Transformer Block 组装](/modules/02-architecture/)
-**重点**: 将基础组件组装成完整的 Transformer Block
-**时长**: 2.5 小时 | **状态**: 开发中
+#### [残差连接](/modules/02-architecture/01-residual-connection/)
+**重点**: 理解增量学习、恒等路径与深层网络梯度流
+**时长**: 1 小时 | **状态**: 完成
 
-[查看架构总览 →](/modules/02-architecture/)
+[开始学习 →](/modules/02-architecture/01-residual-connection/)
+
+---
+
+#### [Transformer Block 组装](/modules/02-architecture/02-transformer-block/)
+**重点**: 将基础组件组装成完整的 Transformer Block
+**时长**: 1.5 小时 | **状态**: 完成
+
+[开始学习 →](/modules/02-architecture/02-transformer-block/)
 
 </div>
 

@@ -53,11 +53,11 @@ export const createLearningPaths = (localePath: string, isEn: boolean): PathData
         {
           icon: 'book',
           title: 'Systematic Study',
-          duration: '6 hours',
+          duration: '8 hours',
           description: 'Master all Transformer fundamentals with a complete, structured path.',
           badge: 'Comprehensive',
           variant: 'secondary',
-          link: withLocale('/ROADMAP#systematic-study-6-hours')
+          link: withLocale('/ROADMAP#systematic-study-8-hours')
         },
         {
           icon: 'graduation',
@@ -82,11 +82,11 @@ export const createLearningPaths = (localePath: string, isEn: boolean): PathData
         {
           icon: 'book',
           title: '系统学习',
-          duration: '6 小时',
+          duration: '8 小时',
           description: '完整掌握 Transformer 的所有基础组件，适合系统学习',
           badge: '系统全面',
           variant: 'secondary',
-          link: withLocale('/ROADMAP#-系统学习-6-小时')
+          link: withLocale('/ROADMAP#-系统学习-8-小时')
         },
         {
           icon: 'graduation',

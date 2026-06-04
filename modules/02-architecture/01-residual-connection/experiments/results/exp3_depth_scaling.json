@@ -1,0 +1,36 @@
+{
+  "seed": 42,
+  "depths": [
+    2,
+    8,
+    32,
+    64
+  ],
+  "measurements": {
+    "2": {
+      "plain_cosine_similarity": -0.031151102855801582,
+      "residual_cosine_similarity": 0.9995551109313965,
+      "plain_output_rms": 0.19859176874160767,
+      "residual_output_rms": 0.9975888729095459
+    },
+    "8": {
+      "plain_cosine_similarity": -0.07750372588634491,
+      "residual_cosine_similarity": 0.9982789754867554,
+      "plain_output_rms": 0.002792665269225836,
+      "residual_output_rms": 0.998943030834198
+    },
+    "32": {
+      "plain_cosine_similarity": 0.004255461506545544,
+      "residual_cosine_similarity": 0.9936506748199463,
+      "plain_output_rms": 1.4811571413808622e-10,
+      "residual_output_rms": 0.9998953938484192
+    },
+    "64": {
+      "plain_cosine_similarity": 1.1951017432620947e-12,
+      "residual_cosine_similarity": 0.9861221313476562,
+      "plain_output_rms": 4.189976441019098e-20,
+      "residual_output_rms": 1.0146429538726807
+    }
+  },
+  "deepest_similarity_gap": 0.9861221313464611
+}

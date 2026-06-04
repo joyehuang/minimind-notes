@@ -146,7 +146,7 @@ Choose the appropriate path based on your time and goals:
 | Path | Duration | Goal | Link |
 |------|----------|------|------|
 | ⚡ **Quick Experience** | 30 minutes | Understand core design choices | [Start](./ROADMAP.md#-quick-experience-30-minutes) |
-| 📚 **Systematic Learning** | 6 hours | Master basic components | [Start](./ROADMAP.md#-systematic-learning-6-hours) |
+| 📚 **Systematic Learning** | 8 hours | Master components and architecture | [Start](./en/ROADMAP.md#systematic-study-8-hours) |
 | 🎓 **Deep Mastery** | 30+ hours | Train model from scratch | [Start](./ROADMAP.md#-deep-mastery-30-hours) |
 
 Detailed roadmap: [ROADMAP.md](./ROADMAP.md)
@@ -168,8 +168,8 @@ Detailed roadmap: [ROADMAP.md](./ROADMAP.md)
 
 | Module | Core Question | Status |
 |--------|---------------|--------|
-| [01-residual-connection](modules/02-architecture/) | Why residual connections? How to stabilize gradients? | 🔜 To Be Developed |
-| [02-transformer-block](modules/02-architecture/) | How to assemble components? Why this order? | 🔜 To Be Developed |
+| [01-residual-connection](modules/02-architecture/01-residual-connection/) | Why residual connections? How to stabilize gradients? | ✅ Complete |
+| [02-transformer-block](modules/02-architecture/02-transformer-block/) | How to assemble components? Why this order? | ✅ Complete |
 
 **Legend**:
 - ✅ Complete: Includes teaching docs + experiment code + quizzes

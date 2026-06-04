@@ -22,7 +22,7 @@ keywords: Transformer架构, 架构组装, 残差连接, Transformer Block, LLM�
 
 ## 📚 模块列表
 
-### 01. Residual Connection（残差连接）
+### [01. Residual Connection（残差连接）](./01-residual-connection/)
 
 **核心问题**：
 - 为什么需要残差连接？
@@ -39,9 +39,11 @@ keywords: Transformer架构, 架构组装, 残差连接, Transformer Block, LLM�
 **前置知识**：
 - Tier 1: Foundation（所有模块）
 
+**状态**：✅ 完整（教学文档 + 3 个实验 + 源码导读 + 自测题）
+
 ---
 
-### 02. Transformer Block（Transformer 块）
+### [02. Transformer Block（Transformer 块）](./02-transformer-block/)
 
 **核心问题**：
 - 如何组装 Norm、Attention、FFN、Residual？
@@ -57,6 +59,8 @@ keywords: Transformer架构, 架构组装, 残差连接, Transformer Block, LLM�
 
 **前置知识**：
 - 01. Residual Connection
+
+**状态**：✅ 完整（教学文档 + 3 个实验 + 源码导读 + 自测题）
 
 ---
 
